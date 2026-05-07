@@ -244,7 +244,7 @@ function setLang(lang) {
     const v = s[el.dataset.i18nHtml];
     if (v !== undefined) el.innerHTML = v;
   });
-  document.querySelectorAll('.lang-btn').forEach(btn => {
+  document.querySelectorAll('.lang-switcher button').forEach(btn => {
     btn.classList.toggle('lang-active', btn.dataset.lang === lang);
   });
 }
