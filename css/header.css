@@ -1,0 +1,61 @@
+/* ── Subbi Clothes — Shared header styles ── */
+
+/* ─ Logo container ─ */
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-icon {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─ Logo wordmark ─ */
+.logo-wordmark {
+  font-family: 'Orbitron', monospace;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  line-height: 1;
+}
+.logo-wordmark b { color: #f0f0f5; font-weight: 700; }
+.logo-wordmark .logo-pink { color: var(--pink); }
+.logo-sub {
+  display: block;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* ─ Language switcher (pill style) ─ */
+.lang-switcher {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 8px);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.lang-switcher button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 5px 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: 1px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.lang-switcher button:hover:not(.active):not(.lang-active) {
+  color: #f0f0f5;
+  background: rgba(255,255,255,0.06);
+}
+.lang-switcher button.active,
+.lang-switcher button.lang-active {
+  background: var(--pink);
+  color: #fff;
+}

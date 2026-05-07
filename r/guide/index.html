@@ -3,22 +3,402 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Redirecting…</title>
-  <script>
-    (function(){
-      var target = "https://docs.google.com/document/d/1NDiYi7shHj9DzMIr35uasNOvS0vTzGvx8MglADWJNeI/edit?usp=sharing";
-      try {
-        window.location.replace(target);
-      } catch (e) {
-        window.location.href = target;
-      }
-    })();
-  </script>
+  <title>Subbi Clothes — Official Guide</title>
+  <meta name="description" content="Official guide for Subbi Clothes, the RLV Wardrobe HUD for Second Life. Setup, features, permissions, config editor and FAQ.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../../css/header.css">
+  <link rel="stylesheet" href="../../css/guide.css">
 </head>
 <body>
-  <p>Redirecting to the guide document…</p>
-  <p>If the redirect doesn't occur, click this link:
-    <a href="https://docs.google.com/document/d/1NDiYi7shHj9DzMIr35uasNOvS0vTzGvx8MglADWJNeI/edit?usp=sharing">Guide (Google Docs)</a>
-  </p>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="site-logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="34" height="34" aria-hidden="true">
+            <defs>
+              <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ff2d78"/>
+                <stop offset="100%" stop-color="#aa0040"/>
+              </linearGradient>
+            </defs>
+            <rect width="52" height="52" rx="7" fill="#0d0018" stroke="#ff2d78" stroke-width="1" stroke-opacity="0.45"/>
+            <polyline points="0,9 0,0 9,0" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <polyline points="43,0 52,0 52,9" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <polyline points="0,43 0,52 9,52" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <polyline points="43,52 52,52 52,43" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <path d="M 39 9 L 15 9 Q 9 9 9 15 L 9 22 Q 9 28 15 28 L 37 28 Q 43 28 43 34 L 43 41 Q 43 43 37 43 L 13 43" stroke="url(#sg)" stroke-width="6" stroke-linecap="butt" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="logo-wordmark">
+          <b>SUBBI</b><span class="logo-pink">CLOTHES</span>
+          <span class="logo-sub">Official Guide</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="/" >Home</a>
+        <a href="../../outfit-config-editor/">Config Editor</a>
+        <a href="../mp" class="nav-cta">Marketplace <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="guide-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="guide-sidebar">
+      <div class="sidebar-label">Contents</div>
+      <nav class="sidebar-nav">
+        <a href="#intro">Introduction</a>
+        <a href="#requirements">Requirements</a>
+        <a href="#quickstart">Quick Start</a>
+        <div class="sidebar-divider"></div>
+        <a href="#clothing">Clothing Management</a>
+        <a href="#avatars">Avatar & Outfit Swap</a>
+        <a href="#accessories">Accessories</a>
+        <a href="#access">Access Control</a>
+        <a href="#pgsafe">PG-Safe+ Mode</a>
+        <div class="sidebar-divider"></div>
+        <a href="#config-editor">Config Editor</a>
+        <a href="#saf">SAF v3</a>
+        <div class="sidebar-divider"></div>
+        <a href="#faq">FAQ</a>
+        <a href="#support">Support</a>
+      </nav>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="guide-content">
+
+      <!-- INTRO -->
+      <section class="guide-section" id="intro">
+        <p class="section-eyebrow">Overview</p>
+        <h2>What is Subbi Clothes?</h2>
+        <p>Subbi Clothes is a complete <strong>RLV Wardrobe HUD</strong> for Second Life. It lets you manage outfits, swap avatars, control who can interact with your wardrobe, and trigger animations, sounds, and particle effects on every clothing change — all from a single wearable.</p>
+        <p>It works with <strong>any mesh body, any avatar type</strong>, and any clothing system including BOM layers. It is not tied to any specific body brand.</p>
+
+        <div class="guide-cards">
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <h4>Immersion</h4>
+            <p>Animations, sounds, and particles on every outfit change.</p>
+          </div>
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-people-arrows"></i></div>
+            <h4>Interactivity</h4>
+            <p>Let others dress, undress, or swap your avatar with full permission control.</p>
+          </div>
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <h4>Security</h4>
+            <p>PG-Safe+ automatically protects you in restricted regions or while AFK.</p>
+          </div>
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-sliders"></i></div>
+            <h4>Customization</h4>
+            <p>Colors, messages, animations, gender profiles — everything configurable per avatar.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- REQUIREMENTS -->
+      <section class="guide-section" id="requirements">
+        <p class="section-eyebrow">Before you start</p>
+        <h2>Requirements</h2>
+
+        <div class="callout warn">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>Subbi Clothes is an <strong>RLV HUD</strong>. It requires a viewer with RLVa support and RLV enabled. It will not function in viewers that do not support RLV.</p>
+        </div>
+
+        <table class="guide-table">
+          <thead>
+            <tr><th>Requirement</th><th>Details</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Viewer</strong></td>
+              <td>Firestorm 7.2 or higher is strongly recommended. Any viewer with full RLVa support will work.</td>
+            </tr>
+            <tr>
+              <td><strong>RLV enabled</strong></td>
+              <td>In Firestorm: <code>Avatar → Avatar Health → Allow Remote Scripted Viewer Controls (RLVa)</code></td>
+            </tr>
+            <tr>
+              <td><strong>Inventory access</strong></td>
+              <td>The HUD reads your <code>#RLV</code> folder. Make sure your viewer has this folder and RLV is on.</td>
+            </tr>
+            <tr>
+              <td><strong>Permissions</strong></td>
+              <td>The HUD is <strong>Copy · Mod · Transfer</strong>. No extra purchases required.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- QUICK START -->
+      <section class="guide-section" id="quickstart">
+        <p class="section-eyebrow">Setup</p>
+        <h2>Quick Start</h2>
+        <p>From unboxing to wearing your first outfit in 4 steps.</p>
+
+        <div class="guide-steps">
+          <div class="guide-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Get the HUD</h4>
+              <p>Purchase Subbi Clothes on the <a href="../mp">Second Life Marketplace</a>. Accept the folder delivery and locate it in your inventory.</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Create your folder structure with SAF v3</h4>
+              <p>Rez the <strong>SAF v3</strong> object included in the package. It will automatically build the entire <code>#RLV/SubbiClothes/</code> folder tree in your inventory. What used to take hours is done in minutes.</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Add your avatars and outfits</h4>
+              <p>Move your avatar folders and outfit items into the <code>#RLV/SubbiClothes/</code> structure created by SAF. Firestorm's inventory is recommended for managing RLV folders.</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Configure with the Outfit Config Editor</h4>
+              <p>Use the <a href="../../outfit-config-editor/">web-based Config Editor</a> to set up animations, colors, particle effects, and permissions for each outfit. Export and paste the result into your config notecard.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLOTHING -->
+      <section class="guide-section" id="clothing">
+        <p class="section-eyebrow">Feature</p>
+        <h2>Clothing Management</h2>
+        <p>Subbi Clothes manages your clothing at the layer level. Each body part (top, bottom, shoes, etc.) can have multiple states: <strong>dressed, underwear, undressed</strong>, or any custom state you configure.</p>
+
+        <h3>How it works</h3>
+        <p>Clicking a body part cycles through its states. You can also trigger states by name via chat commands or through interactions from other avatars (if permitted).</p>
+
+        <h3>Quick Dress / Quick Undress</h3>
+        <p>These shortcuts apply a state change to all body parts at once — useful for events, changing rooms, or RP scenes.</p>
+
+        <div class="callout">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>Clothing states are defined per outfit in the config notecard. Use the <a href="../../outfit-config-editor/">Config Editor</a> to set them up visually.</p>
+        </div>
+      </section>
+
+      <!-- AVATARS -->
+      <section class="guide-section" id="avatars">
+        <p class="section-eyebrow">Feature</p>
+        <h2>Avatar &amp; Outfit Swap</h2>
+        <p>Group your saved avatars and outfits inside <code>#RLV/SubbiClothes/</code>. Subbi Clothes reads these folders and lets you switch between them instantly from the HUD menu.</p>
+
+        <h3>Features</h3>
+        <ul>
+          <li><strong>Instant swap</strong> — switch to a full avatar (body + clothes) in one click.</li>
+          <li><strong>Random pick</strong> — let the HUD pick a random avatar or outfit from a group.</li>
+          <li><strong>Mix &amp; match</strong> — combine body from one avatar with clothes from another.</li>
+          <li><strong>Shared access</strong> — let specific people swap your avatar (with permission).</li>
+        </ul>
+
+        <h3>Folder structure</h3>
+        <p>SAF v3 creates the correct structure automatically. Avatars go in their own subfolder. The HUD auto-detects folders on scan.</p>
+        <div class="code-block">
+#RLV/
+  SubbiClothes/
+    Avatars/
+      My Catgirl/
+      Human v2/
+    Outfits/
+      Casual/
+      Formal/
+        </div>
+      </section>
+
+      <!-- ACCESSORIES -->
+      <section class="guide-section" id="accessories">
+        <p class="section-eyebrow">Feature</p>
+        <h2>Accessories System</h2>
+        <p>The accessories system lets you attach and detach individual items separately from your main outfit — glasses, bags, props, collar, tail, etc.</p>
+
+        <h3>Key behaviors</h3>
+        <ul>
+          <li>Items are <strong>auto-detected</strong> from your accessories subfolder.</li>
+          <li>Supports <strong>subfolders</strong> for grouping related items.</li>
+          <li><strong>Auto-detach on outfit change</strong> — accessories can be set to detach when you switch avatars or outfits.</li>
+          <li>Accessories can be toggled individually from the HUD menu.</li>
+        </ul>
+      </section>
+
+      <!-- ACCESS CONTROL -->
+      <section class="guide-section" id="access">
+        <p class="section-eyebrow">Feature</p>
+        <h2>Access Control &amp; Permissions</h2>
+        <p>You decide who can interact with your HUD, and what they can do. Permissions are set <strong>per category</strong> — clothes, avatars, accessories, hairstyle, nudity, and more.</p>
+
+        <h3>Permission levels</h3>
+        <table class="guide-table">
+          <thead>
+            <tr><th>Level</th><th>Who it applies to</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Public</strong></td><td>Anyone in the same sim.</td></tr>
+            <tr><td><strong>Group</strong></td><td>Anyone in your active group.</td></tr>
+            <tr><td><strong>Friends</strong></td><td>Anyone on your friends list.</td></tr>
+            <tr><td><strong>Whitelist</strong></td><td>Specific avatars you've manually approved.</td></tr>
+            <tr><td><strong>Blacklist</strong></td><td>Specific avatars always blocked regardless of other settings.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Interaction distance</h3>
+        <p>Set a minimum distance for interactions. Avatars outside that range cannot trigger actions even if they have the right permission level.</p>
+
+        <div class="callout">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>The <strong>Whitelist and Blacklist</strong> override all other permission levels. Blacklisted avatars can never interact regardless of group or friend status.</p>
+        </div>
+      </section>
+
+      <!-- PG-SAFE -->
+      <section class="guide-section" id="pgsafe">
+        <p class="section-eyebrow">Feature</p>
+        <h2>PG-Safe+ Mode</h2>
+        <p>PG-Safe+ is an automatic protection system that triggers when you enter restricted regions or go AFK. When active, it can:</p>
+        <ul>
+          <li><strong>Dress your avatar</strong> to a defined "safe" outfit.</li>
+          <li><strong>Revoke permissions</strong> from anyone currently controlling your HUD.</li>
+          <li><strong>Replace your look</strong> entirely with a fallback avatar.</li>
+        </ul>
+
+        <h3>Modes</h3>
+        <table class="guide-table">
+          <thead>
+            <tr><th>Mode</th><th>Behavior</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Auto</strong></td><td>Triggers automatically based on region rating and AFK status.</td></tr>
+            <tr><td><strong>Manual</strong></td><td>Triggered only when you activate it from the HUD menu.</td></tr>
+            <tr><td><strong>Off</strong></td><td>Disabled entirely for this outfit.</td></tr>
+          </tbody>
+        </table>
+
+        <p>PG-Safe+ mode is configured per outfit via the <a href="../../outfit-config-editor/">Config Editor</a>.</p>
+      </section>
+
+      <!-- CONFIG EDITOR -->
+      <section class="guide-section" id="config-editor">
+        <p class="section-eyebrow">Tool</p>
+        <h2>Outfit Config Editor</h2>
+        <p>The <a href="../../outfit-config-editor/">Outfit Config Editor</a> is a free web tool (no install required) for configuring your outfits visually. It replaces the need to edit config notecards by hand.</p>
+
+        <h3>What you can configure</h3>
+        <div class="guide-cards">
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-person-dress"></i></div>
+            <h4>Body Parts &amp; States</h4>
+            <p>Define which clothing states each body part supports (dressed, underwear, undressed, custom).</p>
+          </div>
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-film"></i></div>
+            <h4>Animations</h4>
+            <p>Set wear/remove animations, timing, and looping per outfit.</p>
+          </div>
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-palette"></i></div>
+            <h4>Colors &amp; Particles</h4>
+            <p>Color pickers with gradient presets, particle system settings.</p>
+          </div>
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="fa-solid fa-lock"></i></div>
+            <h4>Permissions</h4>
+            <p>Default permission levels per outfit — can be overridden by global settings.</p>
+          </div>
+        </div>
+
+        <h3>Import / Export</h3>
+        <p>Load an existing config notecard into the editor with the <strong>Load</strong> button. When done, click <strong>Export</strong> to copy the finished config — paste it into your notecard in-world.</p>
+      </section>
+
+      <!-- SAF -->
+      <section class="guide-section" id="saf">
+        <p class="section-eyebrow">Tool · Included with HUD</p>
+        <h2>SAF v3 — Semi-Automatic Folders Creator</h2>
+        <p>SAF v3 is an in-world object included with the HUD package. Rez it on the ground and it automatically creates the entire Subbi Clothes folder structure inside your <code>#RLV</code> inventory.</p>
+
+        <div class="callout">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>Running SAF v3 is <strong>Step 2</strong> of the Quick Start. Do it once after purchasing. You don't need to run it again unless you want to reset your folder structure.</p>
+        </div>
+
+        <p>After SAF runs, your inventory will have a ready-to-use folder tree. You only need to move your avatar and outfit items into the correct subfolders.</p>
+      </section>
+
+      <!-- FAQ -->
+      <section class="guide-section" id="faq">
+        <p class="section-eyebrow">FAQ</p>
+        <h2>Common Questions</h2>
+
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Does it work with my body / avatar?</summary>
+            <p>Yes. Subbi Clothes works with any mesh body, any avatar type, and any clothing — including BOM layers and alpha fixes. It is not locked to any specific body brand or system.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is RLV required?</summary>
+            <p>Yes. Subbi Clothes is an RLV HUD and requires a viewer with RLVa support. Firestorm 7.2 or higher is strongly recommended. You also need to have RLV enabled in your viewer settings.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Do I need scripting knowledge?</summary>
+            <p>No. SAF v3 creates all folders automatically. The Outfit Config Editor handles configuration visually. Initial setup takes 10–15 minutes following this guide.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Can others interact with my HUD?</summary>
+            <p>Yes, with full control on your end. You choose per category (clothes, avatars, accessories, hairstyle, nudity…) what each person — public, friends, group, or individual whitelist — can and cannot do.</p>
+          </details>
+          <details class="faq-item">
+            <summary>What version is current?</summary>
+            <p>The latest public release is <strong>v1.3.3 B4D</strong>. A new major version (<strong>DEV</strong>) is in active development. Owners can request redelivery via <code>/55 redelivery</code> in-world.</p>
+          </details>
+          <details class="faq-item">
+            <summary>How do I update?</summary>
+            <p>Say <code>/55 redelivery</code> in-world near the original vendor or a redelivery terminal to receive the latest version at no extra cost.</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- SUPPORT -->
+      <section class="guide-section" id="support">
+        <p class="section-eyebrow">Help</p>
+        <h2>Support</h2>
+        <p>Personal support and constant updates are included with your purchase. Message either of the creators directly in Second Life:</p>
+        <ul>
+          <li><strong>Souwind</strong> — main developer</li>
+          <li><strong>Aratx</strong> — support &amp; co-creator</li>
+        </ul>
+        <div class="callout">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>Please include your avatar name and a brief description of the issue when contacting support. Screenshots help.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">SUBBI<span>CLOTHES</span></div>
+      <p>Questions? Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life.</p>
+      <p>Latest release: <strong>v1.3.3 B4D</strong> &nbsp;·&nbsp; DEV version in progress</p>
+    </div>
+  </footer>
+
 </body>
 </html>

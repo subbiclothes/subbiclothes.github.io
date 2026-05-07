@@ -6,8 +6,9 @@
   <title>Subbi Clothes — RLV Wardrobe HUD for Second Life</title>
   <meta name="description" content="Subbi Clothes is an RLV wardrobe HUD for Second Life. Manage outfits, swap avatars, control permissions, and let others interact — all from a single wearable.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -15,15 +16,36 @@
   <!-- NAV -->
   <nav class="site-nav">
     <div class="nav-inner">
-      <a href="/" class="nav-logo">SUBBI<span>CLOTHES</span></a>
+      <a href="/" class="site-logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="34" height="34" aria-hidden="true">
+            <defs>
+              <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ff2d78"/>
+                <stop offset="100%" stop-color="#aa0040"/>
+              </linearGradient>
+            </defs>
+            <rect width="52" height="52" rx="7" fill="#0d0018" stroke="#ff2d78" stroke-width="1" stroke-opacity="0.45"/>
+            <polyline points="0,9 0,0 9,0" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <polyline points="43,0 52,0 52,9" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <polyline points="0,43 0,52 9,52" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <polyline points="43,52 52,52 52,43" fill="none" stroke="#ff2d78" stroke-width="1.8" stroke-opacity="0.85"/>
+            <path d="M 39 9 L 15 9 Q 9 9 9 15 L 9 22 Q 9 28 15 28 L 37 28 Q 43 28 43 34 L 43 41 Q 43 43 37 43 L 13 43" stroke="url(#sg)" stroke-width="6" stroke-linecap="butt" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="logo-wordmark">
+          <b>SUBBI</b><span class="logo-pink">CLOTHES</span>
+          <span class="logo-sub">Second Life's RLV Wardrobe</span>
+        </div>
+      </a>
       <div class="nav-links">
         <a href="r/guide"><span data-i18n="nav_guide">Guide</span></a>
         <a href="outfit-config-editor/"><span data-i18n="nav_editor">Config Editor</span></a>
         <a href="r/mp" class="nav-cta"><span data-i18n="nav_mp">Marketplace</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
       </div>
       <div class="lang-switcher">
-        <button class="lang-btn lang-active" data-lang="en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+        <button class="lang-active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button data-lang="es" onclick="setLang('es')">ES</button>
       </div>
     </div>
   </nav>

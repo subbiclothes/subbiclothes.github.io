@@ -24,7 +24,7 @@ body {
   background: var(--bg-deep);
   color: var(--text-bright);
   font-family: 'Rajdhani', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -44,45 +44,12 @@ header {
   background: var(--bg-panel);
   border-bottom: 1px solid var(--border);
   padding: 0 28px;
-  height: 62px;
+  height: 68px;
   display: flex; align-items: center; justify-content: space-between;
   flex-shrink: 0;
   z-index: 100;
 }
-.logo {
-  font-family: 'Orbitron', monospace;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: var(--pink);
-  text-transform: uppercase;
-  display: flex; align-items: center; gap: 10px;
-}
-.logo-icon {
-  width: 34px; height: 34px;
-  border: 1.5px solid var(--pink);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-}
-.logo-icon i { transform: translate(1px, 1px); }
-.logo span { color: var(--text-muted); font-weight: 400; font-size: 11px; letter-spacing: 2px; display: block; }
 .header-actions { display: flex; gap: 10px; align-items: center; }
-
-/* ── LANGUAGE TOGGLE ── */
-.lang-toggle {
-  display: flex; gap: 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.lang-toggle button {
-  background: transparent; border: none;
-  color: var(--text-muted); padding: 5px 10px;
-  font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600;
-  cursor: pointer; letter-spacing: 1px; transition: all .2s;
-}
-.lang-toggle button.active { background: var(--pink); color: #fff; }
 
 /* ── BUTTONS ── */
 .btn {
