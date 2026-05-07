@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Subbi Clothes — Outfit Config Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="css/app.css"/>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon"><i class="fa-solid fa-shirt"></i></div>
+    <div>SUBBI CLOTHES <span>OUTFIT CONFIG EDITOR</span></div>
+  </div>
+  <div class="header-actions">
+    <div class="lang-toggle">
+      <button class="active" onclick="setLang('en')" id="btn-en">EN</button>
+      <button onclick="setLang('es')" id="btn-es">ES</button>
+    </div>
+    <button class="btn btn-ghost" onclick="openUpload()">
+      <i class="fa-solid fa-upload"></i> <span data-t="load">Load</span>
+    </button>
+    <button class="btn btn-primary" onclick="generateAll()">
+      <i class="fa-solid fa-download"></i> <span data-t="export">Export</span>
+    </button>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title-row">
+        <div class="sidebar-title" data-t="outfits_list">Outfits</div>
+        <div style="display:flex;gap:2px;">
+          <button class="btn btn-ghost btn-sm btn-group-active" id="btnGroupBy" onclick="toggleGroupBy()" title="Group by group" style="border:none;padding:3px 7px;">
+            <i class="fa-solid fa-layer-group"></i>
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="sortOutfits()" title="Sort A–Z" style="border:none;padding:3px 7px;">
+            <i class="fa-solid fa-arrow-down-a-z"></i>
+          </button>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%; justify-content:center;" onclick="openAddModal()">
+        <i class="fa-solid fa-plus"></i> <span data-t="add_outfit">Add outfit</span>
+      </button>
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search…" oninput="renderSidebar()"/>
+      </div>
+    </div>
+    <div class="outfit-list" id="outfitList"></div>
+    <div class="sidebar-footer">
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;" onclick="generateAll()">
+        <i class="fa-solid fa-code"></i> <span data-t="preview_all">Preview all</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="mainPanel">
+    <div class="empty-state" id="emptyState">
+      <i class="fa-solid fa-shirt"></i>
+      <div class="hint" data-t="empty_hint">Add an outfit or load a config file</div>
+    </div>
+    <div id="editorContainer" style="display:none;"></div>
+  </div>
+
+</div>
+
+<!-- ADD OUTFIT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3 data-t="modal_title">NEW OUTFIT</h3>
+    <div class="form-group">
+      <label data-t="group_name">Group Name</label>
+      <input type="text" id="m_avatar" placeholder="&lt;Body name&gt;" autocomplete="off"/>
+    </div>
+    <div class="form-group">
+      <label data-t="outfit_name">Outfit Name</label>
+      <input type="text" id="m_outfit" placeholder="&lt;Outfit name&gt;" autocomplete="off"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('addModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmAdd()" data-t="create">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- RENAME MODAL -->
+<div class="modal-overlay" id="renameModal">
+  <div class="modal">
+    <h3 data-t="rename_title">RENAME OUTFIT</h3>
+    <div class="form-group">
+      <label data-t="group_name">Group Name</label>
+      <input type="text" id="r_avatar" autocomplete="off"/>
+    </div>
+    <div class="form-group">
+      <label data-t="outfit_name">Outfit Name</label>
+      <input type="text" id="r_outfit" autocomplete="off"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('renameModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmRename()" data-t="save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div class="modal-overlay" id="confirmDeleteModal">
+  <div class="modal" style="width:360px;">
+    <h3 data-t="confirm_del_title">DELETE OUTFIT</h3>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.5;" data-t="confirm_del_msg">Are you sure? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('confirmDeleteModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDeleteNow()" data-t="btn_delete">Delete outfit</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal" style="width:540px;">
+    <h3 data-t="upload_title">LOAD CONFIG FILE</h3>
+    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+      <i class="fa-solid fa-file-code"></i>
+      <p data-t="upload_click">Click to select your config file</p>
+      <small data-t="upload_hint">.json or .txt notecard</small>
+    </div>
+    <input type="file" id="fileInput" accept=".json,.txt" style="display:none" onchange="loadFile(event)"/>
+    <div class="paste-divider" data-t="or_paste">or paste text</div>
+    <textarea id="pasteArea" style="background:var(--bg-input);border:1px solid var(--border-dim);border-radius:var(--radius);color:var(--text-bright);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px;width:100%;resize:vertical;min-height:110px;transition:border-color .15s;" data-t-ph="paste_ph" placeholder="Paste the contents of your !outfits_settings.config notecard here…" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border-dim)'"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('uploadModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="parsePasteArea()" data-t="parse_btn">Parse text</button>
+    </div>
+  </div>
+</div>
+
+<!-- OUTPUT MODAL -->
+<div class="modal-overlay" id="outputModal">
+  <div class="modal" style="width:700px;max-width:95vw;">
+    <h3 data-t="output_title">GENERATED CONFIG</h3>
+    <div class="export-panel">
+      <div class="export-header">
+        <span class="export-label" data-t="result_label">result</span>
+        <button class="btn btn-ghost btn-sm" onclick="copyOutput()"><i class="fa-solid fa-copy"></i> <span data-t="copy">Copy</span></button>
+      </div>
+      <textarea id="outputCode" readonly rows="14"></textarea>
+    </div>
+    <div class="export-instructions">
+      <span class="instr-title" data-t="instr_title">How to apply</span>
+      <ol id="instrList"></ol>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('outputModal')" data-t="close">Close</button>
+      <button class="btn btn-primary" onclick="downloadOutput()"><i class="fa-solid fa-download"></i> <span data-t="download_file">Download file</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<!-- Scripts: load order matters — dependencies first -->
+<script src="i18n/strings.js"></script>
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/outfits.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/output.js"></script>
+<script src="js/modals.js"></script>
+<script src="js/init.js"></script>
+
+</body>
+</html>

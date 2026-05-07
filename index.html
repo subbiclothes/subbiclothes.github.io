@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Subbi Clothes — RLV Wardrobe HUD for Second Life</title>
+  <meta name="description" content="Subbi Clothes is an RLV wardrobe HUD for Second Life. Manage outfits, swap avatars, control permissions, and let others interact — all from a single wearable.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">SUBBI<span>CLOTHES</span></a>
+      <div class="nav-links">
+        <a href="r/guide"><span data-i18n="nav_guide">Guide</span></a>
+        <a href="outfit-config-editor/"><span data-i18n="nav_editor">Config Editor</span></a>
+        <a href="r/mp" class="nav-cta"><span data-i18n="nav_mp">Marketplace</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+      <div class="lang-switcher">
+        <button class="lang-btn lang-active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-inner">
+      <div class="hero-badge"><i class="fa-solid fa-circle-dot"></i> <span data-i18n="hero_badge">RLV Wardrobe HUD &nbsp;·&nbsp; Second Life</span></div>
+      <h1 data-i18n-html="hero_h1">Your clothes,<br><em>your rules.</em></h1>
+      <p class="hero-sub" data-i18n="hero_sub">Subbi Clothes is a complete management and automation system for your Second Life wardrobe. Swap avatars, manage outfits, control who can interact — with animations, sounds, and particles on every change. Works with any body, any avatar.</p>
+      <div class="hero-btns">
+        <a href="r/mp" class="btn-primary"><i class="fa-solid fa-store"></i> <span data-i18n="hero_btn_mp">Get on Marketplace</span></a>
+        <a href="r/guide" class="btn-ghost"><i class="fa-solid fa-book-open"></i> <span data-i18n="hero_btn_guide">Read the Guide</span></a>
+      </div>
+      <p class="hero-rlv-note"><i class="fa-solid fa-triangle-exclamation"></i> <span data-i18n-html="hero_rlv">Requires a viewer with <strong>RLVa support</strong> (e.g. Firestorm 7.2+) and RLV enabled.</span></p>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars">
+    <div class="section-inner pillars-grid">
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <h3 data-i18n="pillar1_h">Immersion</h3>
+        <p data-i18n="pillar1_p">Animations, sounds, and particle effects on every outfit change make your SL experience more alive.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fa-solid fa-people-arrows"></i></div>
+        <h3 data-i18n="pillar2_h">Interactivity</h3>
+        <p data-i18n="pillar2_p">Let others play with your wardrobe — avatars, dressing, undressing, hairstyles. Especially for couples.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fa-solid fa-eye"></i></div>
+        <h3 data-i18n="pillar3_h">Privacy &amp; Management</h3>
+        <p data-i18n="pillar3_p">Choose by category exactly what each person can do — public, friends, group, or individual level.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3 data-i18n="pillar4_h">Security</h3>
+        <p data-i18n="pillar4_p">PG-Safe+ dresses your avatar, revokes permissions, or replaces your look in restricted regions or AFK.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="section-inner">
+      <p class="section-eyebrow" data-i18n="feat_eyebrow">What you get</p>
+      <h2 class="section-title" data-i18n="feat_title">One HUD, complete control</h2>
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <h3 data-i18n="feat1_h">Clothing management</h3>
+          <p data-i18n="feat1_p">Swap individual body part clothing states instantly. Go from dressed to underwear to undressed — per layer, per part, or all at once.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-user-astronaut"></i></div>
+          <h3 data-i18n="feat2_h">Avatar &amp; outfit swap</h3>
+          <p data-i18n="feat2_p">Group your avatars and outfits, switch between them instantly. Random pick, mix body and clothes from different avatars, share access.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-box-open"></i></div>
+          <h3 data-i18n="feat3_h">Accessories system</h3>
+          <p data-i18n="feat3_p">Attach and detach items individually. Auto-detect folders, subfolders, auto-detach on outfit change — organize your objects freely.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+          <h3 data-i18n="feat4_h">Access control</h3>
+          <p data-i18n="feat4_p">Whitelist and Blacklist, group access, minimum interaction distance, and per-category permissions for every HUD function.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-sliders"></i></div>
+          <h3 data-i18n="feat5_h">Full customization</h3>
+          <p data-i18n="feat5_p">Message style, color, gender profiles, clothing names, notification preferences — everything configurable and saved per avatar.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-circle-nodes"></i></div>
+          <h3 data-i18n="feat6_h">Any body, any avatar</h3>
+          <p data-i18n="feat6_p">Works with any mesh body, any avatar type, any clothing — including BOM layers. Copy · Mod · Transfer.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- GETTING STARTED -->
+  <section class="howto">
+    <div class="section-inner">
+      <p class="section-eyebrow" data-i18n="howto_eyebrow">Quick start</p>
+      <h2 class="section-title" data-i18n="howto_title">Up and running in 4 steps</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h4 data-i18n="step1_h">Get the HUD</h4>
+          <p data-i18n="step1_p">Buy on the Marketplace. Copy · Mod · Transfer.</p>
+          <a href="r/mp" class="step-link"><span data-i18n="step1_link">Marketplace</span> <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="step-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h4 data-i18n="step2_h">Create your folders</h4>
+          <p data-i18n-html="step2_p">Run <strong>SAF v3</strong> — it builds your entire inventory structure automatically.</p>
+        </div>
+        <div class="step-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h4 data-i18n="step3_h">Add your clothes</h4>
+          <p data-i18n="step3_p">Upload your avatars and outfits to the RLV folder (Firestorm recommended).</p>
+        </div>
+        <div class="step-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h4 data-i18n="step4_h">Configure</h4>
+          <p data-i18n-html="step4_p">Use the <strong>Config Editor</strong> to set up animations, colors, and permissions.</p>
+          <a href="outfit-config-editor/" class="step-link"><span data-i18n="step4_link">Open editor</span> <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="videos-grid">
+        <div class="video-card">
+          <p class="video-label" data-i18n-html="vid1_label"><span>Step 2</span> — Creating folders with SAF</p>
+          <div class="video-wrap">
+            <iframe src="https://www.youtube.com/embed/OUh9iOEGYMk" title="SAF v3 — Folder creation" loading="lazy" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="video-card">
+          <p class="video-label" data-i18n-html="vid2_label"><span>Step 3</span> — Uploading your avatar</p>
+          <div class="video-wrap">
+            <iframe src="https://www.youtube.com/embed/pEBKrMhseH0" title="Uploading avatar to Subbi Clothes" loading="lazy" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="usecases">
+    <div class="section-inner">
+      <p class="section-eyebrow" data-i18n="uc_eyebrow">Who is it for?</p>
+      <h2 class="section-title" data-i18n="uc_title">Built for every style of play</h2>
+      <div class="usecases-grid">
+        <div class="usecase-card">
+          <i class="fa-solid fa-heart"></i>
+          <h4 data-i18n="uc1_h">Couples &amp; Social</h4>
+          <p data-i18n="uc1_p">Let a partner control your wardrobe, swap your avatar, or undress you — with full permission control over exactly what they can and can't do.</p>
+        </div>
+        <div class="usecase-card">
+          <i class="fa-solid fa-dragon"></i>
+          <h4 data-i18n="uc2_h">Roleplay &amp; Immersion</h4>
+          <p data-i18n="uc2_p">Wear animations, sounds, and particles on every clothing change. PG-Safe+ protects you automatically in restricted areas or when AFK.</p>
+        </div>
+        <div class="usecase-card">
+          <i class="fa-solid fa-music"></i>
+          <h4 data-i18n="uc3_h">Events &amp; DJs</h4>
+          <p data-i18n="uc3_p">DJ Regions auto-adjusts your look when entering event venues. Quick Dress and Quick Undress for fast scene or stage changes.</p>
+        </div>
+        <div class="usecase-card">
+          <i class="fa-solid fa-shirt"></i>
+          <h4 data-i18n="uc4_h">Wardrobe Management</h4>
+          <p data-i18n="uc4_p">Dozens of avatars and outfits? Subbi Clothes groups, organizes, and switches them without leaving Second Life or opening a single folder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="included">
+    <div class="section-inner included-inner">
+      <div class="included-text">
+        <p class="section-eyebrow" data-i18n="inc_eyebrow">In the box</p>
+        <h2 data-i18n-html="inc_h">Everything you need,<br>out of the box.</h2>
+        <p data-i18n="inc_p">No extra purchases, no separate tools to hunt down. The HUD package includes everything required to get started.</p>
+        <a href="r/mp" class="btn-primary" style="margin-top:8px;"><i class="fa-solid fa-store"></i> <span data-i18n="inc_btn">Get it on Marketplace</span></a>
+      </div>
+      <ul class="included-list">
+        <li><i class="fa-solid fa-check"></i><div><strong data-i18n="inc1_name">Subbi Clothes HUD</strong><span data-i18n="inc1_sub">The main system</span></div></li>
+        <li><i class="fa-solid fa-check"></i><div><strong data-i18n="inc2_name">Body Clicker</strong><span data-i18n="inc2_sub">For overhead messages and click interaction</span></div></li>
+        <li><i class="fa-solid fa-check"></i><div><strong data-i18n="inc3_name">Extra Clickers</strong><span data-i18n="inc3_sub">For a more immersive experience</span></div></li>
+        <li><i class="fa-solid fa-check"></i><div><strong data-i18n="inc4_name">SAF v3</strong><span data-i18n="inc4_sub">Semi-Automatic Folders Creator</span></div></li>
+        <li><i class="fa-solid fa-check"></i><div><strong data-i18n="inc5_name">Outfit Config Editor</strong><span data-i18n="inc5_sub">Free web tool — no install required</span></div></li>
+        <li><i class="fa-solid fa-check"></i><div><strong data-i18n="inc6_name">Guide &amp; personal support</strong><span data-i18n="inc6_sub">Message Souwind or Aratx in SL</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="tool-section">
+    <div class="section-inner">
+      <p class="section-eyebrow" data-i18n="tools_eyebrow">Free tools</p>
+      <h2 class="section-title" data-i18n="tools_title">Made to make your life easier</h2>
+    </div>
+    <div class="section-inner tool-inner">
+      <div class="tool-text">
+        <div class="tool-badge"><i class="fa-solid fa-sliders"></i> Outfit Config Editor</div>
+        <h3 data-i18n="oce_h">Visual Config Editor</h3>
+        <p data-i18n="oce_p">Configure your outfits visually — body parts, wear animations, timing, particles, permissions, and colors. Export a ready-to-paste config notecard without touching JSON by hand.</p>
+        <ul class="tool-list">
+          <li><i class="fa-solid fa-check"></i> <span data-i18n="oce_li1">All body parts &amp; animation settings</span></li>
+          <li><i class="fa-solid fa-check"></i> <span data-i18n="oce_li2">Color pickers with gradient &amp; presets</span></li>
+          <li><i class="fa-solid fa-check"></i> <span data-i18n="oce_li3">Import existing notecards</span></li>
+          <li><i class="fa-solid fa-check"></i> <span data-i18n="oce_li4">English &amp; Spanish interface</span></li>
+        </ul>
+        <a href="outfit-config-editor/" class="btn-primary"><i class="fa-solid fa-sliders"></i> <span data-i18n="oce_btn">Open Config Editor</span></a>
+      </div>
+      <div class="tool-visual">
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+            <span class="mock-title">Outfit Config Editor</span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-sidebar">
+              <div class="mock-outfit active"></div>
+              <div class="mock-outfit"></div>
+              <div class="mock-outfit"></div>
+            </div>
+            <div class="mock-content">
+              <div class="mock-section-hd"></div>
+              <div class="mock-row"><div class="mock-label"></div><div class="mock-toggle"></div></div>
+              <div class="mock-row"><div class="mock-label w-sm"></div><div class="mock-toggle"></div></div>
+              <div class="mock-row"><div class="mock-label"></div><div class="mock-toggle on"></div></div>
+              <div class="mock-section-hd mt"></div>
+              <div class="mock-table-row"></div>
+              <div class="mock-table-row alt"></div>
+              <div class="mock-table-row"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-inner saf-inner">
+      <div class="saf-card">
+        <div class="feature-icon"><i class="fa-solid fa-folder-tree"></i></div>
+        <div class="saf-body">
+          <div class="tool-badge"><i class="fa-solid fa-cube"></i> In-world tool · Included with HUD</div>
+          <h3 data-i18n-html="saf_h">Semi-Automatic Folders Creator <span>v3</span></h3>
+          <p data-i18n="saf_p">Sets up your entire Subbi Clothes folder structure directly inside your Second Life inventory — automatically. What used to take hours of manual work is done in minutes. Included in the HUD package.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="section-inner">
+      <p class="section-eyebrow" data-i18n="faq_eyebrow">FAQ</p>
+      <h2 class="section-title" data-i18n="faq_title">Common questions</h2>
+      <div class="faq-grid">
+        <details class="faq-item">
+          <summary data-i18n="faq1_q">Does it work with my body / avatar?</summary>
+          <p data-i18n="faq1_a">Yes. Subbi Clothes works with any mesh body, any avatar type, and any clothing — including BOM layers and alpha fixes. It is not locked to any specific body brand or system.</p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq2_q">Is RLV required?</summary>
+          <p data-i18n="faq2_a">Yes. Subbi Clothes is an RLV HUD and requires a viewer with RLVa support — Firestorm 7.2 or higher is strongly recommended. You also need to have RLV enabled in your viewer settings.</p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq3_q">Do I need scripting knowledge?</summary>
+          <p data-i18n="faq3_a">No. SAF v3 creates all the folders automatically. The Outfit Config Editor handles configuration visually. The initial setup takes 10–15 minutes following the guide.</p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq4_q">Can others interact with my HUD?</summary>
+          <p data-i18n="faq4_a">Yes, and you have full control. You choose per category (clothes, avatars, accessories, hairstyle, nudity…) what each person — public, friends, group, or individual whitelist — can do.</p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq5_q">Where do I get help?</summary>
+          <p data-i18n-html="faq5_a">Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life. Personal support and constant updates are included.</p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq6_q">What version is current?</summary>
+          <p data-i18n-html="faq6_a">The latest public release is <strong>v1.3.3 B4D</strong>. A new major version (<strong>DEV</strong>) is currently in active development. Owners can request redelivery via <code>/55 redelivery</code> in-world.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">SUBBI<span>CLOTHES</span></div>
+        <nav class="footer-nav">
+          <a href="r/mp" data-i18n="nav_mp">Marketplace</a>
+          <a href="r/guide" data-i18n="nav_guide">Guide</a>
+          <a href="outfit-config-editor/" data-i18n="nav_editor">Config Editor</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p data-i18n-html="footer_contact">Questions? Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life.</p>
+        <p class="footer-version" data-i18n-html="footer_version">Latest release: <strong>v1.3.3 B4D</strong> · DEV version in progress</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+</body>
+</html>

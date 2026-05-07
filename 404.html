@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Redirecting...</title>
+    <script>
+        // Sistema de redirecciones para URLs sin extensión
+        (function(){
+            var path = window.location.pathname;
+            var redirects = {
+                '/r/mp.html' : '/r/mp',
+                '/r/guide.html' : '/r/guide',
+                '/outfit-config-editor.html' : '/outfit-config-editor'
+            };
+            
+            if (redirects[path]) {
+                try {
+                    window.location.replace(redirects[path]);
+                } catch (e) {
+                    window.location.href = redirects[path];
+                }
+            } else {
+                // Si no hay redirección, ir a la página principal
+                window.location.href = '/';
+            }
+        })();
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>

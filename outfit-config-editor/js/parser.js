@@ -1,0 +1,124 @@
+function loadFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { parseConfig(e.target.result); closeModal('uploadModal'); };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function parsePasteArea() {
+  const text = document.getElementById('pasteArea').value.trim();
+  if (!text) return;
+  parseConfig(text);
+  document.getElementById('pasteArea').value = '';
+  closeModal('uploadModal');
+}
+
+function parseConfig(text) {
+  importing = true;
+  const lines = text.split('\n');
+  const blockRegex = /^\s*"([^"]+\/[^"]+)"\s*:\s*\{/;
+  let currentKey = null, blockLines = [], inBlock = false, parsed = 0;
+
+  lines.forEach(line => {
+    if (!inBlock) {
+      const m = line.match(blockRegex);
+      if (m) { currentKey = m[1]; blockLines = ['{']; inBlock = true; }
+    } else {
+      if (line.includes('// === END OUTFIT ===')) {
+        blockLines.push('}');
+        tryParseBlock(currentKey, blockLines.join('\n'));
+        inBlock = false; currentKey = null; blockLines = [];
+        parsed++;
+      } else {
+        const stripped = line.replace(/\/\/.*$/, '').trimEnd();
+        if (stripped.trim()) blockLines.push(stripped);
+      }
+    }
+  });
+  importing = false;
+  if (activeId && outfits.find(o => o.id === activeId)) renderEditor(activeId);
+  renderSidebar();
+  if (parsed > 0 && !activeId && outfits.length) selectOutfit(outfits[0].id);
+  notify(`${parsed} outfit${parsed !== 1 ? 's' : ''} loaded`);
+  saveToStorage();
+}
+
+function tryParseBlock(key, blockText) {
+  const [avatar, ...rest] = key.split('/');
+  const name = rest.join('/');
+  try {
+    const addMissingCommas = src => {
+      const ls = src.split('\n');
+      const out = [];
+      for (let i = 0; i < ls.length; i++) {
+        let s = ls[i].trimEnd();
+        if (s && !s.endsWith(',') && !s.endsWith('{') && !s.endsWith('[')) {
+          for (let j = i + 1; j < ls.length; j++) {
+            const nx = ls[j].trim();
+            if (nx && !nx.startsWith('}') && !nx.startsWith(']')) { s += ','; break; }
+            else if (nx) break;
+          }
+        }
+        out.push(s);
+      }
+      return out.join('\n');
+    };
+    const fixed = addMissingCommas(blockText)
+      .replace(/,\s*([}\]])/g, '$1');
+    const obj = JSON.parse(fixed);
+    const d = DEFAULT_OUTFIT();
+
+    if (obj.gender)                          d.gender = obj.gender;
+    if (obj.animations_enabled !== undefined) d.animations_enabled = obj.animations_enabled;
+    if (obj.skelfix_change !== undefined)    d.skelfix_change = obj.skelfix_change;
+    if (obj.skelfix_reload !== undefined)    d.skelfix_reload = obj.skelfix_reload;
+    if (obj.nudity_permission !== undefined) d.nudity_permission = obj.nudity_permission;
+    if (obj.hairstyle_permission !== undefined) d.hairstyle_permission = obj.hairstyle_permission;
+    if (obj.clothes_permission !== undefined)   d.clothes_permission = obj.clothes_permission;
+    if (obj.lock_ankles !== undefined)          d.lock_ankles = obj.lock_ankles;
+    if (obj.pg_safe_mode !== undefined)         d.pg_safe_mode = obj.pg_safe_mode;
+
+    BODY_PARTS.forEach(p => {
+      const bpKey = Object.keys(obj).find(k => k.trim() === p);
+      if (bpKey) d.bodyparts[p] = {
+        enabled: true,
+        normal:      obj[bpKey].normal || '',
+        underwear:   obj[bpKey].underwear || '',
+        wear_anim:   obj[bpKey].wear_anim || '',
+        wear_time:   parseFloat(obj[bpKey].wear_time || ''),
+        remove_anim: obj[bpKey].remove_anim || '',
+        remove_time: parseFloat(obj[bpKey].remove_time || '')
+      };
+    });
+
+    if (obj.particles_enabled !== undefined) d.particles_enabled = obj.particles_enabled;
+    if (obj.particles_texture)               d.particles_texture = obj.particles_texture;
+    if (obj.particles_duration !== undefined) d.particles_duration = obj.particles_duration;
+
+    // Handle both legacy single color and new start:end gradient format
+    if (obj.particles_color) {
+      const gradMatch = obj.particles_color.match(/^(<[^>]+>):(<[^>]+>)$/);
+      if (gradMatch) {
+        d.particles_color_start = gradMatch[1];
+        d.particles_color_end   = gradMatch[2];
+      } else {
+        d.particles_color_start = obj.particles_color;
+        d.particles_color_end   = obj.particles_color;
+      }
+    }
+    if (obj.particles_color_start) d.particles_color_start = obj.particles_color_start;
+    if (obj.particles_color_end)   d.particles_color_end   = obj.particles_color_end;
+
+    if (obj.title_enabled !== undefined) d.title_enabled = obj.title_enabled;
+    if (obj.title_text !== undefined)    d.title_text    = obj.title_text;
+    if (obj.title_color)                 d.title_color   = obj.title_color;
+
+    const existing = outfits.find(o => o.avatar === avatar && o.name === name);
+    if (existing) existing.data = d;
+    else outfits.push({ id: 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), avatar, name, data: d });
+    } catch(e) {
+      console.warn('Could not parse outfit block:', key, e);
+  }
+}
