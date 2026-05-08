@@ -1,74 +1,5 @@
-/* ── Subbi Clothes — Landing page ── */
-/* Shares visual language with outfit-config-editor//css/app.css */
-
-:root {
-  --bg-deep:    #0a0a0c;
-  --bg-panel:   #111116;
-  --bg-card:    #18181f;
-  --bg-hover:   #1e1e28;
-  --pink:       #e8197a;
-  --pink-dim:   #a01253;
-  --pink-glow:  rgba(232,25,122,0.18);
-  --pink-soft:  rgba(232,25,122,0.08);
-  --text:       #f0f0f5;
-  --text-muted: #8888a0;
-  --text-dim:   #555566;
-  --border:     rgba(232,25,122,0.2);
-  --border-dim: rgba(255,255,255,0.07);
-  --radius:     8px;
-  --radius-lg:  14px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg-deep);
-  color: var(--text);
-  font-family: 'Rajdhani', system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-/* scanline overlay */
-body::before {
-  content: '';
-  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
-  );
-}
-
-/* ── NAV ── */
-.site-nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(10,10,12,0.88);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-inner {
-  max-width: 1100px; margin: 0 auto;
-  padding: 0 24px;
-  height: 68px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.nav-links { display: flex; align-items: center; gap: 24px; }
-.nav-links a {
-  color: var(--text-muted); text-decoration: none;
-  font-size: 14px; font-weight: 600; letter-spacing: 1px;
-  transition: color .15s;
-}
-.nav-links a:hover { color: var(--text); }
-.nav-cta {
-  color: var(--pink) !important;
-  border: 1px solid var(--border);
-  padding: 6px 14px; border-radius: var(--radius);
-  transition: background .15s !important;
-}
-.nav-cta:hover { background: var(--pink-soft) !important; }
-
+/* ── Subbi Clothes — Landing page (content only) ── */
+/* Shell styles (vars, body, nav, footer) live in css/shell.css  */
 
 /* ── BUTTONS ── */
 .btn-primary, .btn-ghost {
@@ -304,30 +235,6 @@ body::before {
 }
 .mock-table-row.alt { background: var(--pink-soft); width: 80%; }
 
-/* ── FOOTER ── */
-.site-footer {
-  border-top: 1px solid var(--border-dim);
-  padding: 40px 24px;
-}
-.footer-inner { max-width: 1100px; margin: 0 auto; }
-.footer-top {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
-  margin-bottom: 24px;
-}
-.footer-brand {
-  font-size: 18px; font-weight: 700; letter-spacing: 2px; color: var(--text-dim);
-}
-.footer-brand span { color: var(--pink-dim); }
-.footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
-.footer-nav a {
-  font-size: 13px; color: var(--text-dim); text-decoration: none;
-  letter-spacing: 1px; font-weight: 600; transition: color .15s;
-}
-.footer-nav a:hover { color: var(--text-muted); }
-.footer-bottom p { font-size: 13px; color: var(--text-dim); }
-.footer-bottom strong { color: var(--text-muted); }
-
 /* SAF card */
 .saf-inner { margin-top: 48px; }
 .saf-card {
@@ -531,13 +438,6 @@ body::before {
   font-family: 'Share Tech Mono', monospace;
   font-size: 13px; color: var(--text);
 }
-
-/* ── FOOTER VERSION ── */
-.footer-version {
-  margin-top: 6px;
-  font-size: 12px; color: var(--text-dim);
-}
-.footer-version strong { color: var(--pink-dim); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
