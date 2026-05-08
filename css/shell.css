@@ -116,6 +116,10 @@ body::before {
   color: var(--text-muted); text-decoration: none;
   transition: color .15s;
 }
+.nav-links a:first-child {
+  min-width: 40px;
+  text-align: center;
+}
 .nav-links a:hover { color: #f0f0f5; }
 .nav-cta {
   color: var(--pink) !important;
