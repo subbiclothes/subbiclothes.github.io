@@ -11,6 +11,7 @@ document.getElementById('mainPanel').addEventListener('input', () => {
 
 // Bootstrap: try localStorage first, otherwise load the example config
 const restored = loadFromStorage();
+loadTagColors();
 if (!restored) {
   fetch('data/example.config')
     .then(r => r.text())
@@ -24,3 +25,5 @@ if (!restored) {
   if (outfits.length) selectOutfit(outfits[0].id);
 }
 applyTranslations();
+
+document.addEventListener('click', () => closeApplyMenu());

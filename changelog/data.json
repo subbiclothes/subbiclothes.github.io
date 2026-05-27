@@ -1,0 +1,735 @@
+// ══════════════════════════════════════════════════════════════════════════════
+// Subbi Clothes — Changelog Data  (JSONC — supports // line comments)
+// ══════════════════════════════════════════════════════════════════════════════
+//
+// ── FIELD REFERENCE ──────────────────────────────────────────────────────────
+//
+//  version       string   Display name shown in the timeline header.
+//                         Examples: "DEV-2.0", "Subbi Clothes 3.3D"
+//
+//  date          string   Release date. Supported formats:
+//                           "YYYY-MM-DD"        Full ISO-8601 date (preferred)
+//                           "YYYY-MM"           Month precision only
+//                           "YYYY"              Year precision only
+//                           "Work in progress"  Pinned to the top of the timeline
+//                           "—"                 Unknown / TBD — sorted to the bottom
+//
+//  type          string   Release channel. Controls the colour pill in the UI.
+//                         Allowed values:
+//                           "stable"         — production release
+//                           "dev"            — development / nightly build
+//                           "beta"           — public beta / RC (excluded from "Releases" filter)
+//                           "legacy-stable"  — archived Stable entry; counts as Stable in filters
+//                           "legacy-dev"     — archived DEV entry; counts as DEV in filters
+//                         Legacy types render with reduced opacity/saturation.
+//
+//  version_type  string   Structural importance of the entry.
+//                         Allowed values:
+//                           "major"   — Full release. Rendered full-size in the timeline.
+//                           "middle"  — Moderate update. Rendered slightly smaller.
+//                           "minor"   — Small patch. Nested inside the parent's
+//                                       "Patch history" drawer (sub_versions array).
+//                           "hotfix"  — Urgent bugfix. Same nested rendering as minor.
+//                         Note: "minor" and "hotfix" entries should live inside
+//                         the sub_versions array of their nearest major/middle parent,
+//                         not at the top level.
+//
+//  badge         string   Short label shown on the version chip.
+//                         Examples: "DEV · SC4", "SC 3.0"
+//
+//  summary       string   One-paragraph description of the release shown below
+//                         the version header.
+//
+//  new           array    List of newly added features.
+//  changed       array    List of changed / improved behaviours.
+//  fixed         array    List of bug fixes.
+//  bugs          array    Known remaining bugs at time of release.
+//  hud           array    HUD-specific changes (rendered in purple).
+//
+//  sub_versions  array    Optional. Nested minor/hotfix entries belonging to
+//                         this release. Each item uses the same field schema
+//                         (version, date, version_type, summary, new, changed,
+//                         fixed, bugs, hud). Stats from sub_versions are summed
+//                         cumulatively into the parent's totals display.
+//                         Example:
+//                           "sub_versions": [
+//                             {
+//                               "version": "3.0a",
+//                               "date": "2025-01-15",
+//                               "version_type": "hotfix",
+//                               "summary": "Hotfix for startup crash.",
+//                               "fixed": ["Fixed crash on startup."]
+//                             },
+//                             {
+//                               "version": "3.0b",
+//                               "date": "2025-02-01",
+//                               "version_type": "minor",
+//                               "summary": "Minor QoL improvements.",
+//                               "changed": ["Improved menu responsiveness."],
+//                               "fixed": ["Fixed particle colour reset."]
+//                             }
+//                           ]
+//
+// ── MARKUP MINI-LANGUAGE ─────────────────────────────────────────────────────
+//
+//  Applies to all list items (new / changed / fixed / bugs / hud) and summary.
+//
+//  Inline formatting:
+//    **text**      Bold
+//    _text_        Italic
+//    ~~text~~      Strikethrough
+//    ||text||      Spoiler (blurred, revealed on hover/click)
+//    ``code``      Inline monospace code
+//
+//  Status tags — can appear anywhere in the string:
+//    [fixed:X]     "Fixed in vX" badge (green)
+//    [replaced:X]  "Replaced in vX" badge (orange)
+//    [wip]         Work In Progress badge (yellow)
+//    [breaking]    Breaking Change badge (red)
+//    [note:text]   Inline callout note (muted)
+//
+//  Leading-tag behaviour:
+//    When a status tag ([wip], [breaking], [replaced:X], [fixed:X]) appears at
+//    the very start of an item string — before any other visible text — the
+//    renderer collapses it to a compact icon-only pill and right-aligns the
+//    rest of the content. This keeps list items visually aligned even when only
+//    some carry a status badge and others do not.
+//    Example: "[replaced:DEV-4.0] Introduced a **Tags System**..."
+//
+// ── SUB-LIST SYNTAX ──────────────────────────────────────────────────────────
+//
+//  Any list item whose text begins with "- " (hyphen + space) is rendered as
+//  an indented sub-bullet under the preceding sibling item. Sub-items must be
+//  plain JSON strings in the same array as their parent.
+//  Example:
+//    "changed": [
+//      "Command system now flexible, accepting multiple formats:",
+//        "- on/off, 1/0, true/false, yes/no",
+//        "- Unknown command warnings",
+//        "- Remote access controls"
+//    ]
+//
+// ══════════════════════════════════════════════════════════════════════════════
+
+{
+  "entries": [
+
+    {
+      "version": "DEV-4.0",
+      "date": "Work in Progress",
+      "type": "beta",
+      "version_type": "major",
+      "badge": "DEV · SC4",
+
+      "summary": "Major SC4 DEV update focused on administrative control expansion, restoration of legacy systems with modernized behavior, deeper command integration, large-scale menu and memory optimizations, and major improvements to Replace Clothes, Safe Regions, and avatar configuration workflows.",
+
+      "new": [
+        "Added **extended administrator controls**, which can be requested directly from the HUD owner.",
+        "Added feature allowing authorized users to **execute commands directly on another user's HUD** (**use with caution**).",
+        "**Random Outfit** has returned and has been repositioned for greater visibility and easier access.",
+        "Reintroduced and improved **Safe Dangerous Regions** system.",
+        "**Replace Clothes** has been fully redesigned and integrated organically into the system. It is **no longer experimental**.",
+        "Replaced the old per-avatar notecard storage system with the new **OCE (Outfit Config Editor)** tool.",
+        "Re-added and improved the hidden **Whitelist/Blacklist easter egg**."
+      ],
+
+      "changed": [
+        "Reworked syntax of several commands to improve usability and consistency.",
+        "**Random Avatar** is now displayed directly inside the **Avatars menu**.",
+        "The **Commands** HUD option now acts as a direct enable/disable toggle for command execution.",
+        "**Stop!** can now replace the currently displayed message dynamically.",
+        "Improved visual representation of the **memory report** system.",
+        "Optimized internal **RLV script** behavior.",
+        "Applied minor optimizations to **Settings** and **Outfits** systems.",
+        "Improved main menu appearance with additional visual indicators.",
+        "Improved descriptions and navigation clarity in introduction menus.",
+        "Removed legacy scripts: ``Mem_Regs_List.lsl`` and ``Mem_Outfits.lsl``.",
+        "Added visual indicator showing when a user has access through the **Whitelist**.",
+        "**Backhome** now defaults to the user's SL Home location (custom regions can still be configured manually).",
+        "Added new Settings category for improved navigation and future scalability.",
+        "Added options to enable/disable **SkeletonFix** during avatar replacement and refresh operations.",
+        "Updated several default option values:",
+        "- Short Names → **True**",
+        "- Anims OnSit → **False**",
+        "- Avatars Access → **True**"
+      ],
+
+      "fixed": [
+        "Fixed the **Title Easter Egg** behavior.",
+        "Fixed issue where enabling all interaction systems (Clothes, Avatars, Accessories, Hairstyles, and Commands) prevented other users from opening the menu.",
+        "Fixed **Random Avatar** selecting invalid or inappropriate folders.",
+        "Fixed truncation issues affecting Outfit, Group, and Accessory names longer than 24 characters.",
+        "Fixed outfit replacement message failing to correctly detect the owner's name.",
+        "Fixed whitelist/blacklist command management still using parts of the legacy system.",
+        "Attempt #5: improved recovery handling for the ``Menu.lsl`` crash/restart issue, where the HUD menu could stop responding after unexpected simulator failures."
+      ],
+
+      "bugs": [
+        "``Menu.lsl`` stability issue may still occur after severe simulator crashes or forced script resets.",
+        "Some older command aliases may still behave inconsistently with the revised syntax system.",
+        "OCE migration may require manual cleanup for legacy avatar configurations in certain setups."
+      ]
+    },
+
+    {
+      "version": "DEV-3.1",
+      "date": "2026-05-12",
+      "type": "dev",
+      "version_type": "major",
+      "badge": "DEV · SC4",
+
+      "summary": "Major SC4 DEV build introducing new avatar-level configuration systems, expanded permission architecture, dynamic title tagging, particle persistence improvements, and a broad restructuring of menus, animations, and core clothing logic, alongside multiple stability fixes and partial system deprecations.",
+
+      "new": [
+        "[replaced:DEV-4.0] Added manual per-avatar configuration via notecard (includes instructions and examples). [note:Permanently replaced in DEV-4.0 — existing configurations may require manual reapplication.]",
+        "Added **dynamic title tags**: ``{outfit}``, ``{avatar}`` (auto-updating placeholders).",
+        "Added **Dynamic Time Parts** option to Clicker menu (enabled by default), allowing particles to remain active while avatar assets are still loading.",
+        "Added new animation set for clothing interactions: updated crotch undress animation, 2 head undress animations, and face dress/undress animation.",
+        "Reintegrated **clothing renaming system** (global, non-per-avatar) using notecard-based configuration.",
+        "Reintegrated and expanded **permission system**, now applicable to Whitelist, Friends, and Groups.",
+        "Extended **+Avatar system** to full scope (Global, Group, Outfit), replacing ``-Avatar-`` and expanding functionality.",
+        "Re-enabled **Autoalpha** option in Clicker (previously forced ON, now toggleable OFF).",
+        "Restored **Replace Clothes** functionality."
+      ],
+
+      "changed": [
+        "Clothing-related menus reviewed and adjusted to match updated menu management system.",
+        "Removed **Coat** and **Socks** logic from Torso and Feet systems completely.",
+        "Internal code optimizations applied for performance improvements.",
+        "HUD visual style updated for improved consistency and readability.",
+        "Hairstyle option is now hidden when **Lock Avatar** is enabled (to reduce confusion).",
+        "1:1 Group/Outfit combinations now skip group selection and directly load the only available outfit instead of forcing Refresh.",
+        "Menu logic partially moved from ``menu.lsl`` to ``processormenu.lsl`` to improve memory handling and support new tag systems."
+      ],
+
+      "fixed": [
+        "Fixed Safe Undress not applying correctly when enabled.",
+        "Fixed Accessories menu character limit miscalculation when using special symbols.",
+        "Fixed guest-enabled configurations preventing menu from opening correctly.",
+        "Fixed complete HUD block caused by third-party interaction conflicts.",
+        "Fixed PG-SAFE failing to disable public access properly.",
+        "Fixed Rainbow color option not functioning correctly.",
+        "Fixed ``{avatar}`` and ``{outfit}`` tags not updating until avatar change.",
+        "Fixed empty title field not restoring default title properly.",
+        "Fixed **Title Easter Egg** malfunction.",
+        "Fixed empty group selection menu when only one group is available.",
+        "Fixed memory accumulation issue in ``menu.lsl`` that could lead to crashes during long sessions.",
+        "Fixed orphaned listeners in ``menu.lsl`` causing potential memory leaks and instability."
+      ],
+
+      "bugs": [
+        "[fixed:DEV-4.0] Unable to save avatar information (clothing names, gender, individual settings).",
+        "[fixed:DEV-4.0] Dangerous/Safe Regions system not functioning correctly.",
+        "[fixed:DEV-4.0] Random avatar toggle commands still partially functional via legacy command system.",
+        "[fixed:DEV-4.0] Title Easter Egg may not display correctly in some cases.",
+        "[fixed:DEV-4.0] Enabling all systems simultaneously (Clothes, Avatars, Accessories, Hairstyles, Commands) may block menu access for other users.",
+        "[fixed:DEV-4.0] Random Avatar may occasionally select incorrect folders.",
+        "[fixed:DEV-4.0] Outfit, Group, and Accessory names longer than 24 characters may not truncate correctly.",
+        "[fixed:DEV-4.0] Outfit replacement message may fail to correctly detect owner name.",
+        "[fixed:DEV-4.0] Whitelist/blacklist system may still partially rely on legacy implementation.",
+        "Using commas in folder names (including tags) may cause unintended menu splitting behavior.",
+        "HUD skin changing is currently disabled.",
+        "Some options are not available in Settings menu."
+      ]
+    },
+
+    {
+      "version": "DEV-2.0b",
+      "date": "2025-11-22",
+      "type": "legacy-dev",
+      "version_type": "hotfix",
+      "badge": "DEV · SC4",
+      "summary": "Hotfix branch focusing on stability fixes for access control and main menu rendering issues, specifically addressing Public Access state persistence and menu overflow behavior.",
+
+      "sub_versions": [
+        {
+          "version": "DEV-2.0a",
+          "date": "2025-11-22",
+          "version_type": "hotfix",
+          "summary": "Fix for Public Access state not persisting correctly on HUD equip or login.",
+          "fixed": [
+            "Fixed bug where **Public Access** was automatically deactivated when equipping the HUD or logging in, without updating the HUD indicator."
+          ]
+        },
+        {
+          "version": "DEV-2.0b",
+          "date": "2025-11-22",
+          "version_type": "hotfix",
+          "summary": "Fix for main menu overflow issue affecting option visibility.",
+          "fixed": [
+            "Fixed issue where **main menu options disappeared when more than 10 options were present**."
+          ]
+        }
+      ]
+    },
+
+    {
+      "version": "DEV-2.0",
+      "date": "2025-11-18",
+      "type": "legacy-dev",
+      "version_type": "major",
+      "badge": "DEV · SC4",
+      "summary": "Major SC4 DEV build introducing a redesigned HUD and menu ecosystem, including a new outfit tagging system, expanded command flexibility, improved BOM handling and performance, and major UX refinements focused on automation, consistency, and reduced script dependency.",
+      "new": [
+        "Added a **Filter system** to the Hairstyles menu.",
+        "[replaced:DEV-4.0] Introduced a **Tags System** for outfits: tags can now be embedded in folder names using ``~~`` (no commas allowed between tags).",
+        "**BOM support expanded** to both General and Group levels, with improved performance.",
+        "Added **STOP! command control**, including gesture support for quick access.",
+        "Added emojis in the Outfits menu for improved visual feedback (including initial selection flow).",
+        "Added option to disable **autopick** when only one outfit is available for an avatar.",
+        "**HUD system reintegrated**, now scriptless and aligned with improved Accessories system behavior."
+      ],
+      "changed": [
+        "Filter is now **mandatory** and permanently available as a dedicated menu button.",
+        "HUD system no longer requires manual activation and now uses **automatic folder detection**.",
+        "**STOP!** now forcibly closes all active menus for users and replaces them with a notification message.",
+        "Improved multiple menu descriptions for clarity and consistency.",
+        "Enhanced error messages for better debugging and readability.",
+        "Command system made more flexible: accepts multiple input formats (**none toggle**), ``on/off``, ``1/0``, ``true/false``, ``yes/no``, including:",
+          "- Unknown commands warnings",
+          "- Remote access controls",
+          "- Reopen accessories menu",
+          "- Animation execution via others module"
+      ],
+      "fixed": [
+        "Fixed a bug where the **Filter system** incorrectly mixed permissions between owner and guests.",
+        "Fixed an issue where the **STOP! function** did not correctly apply to Avatars, Outfits, or Hairstyles."
+      ]
+    },
+
+    {
+      "version": "DEV-1.1",
+      "date": "2025-11-05",
+      "type": "legacy-dev",
+      "version_type": "middle",
+      "badge": "DEV · SC4",
+      "summary": "Medium update introducing menu improvements, expanded particle and avatar refresh features, improved access control handling, and multiple fixes across whitelist/blacklist, navigation, and internal systems.",
+      "new": [
+        "Added ``[↩ Return]`` buttons to input text dialogs.",
+        "Added an option to enable **particles on Refresh**. [note:enabled by default]",
+        "[wip] Added **Skeleton Fix** to Replace Avatar. Included option to disable it. [note:enabled by default]",
+        "Added **alternative particle textures**."
+      ],
+      "changed": [
+        "Improved Clicker menu descriptions. (New format under evaluation: full migration, hybrid approach, or discard)."
+      ],
+      "fixed": [
+        "Fixed issue where **particle color changes** did not apply correctly.",
+        "Fixed missing reference error: ``colors.note``.",
+        "Fixed a **whitelist/blacklist detection issue** causing unstable or incorrect behavior.",
+        "Fixed navigation **Return buttons** not functioning correctly in Clicker menus."
+      ]
+    },
+
+    {
+      "version": "DEV-1.0",
+      "date": "2025-10-31",
+      "type": "legacy-dev",
+      "version_type": "major",
+      "badge": "DEV · SC4",
+      "summary": "First public DEV build of Subbi Clothes 4. Major expansion across commands, access control, body part support, and a broad round of fixes.",
+      "new": [
+        "Accessories and Outfits will now convert symbols to emojis.",
+        "**All BPS** now support **underwear / midwear**.",
+        "**Selecting the same avatar** that is already selected will now work as a **refresh**.",
+        "The HUD now **accepts commands from objects** owned by the HUD owner.",
+        "Added a **Friends Only** access option. This is cumulative with Group Access and Whitelist.",
+        "Option commands once again accept preset values (``true`` / ``false``).",
+        "Added a **Lock Ankle** option to the menu (Others).",
+        "The minimum interaction distance now supports float values (up to 3 decimals, e.g. ``1.54m``) instead of only whole meters.",
+        "Added over 100 new **named colors** for Overhead text and Particles.",
+        "Added **FixSkeleton function** on Avatar replacement and Refresh, which should fix most issues with broken skeletons after replacements.",
+        "Added ``[↩ Return]`` buttons to input dialog menus."
+      ],
+      "changed": [
+        "All tick/cross icons have been replaced with the new versions.",
+        "**PG-SAFE** in **BackHome** or Replace mode will now launch normal PG-SAFE if no configuration exists, instead of only showing an error.",
+        "The system now supports **Midwear** as replacement for **Uwear**.",
+        "Accessories now work with the new menu system.",
+        "Accessories now interpret symbols dynamically (no fixed order dependency).",
+        "**Keep Underwear** (in-HUD option) now applies to all existing underwear.",
+        "Subbi Clothes will now accept ``system folders`` case-insensitively.",
+        "Added emojis to system options in the menu (Avatar, Settings, HUDs).",
+        "**Custom Min.Range** messages now accept ``{R}``, which automatically equals the minimum distance value.",
+        "Improved information transfer request channel (reduced false positives).",
+        "Visual update of HUD from 3.2 → 3.2.1 (including new icons and small graphic improvements).",
+        "Improved HUD performance to reduce simulator impact.",
+        "White/blacklist can now detect all users around and is no longer limited to 10 users.",
+        "White/blacklist detection range increased from **10m → 20m**.",
+        "**Rainbow** wildcard for colors will no longer select dark colors."
+      ],
+      "fixed": [
+        "Fixed several typos.",
+        "Fixed white/blacklist detection failing for users with names longer than 20 characters.",
+        "Fixed **Midwear (Uwear)** issues on Legs.",
+        "Fixed **BOM behavior**.",
+        "Fixed a bug where Accessories folders with the same name at different levels caused duplicate options.",
+        "Fixed occasional alpha issues in HUD.",
+        "Fixed occasional transparent textures around HUD buttons.",
+        "Fixed ``[Attach All]`` and ``[Detach All]`` appearing in single-choice folders inside nested folders.",
+        "Fixed error when multiple users accessing Accessories simultaneously.",
+        "Fixed several minor issues related to Overhead and Title messages."
+      ]
+    },
+
+    {
+      "version": "Subbi Clothes 3.3D",
+      "date": "2025-10-31",
+      "type": "stable",
+      "version_type": "major",
+      "badge": "SC 3.3",
+      "summary": "Subbi Clothes 3.3D final revision. Mature release of SC3 system introducing advanced accessories logic, hairstyle hierarchy, group-based body systems, and extensive stability fixes before migration into SC4 architecture.",
+      "new": [
+        "Added **LockAnkle command** to prevent extreme ankle rotation (e.g. 300º+ angles when sitting on objects). Commands: ``/55 lockankle=on`` / ``/55 lockankle=off``.",
+        "New **Accessories icon system**, allowing SL buttons to display up to **1–3 additional characters**.",
+        "Forced accessories marker ``*`` is no longer displayed, improving button space and allowing **1 extra character**.",
+        "System folders (Accessories, Hairstyles, HUDs, etc.) can now start with ``!`` for sorting purposes in inventory.",
+        "Clicker can now **hide the LL avatar** without requiring an alpha layer.",
+        "Added shortcut commands for attach/detach accessories: ``/55++`` and ``/55--``.",
+        "Hairstyle system now supports **group and global levels**.",
+        "New Hairstyle condition: an **empty Hairstyle folder disables hairstyle usage** for that avatar (even if set globally/group).",
+        "New Hairstyle condition: a folder with **a single hair automatically equips it as default**.",
+        "Added **Attach All / Detach All** options inside normal folders (``@``).",
+        "Clicker can now trigger **particles on avatar replacement** (experimental).",
+        "Added **Short Name** option in Messages menu (removes \"Resident\" from displayed names).",
+        "Added new group-level folder type: **+Bits** (bodypart-based undressed content system).",
+        "Added **Push animation** for pushing people away.",
+        "Added new optional bodyparts: **Face, TChest, Hands, Waist, Legs**.",
+        "Added command ``S rem everything``, a stronger version of rem everything (can override most attachments unless system-locked).",
+        "HUD now performs **automatic avatar replacement on first setup**.",
+        "Added support for **multi-layer subfoldering** in Accessories system.",
+        "Added **reference names for renaming clothes**, including individual renaming support.",
+        "Renaming system now supports **spaces in names**.",
+        "Added group-level systems: **+Dressed**, **+Uwear**, **+Underwear**, similar to **+Bits** behavior.",
+        "Added beta management commands: ``/55 check beta``, ``/55 get beta``."
+      ],
+      "changed": [
+        "Accessories are now **sorted alphabetically** by name.",
+        "Hairstyle system behavior improved to reduce errors when using global/group configurations.",
+        "HUD now warns about Hairstyle usage even when not actively used.",
+        "First avatar after setup may temporarily **not display Hairstyle option** (single-time behavior).",
+        "Random Outfit system now ignores system folders starting with ``!``.",
+        "Improved handling of forced accessories to prevent unintended attachment of **attach/detach special folders**.",
+        "Renaming system now allows **cleaner and more readable naming with spaces**.",
+        "Improved detection and behavior of hidden folders in Attach All logic (permission-aware)."
+      ],
+      "fixed": [
+        "Fixed **Safe-Away** bug where it was executing even when disabled.",
+        "Fixed issue where replacing avatar with the same outfit caused **loss of clothing** due to incorrect swap logic.",
+        "Fixed HUD default texture restoration errors.",
+        "Fixed bug where **uwear (feet)** was not attaching during Replace / QuickDress / Refresh.",
+        "Fixed issue where public chat selection prevented replacement messages from appearing.",
+        "Fixed bug where replacing avatar with identical linked objects caused unintended detachment.",
+        "Fixed Hairstyle detection errors after avatar replacement (wrong active hair selection).",
+        "Fixed Accessories path detection issues after returning from subfolders (caused broken navigation and UI glitches).",
+        "Fixed **+Bits** not detaching correctly in certain replace scenarios.",
+        "Fixed bug where Attach All exposed hidden content incorrectly in some cases.",
+        "Fixed issue where Hairstyle option was not visible to others even when enabled.",
+        "Fixed issue where Hairstyle option incorrectly appeared for owner when no valid configuration existed.",
+        "Fixed bug where group-level body systems did not properly detach content when replacing avatars.",
+        "Fixed multiple issues with hidden folder handling and access permissions across nested structures."
+      ]
+    },
+
+    {
+      "version": "Subbi Clothes 3.2D",
+      "date": "2021-11-23",
+      "type": "legacy-stable",
+      "version_type": "middle",
+      "badge": "SC 3.2",
+      "summary": "3.2 subversion line focused on stabilization and UX continuity, introducing major improvements to the Hairstyle system (pagination, state detection, and bald-flash prevention), recovery mechanisms for RLV-related issues, update system reliability (TTL and multi-server fallback), and critical compatibility fixes including viewer-side UI breakage caused by Firestorm updates.",
+      "sub_versions": [
+        {
+          "version": "3.2D",
+          "date": "—",
+          "version_type": "hotfix",
+          "summary": "Compatibility hotfix addressing a Firestorm viewer update that broke HUD interface buttons.",
+          "fixed": [
+            "Fixed Firestorm update ``6.5.6.66221`` disabling **MORE** and **SETTINGS** buttons in HUD."
+          ]
+        },
+        {
+          "version": "3.2C",
+          "date": "2021-12-16",
+          "version_type": "hotfix",
+          "summary": "Hotfix addressing Hairstyle pagination issues and improving default hair handling and RLV-related auto-fix behavior.",
+          "new": [
+            "Hairstyle now displays **[Default Hair]** instead of empty values when no hair is set.",
+            "Added auto-fix behavior for users experiencing **\"RLV IS OFF\" errors** during Quick Dress / Quick Undress."
+          ],
+          "fixed": [
+            "Fixed Hairstyle menu pagination issue where arrows were incorrectly detected as hair items.",
+            "Fixed Hairstyle not showing more than one page correctly in menu navigation."
+          ]
+        },
+        {
+          "version": "3.2B",
+          "date": "2021-11-28",
+          "version_type": "minor",
+          "summary": "Hair system improvement update with stability fixes, better RLV handling, and improved update request management.",
+          "new": [
+            "Added **TTL system for update requests** to prevent message/object spam during repeated login/logout or attach/detach cycles.",
+            "Added new updater server in a separate region to reduce false-negative server errors.",
+            "Added option to disable automatic redelivery of objects when new updates are released (HUD still shows update icon)."
+          ],
+          "changed": [
+            "Hairstyle system now detaches old hair only after new hair is successfully attached (prevents **bald flashes**).",
+            "Added clearer error descriptions for issues **#26** and **#27** related to the Hairstyle system."
+          ],
+          "fixed": [
+            "Fixed Hairstyle not correctly detecting attached hair in some cases.",
+            "Fixed Hairstyle persisting incorrect hair state after Refresh or Re-Dress.",
+            "Fixed error handling for **RLV OFF** scenarios during Quick Dress / Quick Undress."
+          ]
+        }
+      ]
+    },
+
+    {
+      "version": "Subbi Clothes 3.2",
+      "date": "2021-11-23",
+      "type": "legacy-stable",
+      "version_type": "major",
+      "badge": "SC 3.2",
+
+      "summary": "Introduces stability fixes across permissions, animations, avatar replacement, and UI behavior, along with new remote access controls, temporary security lists, and improved clothing management tools.",
+
+      "new": [
+        "Added temporary **whitelist and blacklist system** (auto-clears on HUD detach or logout, also manually clearable via command).",
+        "[replaced:DEV-2.0] Added **SWITCH command** as temporary replacement for the Enable/Disable system.",
+        "Added **remote access system** via command (menu opening from distance up to 20m, subject to clicker restrictions).",
+        "Added commands for remote access toggle: ``/55 remote=TRUE`` / ``/55 remote=FALSE``.",
+        "Added external remote menu command for others: ``/45 sc:[name] menu``.",
+        "Added toggle for **unknown command warning system**: ``/55 unknown command warning=TRUE/FALSE``.",
+        "Added ability to individually rename single clothing items again.",
+        "Added missing description entry for **OnSitAnim** option in **MORE menu**."
+      ],
+
+      "changed": [
+        "**Re-Dress** system improved: no longer causes avatar disappearance when wearing current objects; still applies dressing logic correctly.",
+        "Updated **PG-SAFE** and **Mode Menu** descriptions for clarity and typo corrections.",
+        "Updated content for ``/55 show commands`` output.",
+        "Improved system behavior for remote access to match clicker restrictions (distance standardized to 20m)."
+      ],
+
+      "fixed": [
+        "Fixed sound/animation icon bug.",
+        "Fixed **W.Permissions** menu not showing Hair option after reopening.",
+        "Fixed random avatar and replace command issue where last body state was not detached correctly.",
+        "Fixed hidden coat system bug that persisted after previous coat improvements.",
+        "Fixed **Re-Dress** behavior causing avatar disappearance in certain states.",
+        "Fixed multiple typos and description issues in PG-SAFE and Mode menus."
+      ]
+    },
+
+    {
+      "version": "Subbi Clothes 3.1B",
+      "date": "2021-11-14",
+      "type": "legacy-stable",
+      "version_type": "minor",
+      "badge": "SC 3.1",
+
+      "summary": "Minor update focused on performance improvements, UI stability fixes, and better error handling across Settings, Accessories, and avatar replacement systems.",
+
+      "new": [
+        "Added updater system **update icon indicator** for clearer update visibility.",
+        "Added error message when HUD cannot find a valid update server.",
+        "Added configurable **2-second safety delay** when replacing avatar using ``-Avatar-`` base to prevent extended naked states.",
+        "Added command to configure avatar replacement delay timing."
+      ],
+
+      "changed": [
+        "Improved **Public Chat** accessory message to clearly indicate ownership and remove ambiguity.",
+        "Forced accessory messages no longer display ``*`` for improved visual cleanliness.",
+        "Settings startup process optimized to reduce loading time.",
+        "Improved handling of **Public Chat / Mute** mode state persistence after HUD reopen.",
+        "Improved menu description handling for clothing-related 'others' options.",
+        "**Error #8** system behavior changed: messages now only display up to 10 times before auto-disabling."
+      ],
+
+      "fixed": [
+        "Fixed Settings taking too long to initialize.",
+        "Fixed bug with empty options and incorrect menu descriptions in clothing-related menus.",
+        "Fixed graphical issue with **Public Chat / Mute** mode not updating correctly after reopening HUD."
+      ]
+    },
+
+    {
+      "version": "Subbi Clothes 3.1",
+      "date": "2021-10-25",
+      "type": "legacy-stable",
+      "version_type": "major",
+      "badge": "SC 3.1",
+      "summary": "Introduces major stability fixes across Hairstyles, PG-SAFE, Accessories and navigation systems, along with expanded teleport safety, animation controls, and improved accessory behavior logic.",
+
+      "new": [
+        "Added secondary updater server for redundancy in case the main updater server fails.",
+        "Added option to get naked without requiring **Bits** attachment (toggleable in Clothes menu).",
+        "Added option to control whether animations can be executed while seated on objects.",
+        "Added **PG-SAFE teleport** feature to safe region (on request).",
+        "Added forced accessory attachment system via naming prefixes: ``*``, ``#*``, ``@*``, ``@#*``.",
+        "Added ability to customize HUD sounds, including separate sounds for dressing and undressing.",
+        "Added command to adjust accessory reopen delay: ``/55 accessories time=[time]``.",
+        "Added command to disable automatic accessory reopening: ``/55 accessories reopen=[ON/OFF]``.",
+        "Added command to allow animations while others interact with your clothes: ``/55 others_execute_anims=[TRUE/FALSE]``."
+      ],
+
+      "changed": [
+        "**Hairstyle** is now considered part of the avatar during Change Avatar, disabling it when only clothing is replaced.",
+        "Improved hidden folder detection using ``@#`` and ``$#`` combinations.",
+        "Experimental replace system now correctly displays bodypart options when replacing empty states with another avatar.",
+        "Removed Contact link from menu descriptions to prevent 512-character overflow errors.",
+        "Optimized several internal scripts for performance improvements.",
+        "Accessory forced-attachment rules improved for consistency.",
+        "Transfer system improved to distribute data more efficiently."
+      ],
+
+      "fixed": [
+        "Fixed **PG-SAFE** menu not reopening correctly.",
+        "Fixed return buttons in PG-SAFE and Access menus routing to main settings instead of correct submenu.",
+        "Fixed crotch animation timing delay issues.",
+        "Fixed whitelist/blacklist command failures.",
+        "Fixed default command initialization not working.",
+        "Fixed Clicker exposing local position in specific interaction cases.",
+        "Fixed Hairstyle handling bugs during avatar replacement (in experimental scenarios)."
+      ]
+    },
+
+    {
+      "version": "Subbi Clothes 3.0E",
+      "date": "2021",
+      "type": "legacy-stable",
+      "version_type": "middle",
+      "badge": "SC 3.0",
+      "summary": "Mid update (3.0a – 3.0e). Adds new remove/add commands, HUD skin replacement, RGB title color, overhead hex colors, auto-hide title, sock detection, and multiple fixes across whitelist commands, button visibility, and clicker behavior.",
+      "new": [
+        "Accessories now support the special folder **Attach** — its content is attached when the accessory is removed.",
+        "HUDs now support subfolders ``@normal`` and ``$autodetach``.",
+        "Auto hide/show title depending on whether public access is on or off (**Autohide** option).",
+        "Title can now change color in real time (**RGB** option).",
+        "Overhead message color can now be set in hexadecimal format (e.g. ``#FFFFFF``).",
+        "HUD can now attempt to fix underwear issues when the same underwear is placed in both Dressed and Underwear. [note:Takes 5s during which you will be naked — not recommended, use Uwear instead]",
+        "HUD can now detect Underwear/Uwear in Feet as socks. [note:Socks take priority over Underwear — both + Uwear are supported]",
+        "Added new command system improvements (expanded ``/55`` command set):",
+          "- ``/55 rem everything`` — Removes all content inside Subbi_Clothes.",
+          "- ``/55 rem acc all`` — Removes all accessories at once.",
+          "- ``/55 rem acc ?`` — Removes specific accessories.",
+          "- ``/55 rem hud ?`` — Removes HUDs (works even when HUD is off).",
+          "- ``/55 add acc ?`` — Adds accessories.",
+          "- ``/55 add hud ?`` — Adds HUDs (works even when HUD is off).",
+          "- ``/55 bom load time=[seconds]`` — Adjusts BOM layer loading delay per avatar (default 0.2s)."
+      ],
+      "changed": [
+        "Replaced 2 icons in dark mode.",
+        "Improved **Color Menu** description for overhead messages — now warns about invalid format or wildcard.",
+        "Added an easier way to add people to whitelist or blacklist (same region, less than 10m, legacy name shorter than 24 characters).",
+        "Improved description of ``/55 help``.",
+        "Improved error descriptions for errors **#2**, **#6**, and **#14**.",
+        "Updated **MAIN MENU** description (owner view).",
+        "Settings script has been optimized.",
+        "**Semi Automatic Folders** now provides notecards to explain alternative folders instead of objects.",
+        "[replaced:DEV-2.0] ``/55 enable`` and ``/55 disable`` were temporarily non-functional — replaced by the unified command system in DEV-2.0."
+      ],
+      "fixed": [
+        "Fixed a bugged texture (stop people touching).",
+        "Fixed bug where buttons sometimes remained invisible until right-clicking the HUD.",
+        "Fixed visual bug when replacing avatar with page 1 open.",
+        "Fixed whitelist and blacklist commands not working.",
+        "Fixed **Set Default** commands not working at all.",
+        "Fixed Clicker sharing its local position when clicked in a specific area."
+      ],
+      "hud": [
+        "HUD skins can now be replaced — also added a **black-red** version."
+      ]
+    },
+
+    {
+      "version": "Subbi Clothes 3.0",
+      "date": "2021",
+      "type": "legacy-stable",
+      "version_type": "major",
+      "badge": "SC 3.0",
+      "summary": "Major 3.0 release featuring a full HUD v3 redesign, deep rework of core systems (Memory, Settings, Outfits, Accessories), expanded PG-SAFE and access control logic, improved outfit management automation, and extensive stability fixes across the entire architecture.",
+      "new": [
+        "Added **chat command system** (gesture-compatible for faster execution).",
+        "Added **Random Outfit system** with sound, message feedback, and external availability.",
+        "Added **Clothes Access control**, allowing restriction of access to clothing systems.",
+        "Added advanced **underwear management modes** (full / top only / bottom only).",
+        "Added new underwear persistence system using **Uwear** folders (legacy compatible with Underwear).",
+        "Added animation system for self-interactions (can be disabled): torso, crotch, feet, arms add/remove states.",
+        "Added **hairstyle replacement function**.",
+        "Added temporary compatibility solution for V-Tech and similar systems (**AlphaFix** folder).",
+        "Added BOM load order workaround system (manual assisted mode available).",
+        "Added option for **constant overhead messages**.",
+        "Added system allowing Accessories to **auto-detach conflicting items**.",
+        "Added subfolder system for Accessories: ``@`` (standard hierarchy) and ``$`` (auto-detach on switch).",
+        "[wip] Added experimental **Replace Clothes system** (future feature, partially implemented).",
+        "Added Easter Egg elements in whitelist/blacklist system.",
+        "Added **Group Access** system for shared group permissions.",
+        "Added beta notification system directly inside HUD main menu.",
+        "Added automatic alphabetical ordering for avatars and outfits.",
+        "Added **dangerous region system** where PG-SAFE is always forced.",
+        "Added warning system for Transfer operations.",
+        "Added automatic correction for double spaces in whitelist/blacklist entries.",
+        "Added full redesign of **Coat system (Torso)**, now called **\"Covered (In Coat)\"**, with smarter auto-attach behavior.",
+        "Added direct Accessories access from **MiniHUD**.",
+        "Added notification when new beta version is available.",
+        "Added improved color system with up to **16.5 million possible colors** for messages."
+      ],
+      "changed": [
+        "Chat command system now supports gestures for faster execution.",
+        "HUD scripts now run independently (HUD system decoupled from core clothing scripts).",
+        "Transfer system improved: now sends data in segmented messages instead of a single payload.",
+        "Updater system integrated into Settings.",
+        "Outfit configuration (names, gender, etc.) now auto-saves.",
+        "Settings system split into two scripts for scalability (introduces potential legacy instability).",
+        "Options renamed and reorganized for clarity.",
+        "Several options moved into submenus for improved navigation.",
+        "**Swap** button moved from MiniHUD to Settings > More.",
+        "**Add Nude** and **Local BP** moved to Clothes menu.",
+        "**PG-SAFE** rating options (G/M/A) moved into Rating submenu.",
+        "Default outfit behavior now applies fallback naming and Neutral gender when no saved outfit exists.",
+        "Underwear option is hidden when empty.",
+        "**Quick Dress** and **PG-SAFE** no longer re-detach already worn clothes unnecessarily.",
+        "Accessories menu now reopens automatically after interaction.",
+        "Avatar and outfit names are now sorted alphabetically.",
+        "Accessories system now includes built-in symbol documentation.",
+        "Memory system split into two dedicated modules (profiles vs security/regions).",
+        "Outfits system split into multiple scripts for future expansion.",
+        "**PG-SAFE Away** now works across all regions (no rate limitation).",
+        "**PG-SAFE** now supports automatic accessory detachment (configurable).",
+        "**MiniHUD** now has direct access to Accessories system.",
+        "O.H.Options menu improved visually and structurally.",
+        "Main menu descriptions improved for third-party users.",
+        "Accessory system now reopens menus automatically after actions (may cause issues in high-lag regions)."
+      ],
+      "fixed": [
+        "Fixed issue where folder names longer than 24 characters caused instability.",
+        "Fixed socks-related misconfiguration bug.",
+        "Fixed **Pull Away** button conflict during active clothing interactions.",
+        "Fixed Filter system not working for Avatars/Outfits.",
+        "Fixed undressed state inconsistencies.",
+        "Fixed accessory update desync introduced in previous version.",
+        "Fixed accessory message inconsistencies.",
+        "Fixed color propagation bug affecting nearby HUD users.",
+        "Fixed **Quick Undress** ignoring Bits/Undressed folder rules in non-default setups.",
+        "Fixed multiple HUD-related bugs.",
+        "Fixed transfer system data corruption issues.",
+        "Fixed potential mutual overwrite of shared memory data.",
+        "Fixed several Memory system stability issues.",
+        "Fixed multiple typo errors and outdated descriptions.",
+        "Applied multiple minor stability fixes across systems."
+      ],
+      "hud": [
+        "Introduced **HUD v3.0** (mesh redesign), fully rebuilt (twice iterated).",
+        "HUD now includes expanded option set and redesigned iconography.",
+        "New button layout and improved navigation flow.",
+        "Graphical redesign across the entire interface.",
+        "Significantly optimized performance and reduced footprint.",
+        "HUD size reduced while increasing functionality.",
+        "Added new interaction modes.",
+        "HUD now supports editability and future modular expansion."
+      ]
+    }
+  ]
+}

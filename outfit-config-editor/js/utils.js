@@ -1,3 +1,16 @@
+function encodeColorForOutput(v) {
+  if (!v) return v;
+  return String(v).replace(/^RGB:(\d+)$/i, (_, n) => 'RGB:' + (parseInt(n) * 12));
+}
+
+function decodeColorFromInput(v) {
+  if (!v) return v;
+  return String(v).replace(/^RGB:(\d+)$/i, (_, n) => {
+    const num = parseInt(n);
+    return 'RGB:' + (num % 12 === 0 ? num / 12 : num);
+  });
+}
+
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }

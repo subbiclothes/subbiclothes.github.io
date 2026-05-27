@@ -17,9 +17,13 @@ function parsePasteArea() {
 
 function parseConfig(text) {
   importing = true;
+  const overwrite     = document.getElementById('chk-overwrite')?.checked ?? true;
+  const removeMismatch = document.getElementById('chk-remove-mismatch')?.checked ?? false;
+
   const lines = text.split('\n');
   const blockRegex = /^\s*"([^"]+\/[^"]+)"\s*:\s*\{/;
   let currentKey = null, blockLines = [], inBlock = false, parsed = 0;
+  const parsedKeys = new Set();
 
   lines.forEach(line => {
     if (!inBlock) {
@@ -28,15 +32,33 @@ function parseConfig(text) {
     } else {
       if (line.includes('// === END OUTFIT ===')) {
         blockLines.push('}');
-        tryParseBlock(currentKey, blockLines.join('\n'));
+        if (tryParseBlock(currentKey, blockLines.join('\n'), overwrite)) {
+          parsedKeys.add(currentKey);
+          parsed++;
+        }
         inBlock = false; currentKey = null; blockLines = [];
-        parsed++;
       } else {
         const stripped = line.replace(/\/\/.*$/, '').trimEnd();
         if (stripped.trim()) blockLines.push(stripped);
       }
     }
   });
+
+  // Restore global tag colors if present in file
+  const colorLine = lines.find(l => l.trimStart().startsWith('// SUBBI_OCE_COLORS:'));
+  if (colorLine) {
+    try {
+      const parsed = JSON.parse(colorLine.slice(colorLine.indexOf(':') + 1).trim());
+      Object.assign(tagColors, parsed);
+      saveTagColors();
+    } catch(e) {}
+  }
+
+  if (removeMismatch) {
+    outfits = outfits.filter(o => parsedKeys.has(o.avatar + '/' + o.name));
+    if (activeId && !outfits.find(o => o.id === activeId)) activeId = null;
+  }
+
   importing = false;
   if (activeId && outfits.find(o => o.id === activeId)) renderEditor(activeId);
   renderSidebar();
@@ -45,7 +67,7 @@ function parseConfig(text) {
   saveToStorage();
 }
 
-function tryParseBlock(key, blockText) {
+function tryParseBlock(key, blockText, overwrite = true) {
   const [avatar, ...rest] = key.split('/');
   const name = rest.join('/');
   try {
@@ -101,24 +123,31 @@ function tryParseBlock(key, blockText) {
     if (obj.particles_color) {
       const gradMatch = obj.particles_color.match(/^(<[^>]+>):(<[^>]+>)$/);
       if (gradMatch) {
-        d.particles_color_start = gradMatch[1];
-        d.particles_color_end   = gradMatch[2];
+        d.particles_color_start         = decodeColorFromInput(gradMatch[1]);
+        d.particles_color_end           = decodeColorFromInput(gradMatch[2]);
+        d.particles_color_start_enabled = true;
+        d.particles_color_end_enabled   = true;
       } else {
-        d.particles_color_start = obj.particles_color;
-        d.particles_color_end   = obj.particles_color;
+        d.particles_color_start         = decodeColorFromInput(obj.particles_color);
+        d.particles_color_end           = decodeColorFromInput(obj.particles_color);
+        d.particles_color_start_enabled = true;
       }
     }
-    if (obj.particles_color_start) d.particles_color_start = obj.particles_color_start;
-    if (obj.particles_color_end)   d.particles_color_end   = obj.particles_color_end;
+    if (obj.particles_color_start) { d.particles_color_start = decodeColorFromInput(obj.particles_color_start); d.particles_color_start_enabled = true; }
+    if (obj.particles_color_end)   { d.particles_color_end   = decodeColorFromInput(obj.particles_color_end);   d.particles_color_end_enabled   = true; }
 
     if (obj.title_enabled !== undefined) d.title_enabled = obj.title_enabled;
     if (obj.title_text !== undefined)    d.title_text    = obj.title_text;
-    if (obj.title_color)                 d.title_color   = obj.title_color;
+    if (obj.title_color)               { d.title_color   = decodeColorFromInput(obj.title_color); d.title_color_enabled = true; }
+    if (obj.biography !== undefined)     d.biography     = obj.biography;
+    if (obj.tags      !== undefined)     d.tags          = obj.tags;
 
     const existing = outfits.find(o => o.avatar === avatar && o.name === name);
-    if (existing) existing.data = d;
+    if (existing) { if (overwrite) existing.data = d; }
     else outfits.push({ id: 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), avatar, name, data: d });
-    } catch(e) {
-      console.warn('Could not parse outfit block:', key, e);
+    return true;
+  } catch(e) {
+    console.warn('Could not parse outfit block:', key, e);
+    return false;
   }
 }

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setting Up - Subbi Clothes User Guide</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #de2487 0%, #b91c7a 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb a {
+            color: #de2487;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #de2487;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #de2487;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            color: #555;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .section p {
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Highlight boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #de248715, #b91c7a15);
+            border-left: 4px solid #de2487;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #d1edff;
+            border-left: 4px solid #0084ff;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #de2487, #b91c7a);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>Setting Up Subbi Clothes</h1>
+            <p>Complete installation and configuration guide</p>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <div class="container">
+            <a href="../">← Back to Guide Index</a> / Setting Up
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Introduction -->
+            <section class="section">
+                <h2>Welcome to Subbi Clothes</h2>
+                <p>This comprehensive guide will walk you through the complete setup process for your Subbi Clothes system. Whether you're a complete beginner or experienced with virtual world attachments, this guide ensures a smooth installation and configuration.</p>
+                
+                <div class="highlight-box">
+                    <strong>Important:</strong> Please follow these steps in the exact order presented. Each step builds upon the previous one, and skipping steps may cause issues with your installation.
+                </div>
+
+                <h3>What You'll Need</h3>
+                <ul>
+                    <li><strong>Your Subbi Clothes package</strong> (HUD and any included accessories)</li>
+                    <li><strong>Firestorm Viewer</strong> (recommended for best compatibility)</li>
+                    <li><strong>Stable internet connection</strong> for initial setup</li>
+                    <li><strong>15-20 minutes</strong> of uninterrupted time</li>
+                    <li><strong>Basic inventory management knowledge</strong> (we'll guide you through this)</li>
+                </ul>
+            </section>
+
+            <!-- Pre-Setup Notes -->
+            <section class="section">
+                <h2>Notes for Set Up</h2>
+                <p>Before beginning the installation process, it's crucial to understand how Subbi Clothes works and what to expect during setup.</p>
+
+                <h3>Semi-Automatic Folders</h3>
+                <p>Subbi Clothes uses an intelligent folder organization system:</p>
+                <ul>
+                    <li><strong>Automatic Creation:</strong> The system creates necessary folders in your inventory automatically</li>
+                    <li><strong>Smart Organization:</strong> Items are sorted into logical categories without manual intervention</li>
+                    <li><strong>Backup Safety:</strong> Your existing items remain untouched - new folders are created alongside them</li>
+                    <li><strong>Customizable Structure:</strong> You can modify the folder structure after initial setup</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>Important:</strong> During setup, do not move, rename, or delete any folders that Subbi Clothes creates. This will be handled automatically.
+                </div>
+
+                <h3>Uploading Avatars</h3>
+                <p>The avatar upload process is a key feature of Subbi Clothes:</p>
+                <ul>
+                    <li><strong>Multiple Avatar Support:</strong> Store and manage multiple avatar appearances</li>
+                    <li><strong>Outfit Integration:</strong> Avatars work seamlessly with clothing combinations</li>
+                    <li><strong>Quick Switching:</strong> Change entire avatar looks in seconds</li>
+                    <li><strong>Backup System:</strong> Your avatar data is safely stored and retrievable</li>
+                </ul>
+
+                <h3>Recommendations and Indications</h3>
+                <div class="success-box">
+                    <h4>Easy way to upload avatar (Only for FIRESTORM):</h4>
+                    <p>Firestorm viewers provide the most reliable experience with Subbi Clothes. The viewer's enhanced inventory management and script handling ensure optimal performance during setup and daily use.</p>
+                </div>
+
+                <h3>Starting with your Subbi Clothes (For people unfamiliar with scripts)</h3>
+                <p>If you're new to scripted attachments in virtual worlds, don't worry! Subbi Clothes is designed with beginners in mind:</p>
+                <ul>
+                    <li><strong>User-Friendly Interface:</strong> Simple, intuitive controls that don't require technical knowledge</li>
+                    <li><strong>Automated Processes:</strong> Most technical aspects are handled automatically</li>
+                    <li><strong>Clear Feedback:</strong> The system provides clear messages about what's happening</li>
+                    <li><strong>Safety Features:</strong> Built-in safeguards prevent accidental data loss</li>
+                    <li><strong>Help System:</strong> Built-in help and guidance throughout the process</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>Beginner Tip:</strong> Take your time with each step. There's no rush, and following the instructions carefully will save you time in the long run.
+                </div>
+            </section>
+
+            <!-- Step by Step Setup -->
+            <section class="section">
+                <h2>Step-by-Step Setup Process</h2>
+                <p>Follow these steps carefully to ensure a successful installation of your Subbi Clothes system.</p>
+
+                <h3>Step 1: Prepare Your Environment</h3>
+                <ol>
+                    <li><strong>Clear Your Attachment Points:</strong> Remove any conflicting HUDs or attachments</li>
+                    <li><strong>Find a Quiet Location:</strong> Go to a low-lag area for setup (your home or a sandbox)</li>
+                    <li><strong>Check Your Connection:</strong> Ensure stable internet connectivity</li>
+                    <li><strong>Close Unnecessary Programs:</strong> Minimize system load for optimal performance</li>
+                </ol>
+
+                <h3>Step 2: Install Subbi Clothes HUD</h3>
+                <ol>
+                    <li><strong>Locate the HUD:</strong> Find the Subbi Clothes HUD in your inventory</li>
+                    <li><strong>Right-click and Wear:</strong> Attach the HUD to your screen</li>
+                    <li><strong>Position the HUD:</strong> Drag it to a comfortable location on your screen</li>
+                    <li><strong>Wait for Initialization:</strong> Allow 30-60 seconds for the HUD to fully load</li>
+                </ol>
+
+                <div class="warning-box">
+                    <strong>Important:</strong> Do not click any buttons on the HUD until it has fully initialized. You'll see a ready message when it's complete.
+                </div>
+
+                <h3>Step 3: Initial Configuration</h3>
+                <ol>
+                    <li><strong>First Boot Setup:</strong> The HUD will automatically start the setup process</li>
+                    <li><strong>Folder Creation:</strong> Watch as the system creates necessary inventory folders</li>
+                    <li><strong>Permission Requests:</strong> Grant any requested permissions for inventory access</li>
+                    <li><strong>Configuration Dialog:</strong> Follow any on-screen setup prompts</li>
+                </ol>
+
+                <h3>Step 4: Avatar Preparation</h3>
+                <ol>
+                    <li><strong>Wear Your Preferred Look:</strong> Put on your desired base avatar and outfit</li>
+                    <li><strong>Check All Attachments:</strong> Ensure everything is properly attached</li>
+                    <li><strong>Save Base Configuration:</strong> Use the HUD to save this as your starting point</li>
+                    <li><strong>Test Avatar Functions:</strong> Verify that avatar switching works correctly</li>
+                </ol>
+
+                <h3>Step 5: Folder Organization</h3>
+                <ol>
+                    <li><strong>Review Created Folders:</strong> Check your inventory for new Subbi Clothes folders</li>
+                    <li><strong>Understand the Structure:</strong> Familiarize yourself with the folder hierarchy</li>
+                    <li><strong>Move Existing Items:</strong> Optionally organize your current clothing into the new system</li>
+                    <li><strong>Create Additional Folders:</strong> Add custom categories if needed</li>
+                </ol>
+
+                <h3>Step 6: Test Basic Functions</h3>
+                <ol>
+                    <li><strong>Save an Outfit:</strong> Create your first saved outfit combination</li>
+                    <li><strong>Load an Outfit:</strong> Test switching between different looks</li>
+                    <li><strong>Check Accessories:</strong> Verify that accessories attach and detach properly</li>
+                    <li><strong>Verify Settings:</strong> Review basic configuration options</li>
+                </ol>
+
+                <div class="success-box">
+                    <strong>Setup Complete!</strong> If all tests pass successfully, your Subbi Clothes system is ready for daily use. Proceed to explore the other guides for advanced features.
+                </div>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section class="section">
+                <h2>Common Setup Issues</h2>
+                <p>If you encounter problems during setup, here are the most common issues and their solutions:</p>
+
+                <h3>HUD Not Responding</h3>
+                <ul>
+                    <li><strong>Solution 1:</strong> Wait longer - initial load can take up to 2 minutes</li>
+                    <li><strong>Solution 2:</strong> Detach and reattach the HUD</li>
+                    <li><strong>Solution 3:</strong> Clear cache and try again</li>
+                    <li><strong>Solution 4:</strong> Move to a less laggy location</li>
+                </ul>
+
+                <h3>Folders Not Creating</h3>
+                <ul>
+                    <li><strong>Check Permissions:</strong> Ensure you granted inventory access</li>
+                    <li><strong>Inventory Space:</strong> Make sure you have available inventory slots</li>
+                    <li><strong>Wait Time:</strong> Folder creation can take 3-5 minutes</li>
+                    <li><strong>Restart Process:</strong> Reset the HUD and try again</li>
+                </ul>
+
+                <h3>Avatar Upload Issues</h3>
+                <ul>
+                    <li><strong>Use Firestorm:</strong> Switch to Firestorm viewer if using another client</li>
+                    <li><strong>Check Attachments:</strong> Ensure all items are properly attached before saving</li>
+                    <li><strong>Memory Issues:</strong> Remove unnecessary attachments during upload</li>
+                    <li><strong>Network Stability:</strong> Ensure stable internet connection</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>Still Having Issues?</strong> If problems persist, check the <a href="../support/" style="color: #856404; font-weight: bold;">Support Guide</a> for additional help and contact information.
+                </div>
+            </section>
+
+            <!-- Next Steps -->
+            <section class="section">
+                <h2>Next Steps</h2>
+                <p>Congratulations on completing the Subbi Clothes setup! Here's what to explore next:</p>
+
+                <h3>Immediate Next Steps</h3>
+                <ol>
+                    <li><strong><a href="../folders-guide/" style="color: #de2487;">Folders Guide</a>:</strong> Learn advanced organization techniques</li>
+                    <li><strong><a href="../hud-guide/" style="color: #de2487;">HUD Guide</a>:</strong> Master all interface features</li>
+                    <li><strong><a href="../settings-guide/" style="color: #de2487;">Settings Guide</a>:</strong> Customize your experience</li>
+                </ol>
+
+                <h3>Advanced Features</h3>
+                <ul>
+                    <li>Create complex outfit combinations</li>
+                    <li>Set up automatic clothing changes</li>
+                    <li>Configure advanced accessibility options</li>
+                    <li>Learn text commands for power users</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>Pro Tip:</strong> Spend some time experimenting with basic features before diving into advanced options. This helps you understand the system's capabilities and limitations.
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="../" class="btn btn-secondary">← Back to Guide Index</a>
+            <a href="../folders-guide/" class="btn btn-primary">Next: Folders Guide →</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Subbi Clothes. All rights reserved.</p>
+            <p><a href="../../index.html" style="color: #ccc;">Back to Home</a></p>
+        </footer>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

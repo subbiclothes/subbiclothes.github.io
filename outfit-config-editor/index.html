@@ -11,10 +11,11 @@
 <meta property="og:site_name" content="Subbi Clothes">
 <meta property="og:title" content="Subbi Clothes — Outfit Config Editor">
 <meta property="og:description" content="Online config editor for Subbi Clothes, the RLV wardrobe HUD for Second Life. Build and customize your outfit configuration files with a visual interface.">
+<meta property="og:image" content="https://subbiclothes.com/img/store-thumnail.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Subbi Clothes — Outfit Config Editor">
 <meta name="twitter:description" content="Online config editor for Subbi Clothes, the RLV wardrobe HUD for Second Life.">
-<link rel="icon" type="image/x-icon" href="../favicon.ico">
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 <link rel="stylesheet" href="../css/header.css"/>
@@ -64,16 +65,22 @@
 <div class="app">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
+  <div class="sidebar" id="sidebarPanel">
     <div class="sidebar-header">
       <div class="sidebar-title-row">
         <div class="sidebar-title" data-t="outfits_list">Outfits</div>
-        <div style="display:flex;gap:2px;">
+        <div style="display:flex;gap:2px;" id="sidebarToolbar">
           <button class="btn btn-ghost btn-sm btn-group-active" id="btnGroupBy" onclick="toggleGroupBy()" title="Group by group" style="border:none;padding:3px 7px;">
             <i class="fa-solid fa-layer-group"></i>
           </button>
+          <button class="btn btn-ghost btn-sm" id="btnCompact" onclick="toggleCompact()" title="Compact view" style="border:none;padding:3px 7px;">
+            <i class="fa-solid fa-bars"></i>
+          </button>
           <button class="btn btn-ghost btn-sm" onclick="sortOutfits()" title="Sort A–Z" style="border:none;padding:3px 7px;">
             <i class="fa-solid fa-arrow-down-a-z"></i>
+          </button>
+          <button class="btn btn-ghost btn-sm" id="btnCollapse" onclick="toggleSidebarCollapse()" title="Collapse sidebar" style="border:none;padding:3px 7px;">
+            <i class="fa-solid fa-chevron-left" id="sidebarCollapseIcon"></i>
           </button>
         </div>
       </div>
@@ -82,14 +89,22 @@
       </button>
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="searchInput" placeholder="Search…" oninput="renderSidebar()"/>
+        <input type="text" id="searchInput" placeholder="Search name…" oninput="renderSidebar()"/>
+        <button class="search-tag-toggle" id="searchTagToggle" onclick="toggleSearchMode()" title="Search by tags">
+          <i class="fa-solid fa-tag"></i>
+        </button>
       </div>
     </div>
+    <div class="sidebar-collapsed-label">OUTFITS</div>
     <div class="outfit-list" id="outfitList"></div>
     <div class="sidebar-footer">
       <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;" onclick="generateAll()">
         <i class="fa-solid fa-code"></i> <span data-t="preview_all">Preview all</span>
       </button>
+      <div class="version-tag">
+        <button class="duck-btn" onclick="duckClick()" tabindex="-1">🦆</button>
+        <span>v1.1.0.0</span>
+      </div>
     </div>
   </div>
 
@@ -113,8 +128,14 @@
       <input type="text" id="m_avatar" placeholder="&lt;Body name&gt;" autocomplete="off"/>
     </div>
     <div class="form-group">
-      <label data-t="outfit_name">Outfit Name</label>
+      <label style="display:flex;align-items:center;justify-content:space-between;">
+        <span data-t="outfit_name">Outfit Name</span>
+        <button type="button" id="addManyToggle" class="add-many-toggle" onclick="toggleAddMany()">
+          <i class="fa-solid fa-list-ul"></i> add multiple
+        </button>
+      </label>
       <input type="text" id="m_outfit" placeholder="&lt;Outfit name&gt;" autocomplete="off"/>
+      <div id="m_many_hint" style="display:none;font-size:11px;color:var(--text-dim);margin-top:4px;">Separate outfit names with commas</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('addModal')" data-t="cancel">Cancel</button>
@@ -158,14 +179,41 @@
 <div class="modal-overlay" id="uploadModal">
   <div class="modal" style="width:540px;">
     <h3 data-t="upload_title">LOAD CONFIG FILE</h3>
+    <textarea id="pasteArea" style="background:var(--bg-input);border:1px solid var(--border-dim);border-radius:var(--radius);color:var(--text-bright);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px;width:100%;resize:vertical;min-height:110px;transition:border-color .15s;" data-t-ph="paste_ph" placeholder="Paste the contents of your !outfits_settings.config notecard here…" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border-dim)'"></textarea>
+    <div class="paste-divider" data-t="or_file">or select a file</div>
     <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
       <i class="fa-solid fa-file-code"></i>
       <p data-t="upload_click">Click to select your config file</p>
       <small data-t="upload_hint">.json or .txt notecard</small>
     </div>
     <input type="file" id="fileInput" accept=".json,.txt" style="display:none" onchange="loadFile(event)"/>
-    <div class="paste-divider" data-t="or_paste">or paste text</div>
-    <textarea id="pasteArea" style="background:var(--bg-input);border:1px solid var(--border-dim);border-radius:var(--radius);color:var(--text-bright);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px;width:100%;resize:vertical;min-height:110px;transition:border-color .15s;" data-t-ph="paste_ph" placeholder="Paste the contents of your !outfits_settings.config notecard here…" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border-dim)'"></textarea>
+    <div class="load-options">
+      <label class="load-option">
+        <input type="checkbox" id="chk-overwrite" checked/>
+        <span class="load-option-text">
+          <span data-t="load_overwrite">Overwrite existing outfits</span>
+          <span class="load-option-desc" data-t="load_overwrite_desc">Update matching outfits with data from the file</span>
+        </span>
+      </label>
+      <label class="load-option">
+        <input type="checkbox" id="chk-remove-mismatch"/>
+        <span class="load-option-text">
+          <span data-t="load_remove_mismatch">Remove non-matching outfits</span>
+          <span class="load-option-desc" data-t="load_remove_mismatch_desc">Delete outfits not found in the loaded file</span>
+        </span>
+      </label>
+    </div>
+    <div class="where-to-find">
+      <div class="where-header">
+        <i class="fa-solid fa-circle-question"></i>
+        <span data-t="where_to_find">Where to find !outfits_settings.config?</span>
+      </div>
+      <ol class="where-steps">
+        <li data-t-html="where_step_1">In Second Life, <b>right-click</b> your <b>Subbi Clothes HUD</b> → <b>Edit</b></li>
+        <li data-t-html="where_step_2">Open the <b>Content</b> tab</li>
+        <li data-t-html="where_step_3">Find the notecard <code>!outfits_settings.config</code>, open it and copy all its contents</li>
+      </ol>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('uploadModal')" data-t="cancel">Cancel</button>
       <button class="btn btn-primary" onclick="parsePasteArea()" data-t="parse_btn">Parse text</button>
@@ -197,6 +245,26 @@
 
 <div class="notif" id="notif"></div>
 
+<!-- EMOJI PICKER POPUP -->
+<div id="emojiPickerPopup" class="emoji-picker-popup">
+  <emoji-picker data-source="https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json"></emoji-picker>
+</div>
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+
+<!-- APPLY TO ALL MENU -->
+<div id="applyMenuPopup" class="apply-menu-popup">
+  <button id="applyMenuGroup" class="apply-menu-item" onclick="applyToOutfits(true)"></button>
+  <button id="applyMenuAll"   class="apply-menu-item" onclick="applyToOutfits(false)"></button>
+</div>
+
+<!-- DUCK QUOTE OVERLAY -->
+<div id="duckQuoteOverlay" class="duck-quote-overlay">
+  <div class="duck-quote-inner">
+    <div class="duck-quote-text" id="duckQuoteText"></div>
+    <div class="duck-quote-author" id="duckQuoteAuthor"></div>
+  </div>
+</div>
+
 <!-- Scripts: load order matters — dependencies first -->
 <script src="i18n/strings.js"></script>
 <script src="js/data.js"></script>
@@ -211,6 +279,7 @@
 <script src="js/output.js"></script>
 <script src="js/modals.js"></script>
 <script src="js/init.js"></script>
+<script src="js/duck.js"></script>
 
 </body>
 </html>

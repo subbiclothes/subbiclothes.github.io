@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Subbi Clothes — Changelog</title>
+  <meta name="description" content="Changelog for Subbi Clothes. All changes across every release — Stable and public DEV builds, most recent first.">
+  <link rel="canonical" href="https://subbiclothes.com/changelog/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://subbiclothes.com/changelog/">
+  <meta property="og:site_name" content="Subbi Clothes">
+  <meta property="og:title" content="Subbi Clothes — Changelog">
+  <meta property="og:description" content="All changes across every release — Stable and public DEV builds, most recent first.">
+  <meta property="og:image" content="https://subbiclothes.com/img/store-thumnail.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Subbi Clothes — Changelog">
+  <meta name="twitter:description" content="All changes across every release — Stable and public DEV builds, most recent first.">
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <meta name="shell-logo-sub" content="Changelog">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/shell.css">
+  <style>
+    main {
+      flex: 1;
+      padding: 56px 24px 80px;
+      max-width: 820px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── Page header ── */
+    .page-eyebrow { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .page-title   { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--text); margin-bottom: 8px; }
+    .page-title span { color: #00c4d4; }
+    .page-desc    { font-size: 16px; color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; max-width: 560px; }
+
+    /* ── Type legend ── */
+    .type-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .type-card {
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-dim);
+      background: rgba(255,255,255,0.015);
+    }
+    .type-card.stable { border-color: rgba(29,230,138,0.14); }
+    .type-card.dev    { border-color: rgba(0,196,212,0.14); }
+    .type-card.beta   { border-color: rgba(245,166,35,0.14); }
+    .type-card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; margin-bottom: 8px;
+    }
+    .type-rec {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--pink);
+    }
+    .type-card p {
+      font-size: 14px; color: var(--text-muted); line-height: 1.5; margin: 0;
+    }
+    .type-legacy-note {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-top: 8px; margin-bottom: 28px;
+      font-size: 14px; color: var(--text-muted);
+    }
+    .type-legacy-note .legacy-note-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .type-legacy-note .cl-badge { font-size: 9px; padding: 2px 7px; margin-top: 0; }
+    .legacy-note-hint {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13px; color: var(--warning);
+    }
+    .type-card-head .cl-badge   { margin-top: 0; }
+
+    /* ── Filter bar ── */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+    .filter-btn {
+      font-family: 'Rajdhani', sans-serif; font-weight: 600;
+      font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px; cursor: pointer;
+      border: 1px solid var(--border-dim); background: transparent;
+      color: var(--text-muted); transition: all .15s;
+    }
+    .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .filter-btn.active                          { background: var(--border-dim); color: var(--text); border-color: transparent; }
+    .filter-btn[data-filter="stable"].active    { background: rgba(29,230,138,0.12); color: #1de68a;        border-color: rgba(29,230,138,0.3); }
+    .filter-btn[data-filter="dev"].active       { background: rgba(0,196,212,0.10);  color: #00c4d4;        border-color: rgba(0,196,212,0.3); }
+    .filter-btn[data-filter="beta"].active      { background: rgba(245,166,35,0.10); color: var(--warning); border-color: rgba(245,166,35,0.3); }
+
+    /* ── Timeline ── */
+    .timeline { display: flex; flex-direction: column; }
+    .cl-entry { display: grid; grid-template-columns: 150px 1fr; gap: 0 28px; }
+
+    /* Left col */
+    .cl-meta { padding: 24px 0; text-align: right; position: sticky; top: 20px; align-self: start; }
+    .cl-version { font-family: 'Orbitron', monospace; font-size: 15px; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
+    .cl-date    { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-dim); }
+    .cl-badge   {
+      display: inline-block; margin-top: 8px;
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 20px;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    }
+    .cl-badge.stable        { background: rgba(29,230,138,0.12); color: #1de68a;               border: 1px solid rgba(29,230,138,0.25); }
+    .cl-badge.dev           { background: rgba(0,196,212,0.10);  color: #00c4d4;               border: 1px solid rgba(0,196,212,0.25); }
+    .cl-badge.beta          { background: rgba(245,166,35,0.10); color: var(--warning);        border: 1px solid rgba(245,166,35,0.25); }
+    .cl-badge.legacy-stable { background: rgba(29,230,138,0.06); color: rgba(29,230,138,0.55); border: 1px solid rgba(29,230,138,0.15); }
+    .cl-badge.legacy-dev    { background: rgba(0,196,212,0.06);  color: rgba(0,196,212,0.55);  border: 1px solid rgba(0,196,212,0.15); }
+
+    /* Right col */
+    .cl-body { border-left: 1px solid var(--border-dim); padding: 24px 0 24px 28px; position: relative; }
+    .cl-body::before {
+      content: ''; position: absolute; left: -5px; top: 32px;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--border-dim); border: 2px solid var(--bg);
+    }
+    .cl-entry.stable        .cl-body::before { background: #1de68a; }
+    .cl-entry.dev           .cl-body::before { background: #00c4d4; }
+    .cl-entry.beta          .cl-body::before { background: var(--warning); }
+    .cl-entry.legacy-stable .cl-body::before { background: rgba(29,230,138,0.35); }
+    .cl-entry.legacy-dev    .cl-body::before { background: rgba(0,196,212,0.35); }
+    .cl-entry.stable        .cl-version { color: #1de68a; }
+    .cl-entry.dev           .cl-version { color: #00c4d4; }
+    .cl-entry.beta          .cl-version { color: var(--warning); }
+    .cl-entry.legacy-stable .cl-version { color: rgba(29,230,138,0.6); }
+    .cl-entry.legacy-dev    .cl-version { color: rgba(0,196,212,0.6); }
+
+    /* Header row */
+    .cl-header  { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; flex-wrap: wrap; }
+    .cl-summary { font-size: 16px; color: #c8bcd8; line-height: 1.55; flex: 1; }
+    .cl-stats   { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+    .cl-stat    { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+    .cl-stat.new { background: rgba(29,230,138,0.10); color: #1de68a; }
+    .cl-stat.chg { background: rgba(0,196,212,0.08);  color: #00c4d4; }
+    .cl-stat.fix { background: rgba(255,45,120,0.08); color: var(--pink); }
+    .cl-stat.hud { background: rgba(167,139,250,0.10); color: #a78bfa; }
+    .cl-stat.bug { background: rgba(245,166,35,0.10); color: var(--warning); }
+
+    /* Toggle */
+    .cl-toggle {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 12px; background: none; border: none; cursor: pointer;
+      font-family: 'Rajdhani', sans-serif; font-weight: 600;
+      font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-dim); padding: 0; transition: color .15s;
+    }
+    .cl-toggle:hover { color: var(--text-muted); }
+    .cl-toggle i { font-size: 11px; transition: transform .2s; }
+    .cl-toggle.open i { transform: rotate(180deg); }
+
+    /* Details */
+    .cl-details { display: none; margin-top: 18px; }
+    .cl-details.open { display: block; }
+
+    /* Groups */
+    .cl-group { margin-bottom: 20px; }
+    .cl-group:last-child { margin-bottom: 0; }
+    .cl-group-label {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+      padding-bottom: 7px; margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-dim);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cl-group-label i { font-size: 12px; }
+    .cl-group-label.new { color: #1de68a;        border-color: rgba(29,230,138,0.2); }
+    .cl-group-label.chg { color: #00c4d4;        border-color: rgba(0,196,212,0.2); }
+    .cl-group-label.fix { color: var(--pink);    border-color: rgba(255,45,120,0.2); }
+    .cl-group-label.hud { color: #a78bfa;        border-color: rgba(167,139,250,0.2); }
+    .cl-group-label.bug { color: var(--warning); border-color: rgba(245,166,35,0.2); }
+
+    /* Items */
+    .cl-changes { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .cl-changes > li {
+      display: flex; flex-direction: column; gap: 4px;
+      font-size: 16px; line-height: 1.55; color: #cec4e0;
+    }
+    .cl-item-row { display: flex; gap: 9px; align-items: baseline; }
+    .cl-item-row::before {
+      content: '▸';
+      color: var(--pink-dim); flex-shrink: 0;
+      font-size: 11px; line-height: 1.6;
+    }
+
+    /* Deprecated items (fixed/replaced) */
+    .cl-changes > li.deprecated { opacity: .55; }
+    .cl-changes > li.deprecated .cl-item-text { text-decoration: line-through; }
+
+    /* Sub-list */
+    .cl-sublist {
+      list-style: none; display: flex; flex-direction: column; gap: 3px;
+      margin-top: 8px; padding-left: 22px;
+    }
+    .cl-sublist li {
+      font-size: 14px; color: var(--text-dim);
+      display: flex; gap: 8px; align-items: baseline; line-height: 1.45;
+    }
+    .cl-sublist li::before { content: '–'; flex-shrink: 0; font-size: 12px; }
+
+    /* ── INLINE MARKUP ── */
+    .cl-changes strong { color: var(--text); font-weight: 600; }
+    .cl-changes em     { color: var(--text-muted); font-style: italic; }
+    .cl-changes del    { opacity: .5; }
+
+    /* Inline code */
+    .cl-changes code {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px; color: #00c4d4;
+      background: rgba(0,196,212,0.08);
+      border: 1px solid rgba(0,196,212,0.2);
+      padding: 1px 5px; border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* Spoiler */
+    .cl-spoiler {
+      background: var(--text-dim); color: transparent;
+      border-radius: 3px; padding: 1px 4px;
+      cursor: pointer; user-select: none;
+      transition: background .2s, color .2s;
+    }
+    .cl-spoiler.revealed {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-muted);
+    }
+
+    /* Meta tags */
+    .cl-tag {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+      padding: 1px 6px; border-radius: 3px;
+      vertical-align: middle; margin-left: 5px;
+    }
+    .cl-tag i { font-size: 9px; }
+    .tag-fixed    { background: rgba(29,230,138,0.12); color: #1de68a;        border: 1px solid rgba(29,230,138,0.25); }
+    .tag-replaced { background: rgba(0,196,212,0.10);  color: #00c4d4;        border: 1px solid rgba(0,196,212,0.25); }
+    .tag-wip      { background: rgba(245,166,35,0.10); color: var(--warning); border: 1px solid rgba(245,166,35,0.25); }
+    .tag-breaking { background: rgba(255,45,120,0.12); color: var(--pink);    border: 1px solid rgba(255,45,120,0.3); }
+    .tag-note     { background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid var(--border-dim); cursor: default; }
+
+    /* Leading tag — collapsed pill */
+    .cl-tag.cl-tag-pill {
+      cursor: pointer; margin-left: 0; margin-right: 8px;
+      padding: 2px 7px; font-size: 11px; min-width: 24px;
+      justify-content: center; transition: min-width .15s;
+    }
+    .cl-tag.cl-tag-pill i { font-size: 11px; }
+    .cl-tag.cl-tag-pill .cl-tag-label { display: none; }
+    .cl-tag.cl-tag-pill:hover { opacity: .8; }
+    .cl-tag.cl-tag-pill.expanded { min-width: unset; }
+    .cl-tag.cl-tag-pill.expanded .cl-tag-label { display: inline; }
+
+    /* Loading / empty */
+    .cl-loading, .cl-empty { text-align: center; padding: 60px 0; color: var(--text-dim); font-size: 15px; }
+    .cl-loading i, .cl-empty i { display: block; font-size: 28px; margin-bottom: 12px; opacity: .4; }
+
+    /* ── VERSION TYPE: MIDDLE / MINOR / HOTFIX (in main timeline) ── */
+    .cl-entry[data-vtype="middle"] .cl-version,
+    .cl-entry[data-vtype="minor"]  .cl-version,
+    .cl-entry[data-vtype="hotfix"] .cl-version { font-size: 12px; letter-spacing: 0.5px; }
+    .cl-entry[data-vtype="middle"] .cl-body::before,
+    .cl-entry[data-vtype="minor"]  .cl-body::before,
+    .cl-entry[data-vtype="hotfix"] .cl-body::before { width: 7px; height: 7px; left: -4px; }
+    .cl-entry[data-vtype="middle"] .cl-summary,
+    .cl-entry[data-vtype="minor"]  .cl-summary,
+    .cl-entry[data-vtype="hotfix"] .cl-summary { font-size: 14px; color: var(--text-muted); }
+
+    /* ── SUB-VERSIONS (minor / hotfix nested inside parent entry) ── */
+    .cl-subversions {
+      margin-top: 24px; padding-top: 18px;
+      border-top: 1px dashed var(--border-dim);
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .cl-subversions-title {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 6px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cl-sv {
+      border: 1px solid var(--border-dim);
+      border-left: 3px solid var(--border-dim);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(255,255,255,0.015);
+    }
+    .cl-sv.middle  { border-left-color: rgba(0,196,212,0.4); }
+    .cl-sv.minor   { border-left-color: rgba(168,168,200,0.3); }
+    .cl-sv.hotfix  { border-left-color: rgba(255,45,120,0.4); }
+    .cl-sv-head {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 12px; flex-wrap: wrap;
+    }
+    .cl-sv-type {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 1px 7px; border-radius: 3px; flex-shrink: 0;
+    }
+    .cl-sv.middle .cl-sv-type  { background: rgba(0,196,212,0.08);    color: #00c4d4;           border: 1px solid rgba(0,196,212,0.2); }
+    .cl-sv.minor  .cl-sv-type  { background: rgba(168,168,200,0.08);  color: var(--text-muted); border: 1px solid rgba(168,168,200,0.2); }
+    .cl-sv.hotfix .cl-sv-type  { background: rgba(255,45,120,0.08);   color: var(--pink);       border: 1px solid rgba(255,45,120,0.2); }
+    .cl-sv-version {
+      font-family: 'Orbitron', monospace; font-weight: 700; font-size: 12px;
+    }
+    .cl-sv.middle .cl-sv-version { color: #00c4d4; }
+    .cl-sv.minor  .cl-sv-version { color: var(--text-muted); }
+    .cl-sv.hotfix .cl-sv-version { color: var(--pink); }
+    .cl-sv-date {
+      font-family: 'Share Tech Mono', monospace; font-size: 11px;
+      color: var(--text-dim); margin-left: auto;
+    }
+    .cl-sv-stats { display: flex; gap: 5px; flex-wrap: wrap; }
+    .cl-sv-toggle {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); padding: 3px 5px; border-radius: 3px;
+      transition: color .15s, background .15s;
+      display: flex; align-items: center;
+    }
+    .cl-sv-toggle:hover { color: var(--text-muted); background: var(--bg-hover); }
+    .cl-sv-toggle i { font-size: 10px; transition: transform .2s; }
+    .cl-sv-toggle.open i { transform: rotate(180deg); }
+    .cl-sv-summary {
+      font-size: 14px; color: var(--text-muted); line-height: 1.5;
+      padding: 0 12px 10px;
+    }
+    .cl-sv-details {
+      display: none; padding: 10px 12px 14px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .cl-sv-details.open { display: block; }
+    .cl-sv-details .cl-group { margin-bottom: 14px; }
+    .cl-sv-details .cl-group:last-child { margin-bottom: 0; }
+    .cl-sv-details .cl-group-label { font-size: 12px; padding-bottom: 5px; margin-bottom: 8px; }
+    .cl-sv-details .cl-group-label i { font-size: 11px; }
+    .cl-sv-details .cl-changes > li { font-size: 14px; }
+    .cl-sv-details .cl-item-row::before { font-size: 10px; }
+    .cl-sv-details .cl-sublist li { font-size: 12px; }
+    .cl-sv-details .cl-sublist li::before { font-size: 10px; }
+
+    /* Responsive */
+    @media (max-width: 580px) {
+      .cl-entry { grid-template-columns: 1fr; }
+      .cl-meta  { text-align: left; padding: 24px 0 6px; position: static; }
+      .cl-date  { display: inline; margin-left: 8px; }
+      .cl-body  { border-left: none; padding: 0 0 28px 0; }
+      .cl-body::before { display: none; }
+      .cl-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .type-legend { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <p class="page-eyebrow" data-i18n="eyebrow">Release history</p>
+    <h1 class="page-title" data-i18n-html="title">Subbi Clothes — <span>Changelog</span></h1>
+    <p class="page-desc" data-i18n="desc">All changes across every release — stable builds and public DEV versions. Most recent first.</p>
+
+    <!-- ── Release type legend ── -->
+    <div class="type-legend">
+      <div class="type-card stable">
+        <div class="type-card-head">
+          <span class="cl-badge stable" data-i18n="f_stable">Stable</span>
+        </div>
+        <p data-i18n="tdesc_stable">Properly documented and extensively tested. Fewer features, but stable and reliable. Not exempt from unidentified bugs.</p>
+      </div>
+      <div class="type-card dev">
+        <div class="type-card-head">
+          <span class="cl-badge dev" data-i18n="f_dev">DEV</span>
+          <span class="type-rec" data-i18n="tdesc_dev_rec">★ Recommended</span>
+        </div>
+        <p data-i18n="tdesc_dev">Highly reliable, less tested than Stable. Public and reviewed changelogs. Generally 100% functional — may have known or unidentified bugs. More features, better optimized, more QoL.</p>
+      </div>
+      <div class="type-card beta">
+        <div class="type-card-head">
+          <span class="cl-badge beta" data-i18n="f_beta">Beta</span>
+        </div>
+        <p data-i18n="tdesc_beta">Active development line. High risk of unidentified bugs. Documentation may be absent — including changelogs. Unstable, but generally functional.</p>
+      </div>
+    </div>
+    <div class="type-legacy-note">
+      <div class="legacy-note-row">
+        <span class="cl-badge legacy-stable">Legacy Stable</span>
+        <span class="cl-badge legacy-dev">Legacy DEV</span>
+        <span data-i18n="tdesc_legacy">are older versions of their respective lines with slightly reduced visual prominence.</span>
+      </div>
+      <div class="legacy-note-hint">
+        <i class="fa-solid fa-circle-arrow-up"></i>
+        <span data-i18n="tdesc_legacy_hint">If you are using a legacy version, consider updating to a more recent release.</span>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all"    onclick="setFilter('all')"    data-i18n="f_all">Releases</button>
+      <button class="filter-btn"        data-filter="stable" onclick="setFilter('stable')" data-i18n="f_stable">Stable</button>
+      <button class="filter-btn"        data-filter="dev"    onclick="setFilter('dev')"    data-i18n="f_dev">DEV</button>
+      <button class="filter-btn"        data-filter="beta"   onclick="setFilter('beta')"   data-i18n="f_beta">Beta</button>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="cl-loading">
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+        Loading changelog…
+      </div>
+    </div>
+    <div class="cl-empty" id="clEmpty" style="display:none;">
+      <i class="fa-solid fa-timeline"></i>
+      No entries match the selected filter.
+    </div>
+  </main>
+
+  <script src="/js/shell.js"></script>
+  <script>
+
+    /* ════════════════════════════════════════════
+       MARKUP RENDERER
+       ════════════════════════════════════════════
+       Supported syntax:
+         **text**         → bold
+         _text_           → italic
+         ~~text~~         → strikethrough
+         ||text||         → spoiler (click to reveal)
+         ``text``         → inline code
+         [fixed:v1.0]     → tag "fixed in v1.0"  + line struck
+         [replaced:v2.0]  → tag "replaced in v2.0" + line struck
+         [wip]            → tag WIP
+         [breaking]       → tag BREAKING
+         [note:text]      → small annotation tag
+    ════════════════════════════════════════════ */
+
+    function renderMarkup(str) {
+      if (!str) return '';
+      const raw = String(str).trim();
+
+      // Detect if the string STARTS with a meta tag
+      const LEADING = /^\[(?:fixed|replaced|wip|breaking|note)(?::[^\]]+)?\]/i.test(raw);
+
+      // 1. HTML-escape
+      let s = raw
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // 2. Process ALL meta tags in string order (single pass)
+      let firstTagDone = false;
+      const ALL_TAGS = /\[fixed:([^\]]+)\]|\[replaced:([^\]]+)\]|\[(wip|breaking)\]|\[note:([^\]]+)\]/gi;
+
+      s = s.replace(ALL_TAGS, (match, fixed, replaced, simple, note) => {
+        let icon, cls, label;
+        if      (fixed    !== undefined) { icon = 'fa-check';               cls = 'tag-fixed';    label = `fixed in ${esc(fixed)}`; }
+        else if (replaced !== undefined) { icon = 'fa-rotate';              cls = 'tag-replaced'; label = `replaced in ${esc(replaced)}`; }
+        else if (simple   !== undefined && simple.toLowerCase() === 'wip')
+                                         { icon = 'fa-clock';               cls = 'tag-wip';      label = 'WIP'; }
+        else if (simple   !== undefined) { icon = 'fa-triangle-exclamation';cls = 'tag-breaking'; label = 'BREAKING'; }
+        else if (note     !== undefined) { icon = 'fa-circle-info';         cls = 'tag-note';     label = esc(note); }
+        else return match;
+
+        const isLeadingPill = LEADING && !firstTagDone;
+        firstTagDone = true;
+
+        if (isLeadingPill) {
+          return `<span class="cl-tag ${cls} cl-tag-pill" onclick="this.classList.toggle('expanded')" title="${label}"><i class="fa-solid ${icon}"></i><span class="cl-tag-label">&nbsp;${label}</span></span>`;
+        }
+        return `<span class="cl-tag ${cls}"><i class="fa-solid ${icon} fa-xs"></i> ${label}</span>`;
+      });
+
+      // 3. Spoiler  ||text||
+      s = s.replace(/\|\|(.+?)\|\|/g,
+        `<span class="cl-spoiler" onclick="this.classList.toggle('revealed')">$1</span>`);
+
+      // 4. Inline code  ``text``
+      s = s.replace(/``(.+?)``/g, '<code>$1</code>');
+
+      // 5. Bold  **text**
+      s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+      // 6. Italic  _text_
+      s = s.replace(/(?<![a-zA-Z0-9])_(.+?)_(?![a-zA-Z0-9])/g, '<em>$1</em>');
+
+      // 7. Strikethrough  ~~text~~
+      s = s.replace(/~~(.+?)~~/g, '<del>$1</del>');
+
+      return s;
+    }
+
+    /* Plain HTML escape (no markup) */
+    function esc(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /* Is this item "deprecated" (should show struck-through)? */
+    function isDeprecated(str) {
+      return /\[fixed:[^\]]+\]|\[replaced:[^\]]+\]/.test(str);
+    }
+
+    /* ════════════════════════════════════════════
+       DATE PARSER
+       Handles: "YYYY-MM-DD", "YYYY-MM", "YYYY",
+                "Work in progress", "—", and anything else.
+    ════════════════════════════════════════════ */
+    function parseDateVal(str) {
+      if (!str) return null;
+      const s = str.trim().toLowerCase();
+      // WIP / in-progress → always at the top
+      if (s === 'work in progress' || s === 'wip' || s.includes('progress')) return Infinity;
+      // Unknown placeholder
+      if (s === '—' || s === '-' || s === '') return null;
+      // Try to parse year-only ("2021") or year-month ("2021-07") or full date
+      const d = new Date(str).getTime();
+      return isNaN(d) ? null : d;
+    }
+
+    /* ════════════════════════════════════════════
+       FILTER LOGIC
+       "all"    → everything except beta
+       "stable" → stable + legacy-stable
+       "dev"    → dev + legacy-dev
+       "beta"   → beta only
+    ════════════════════════════════════════════ */
+    function entryMatchesFilter(e, filter) {
+      const type = (e.type || 'stable').toLowerCase();
+      if (filter === 'all')    return type !== 'beta';
+      if (filter === 'stable') return type === 'stable' || type === 'legacy-stable';
+      if (filter === 'dev')    return type === 'dev'    || type === 'legacy-dev';
+      return type === filter;
+    }
+
+    /* ════════════════════════════════════════════
+       i18n
+    ════════════════════════════════════════════ */
+    const STRINGS = {
+      en: {
+        eyebrow:      'Release history',
+        title:        'Subbi Clothes — <span>Changelog</span>',
+        desc:         'All changes across every release — stable builds and public DEV versions. Most recent first.',
+        f_all:        'Releases',
+        f_stable:     'Stable',
+        f_dev:        'DEV',
+        f_beta:       'Beta',
+        empty:        'No entries match the selected filter.',
+        g_new:        'New',
+        g_chg:        'Changed',
+        g_fix:        'Fixed',
+        g_hud:        'HUD Changes',
+        g_bug:        'Known Bugs',
+        hide:         'Hide changes',
+        show:         'Show {n} changes',
+        sv_title:     'Patch history',
+        sv_hide:      'Hide',
+        sv_show:      'Show {n}',
+        tdesc_stable: 'Properly documented and extensively tested. Fewer features, but stable and reliable. Not exempt from unidentified bugs.',
+        tdesc_dev:    'Highly reliable, less tested than Stable. Public and reviewed changelogs. Generally 100% functional — may have known or unidentified bugs. More features, better optimized, more QoL.',
+        tdesc_dev_rec:'★ Recommended',
+        tdesc_beta:   'Active development line. High risk of unidentified bugs. Documentation may be absent — including changelogs. Unstable, but generally functional.',
+        tdesc_legacy:       'are older versions of their respective lines with slightly reduced visual prominence.',
+        tdesc_legacy_hint:  'If you are using a legacy version, consider updating to a more recent release.',
+      },
+      es: {
+        eyebrow:      'Historial de versiones',
+        title:        'Subbi Clothes — <span>Changelog</span>',
+        desc:         'Todos los cambios de cada versión — builds estables y versiones DEV públicas. Más recientes primero.',
+        f_all:        'Versiones',
+        f_stable:     'Estable',
+        f_dev:        'DEV',
+        f_beta:       'Beta',
+        empty:        'Ninguna entrada coincide con el filtro.',
+        g_new:        'Nuevo',
+        g_chg:        'Cambios',
+        g_fix:        'Correcciones',
+        g_hud:        'Cambios en HUD',
+        g_bug:        'Bugs Conocidos',
+        hide:         'Ocultar cambios',
+        show:         'Ver {n} cambios',
+        sv_title:     'Historial de parches',
+        sv_hide:      'Ocultar',
+        sv_show:      'Ver {n}',
+        tdesc_stable: 'Correctamente documentadas y muy testeadas. Menos funciones, estables y fiables. No exentas de bugs no identificados.',
+        tdesc_dev:    'Altamente fiable pero menos testeada que Stable. Logs públicos y revisados. Generalmente 100% funcionales — pueden tener bugs conocidos o no. Más funciones, mejor optimizadas y más QoL.',
+        tdesc_dev_rec:'★ Recomendada',
+        tdesc_beta:   'Línea en desarrollo activo. Alta posibilidad de bugs no identificados. Documentación escasa o inexistente. Inestable, pero generalmente funcional.',
+        tdesc_legacy:       'son versiones antiguas de sus respectivas líneas con menor prominencia visual.',
+        tdesc_legacy_hint:  'Si usas una versión legacy, considera actualizar a una versión más reciente.',
+      }
+    };
+
+    let currentLang = 'en';
+
+    function t(key, vars) {
+      const s = STRINGS[currentLang] || STRINGS.en;
+      let str = s[key] !== undefined ? s[key] : (STRINGS.en[key] || key);
+      if (vars) Object.entries(vars).forEach(([k, v]) => str = str.replace(`{${k}}`, v));
+      return str;
+    }
+
+    function setLang(lang) {
+      currentLang = STRINGS[lang] ? lang : 'en';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const v = t(el.dataset.i18n);
+        if (v !== el.dataset.i18n) el.textContent = v;
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const v = t(el.dataset.i18nHtml);
+        if (v !== el.dataset.i18nHtml) el.innerHTML = v;
+      });
+      renderTimeline();
+    }
+
+    /* ════════════════════════════════════════════
+       TIMELINE RENDERER
+    ════════════════════════════════════════════ */
+
+    let allEntries  = [];
+    let currentFilter = 'all';
+
+    fetch('./data.json')
+      .then(r => r.text())
+      .then(text => {
+        // JSONC support: strip // line-comments while preserving them inside strings
+        const clean = text.replace(/("(?:[^"\\]|\\.)*")|\/\/[^\n]*/g, (m, str) => str || '');
+        return JSON.parse(clean);
+      })
+      .then(data => { allEntries = data.entries || []; renderTimeline(); })
+      .catch(() => {
+        document.getElementById('timeline').innerHTML =
+          '<div class="cl-empty"><i class="fa-solid fa-triangle-exclamation"></i>Could not load changelog.</div>';
+      });
+
+    function renderTimeline() {
+      const tl = document.getElementById('timeline');
+
+      const filtered = allEntries
+        .filter(e => entryMatchesFilter(e, currentFilter))
+        .slice()
+        .sort((a, b) => {
+          const da = parseDateVal(a.date);
+          const db = parseDateVal(b.date);
+          // Both null → preserve original JSON order
+          if (da === null && db === null) return 0;
+          // Null dates go to the bottom
+          if (da === null) return 1;
+          if (db === null) return -1;
+          // Descending (most recent first); Infinity naturally sorts to top
+          return db - da;
+        });
+
+      document.getElementById('clEmpty').style.display = filtered.length === 0 ? 'block' : 'none';
+      if (!filtered.length) { tl.innerHTML = ''; return; }
+
+      tl.innerHTML = filtered.map((e, i) => buildEntry(e, i === 0)).join('');
+    }
+
+    /* Accumulates a field count across an entry and all its sub_versions (recursive) */
+    function sumField(e, field) {
+      const own = (e[field] || []).length;
+      const sub = (e.sub_versions || []).reduce((acc, sv) => acc + sumField(sv, field), 0);
+      return own + sub;
+    }
+
+    function buildEntry(e, expandedByDefault) {
+      const n = sumField(e, 'new');
+      const c = sumField(e, 'changed');
+      const f = sumField(e, 'fixed');
+      const h = sumField(e, 'hud');
+      const b = sumField(e, 'bugs');
+      const total = n + c + f + h + b;
+      const open  = expandedByDefault ? ' open' : '';
+      const vtype = e.version_type || 'major';
+
+      const stats = [
+        n ? `<span class="cl-stat new">${n} new</span>`  : '',
+        c ? `<span class="cl-stat chg">${c} chg</span>`  : '',
+        f ? `<span class="cl-stat fix">${f} fix</span>`  : '',
+        h ? `<span class="cl-stat hud">${h} hud</span>`  : '',
+        b ? `<span class="cl-stat bug">${b} bugs</span>` : '',
+      ].join('');
+
+      const groups = [
+        buildGroup('new', 'fa-plus',                   t('g_new'), e.new),
+        buildGroup('chg', 'fa-arrow-right-arrow-left', t('g_chg'), e.changed),
+        buildGroup('fix', 'fa-wrench',                 t('g_fix'), e.fixed),
+        buildGroup('hud', 'fa-display',                t('g_hud'), e.hud),
+        buildGroup('bug', 'fa-bug',                    t('g_bug'), e.bugs),
+      ].join('');
+
+      const subVer = buildSubVersions(e.sub_versions);
+
+      const toggleLabel = expandedByDefault
+        ? t('hide')
+        : t('show', { n: total });
+
+      const hasContent = total > 0 || subVer;
+
+      return `
+        <div class="cl-entry ${esc(e.type)}" data-type="${esc(e.type)}" data-vtype="${esc(vtype)}">
+          <div class="cl-meta">
+            <div class="cl-version">${esc(e.version)}</div>
+            <div class="cl-date">${esc(e.date)}</div>
+            <span class="cl-badge ${esc(e.type)}">${esc(e.badge || e.type)}</span>
+          </div>
+          <div class="cl-body">
+            <div class="cl-header">
+              <p class="cl-summary">${renderMarkup(e.summary)}</p>
+              <div class="cl-stats">${stats}</div>
+            </div>
+            ${hasContent ? `
+            <button class="cl-toggle${open}" onclick="toggleEntry(this)">
+              <i class="fa-solid fa-chevron-down"></i> ${toggleLabel}
+            </button>
+            <div class="cl-details${open}">${groups}${subVer}</div>` : ''}
+          </div>
+        </div>`;
+    }
+
+    function buildSubVersions(arr) {
+      if (!arr || !arr.length) return '';
+      const items = arr.map(sv => buildSubEntry(sv)).join('');
+      return `
+        <div class="cl-subversions">
+          <div class="cl-subversions-title"><i class="fa-solid fa-code-branch"></i> ${t('sv_title')}</div>
+          ${items}
+        </div>`;
+    }
+
+    function buildSubEntry(sv) {
+      const vtype = sv.version_type || 'minor';
+      const typeLabel = { major: 'Major', middle: 'Mid', minor: 'Minor', hotfix: 'Hotfix' }[vtype] || vtype;
+      const n = (sv.new     || []).length;
+      const c = (sv.changed || []).length;
+      const f = (sv.fixed   || []).length;
+      const h = (sv.hud     || []).length;
+      const b = (sv.bugs    || []).length;
+      const total = n + c + f + h + b;
+
+      const stats = [
+        n ? `<span class="cl-stat new">${n} new</span>` : '',
+        c ? `<span class="cl-stat chg">${c} chg</span>` : '',
+        f ? `<span class="cl-stat fix">${f} fix</span>` : '',
+        h ? `<span class="cl-stat hud">${h} hud</span>` : '',
+        b ? `<span class="cl-stat bug">${b} bugs</span>` : '',
+      ].join('');
+
+      const groups = [
+        buildGroup('new', 'fa-plus',                   t('g_new'), sv.new),
+        buildGroup('chg', 'fa-arrow-right-arrow-left', t('g_chg'), sv.changed),
+        buildGroup('fix', 'fa-wrench',                 t('g_fix'), sv.fixed),
+        buildGroup('hud', 'fa-display',                t('g_hud'), sv.hud),
+        buildGroup('bug', 'fa-bug',                    t('g_bug'), sv.bugs),
+      ].join('');
+
+      return `
+        <div class="cl-sv ${vtype}">
+          <div class="cl-sv-head">
+            <span class="cl-sv-type">${typeLabel}</span>
+            <span class="cl-sv-version">${esc(sv.version)}</span>
+            ${sv.date ? `<span class="cl-sv-date">${esc(sv.date)}</span>` : ''}
+            <div class="cl-sv-stats">${stats}</div>
+            ${total > 0 ? `<button class="cl-sv-toggle" onclick="toggleSv(this)" title="${t('sv_show',{n:total})}"><i class="fa-solid fa-chevron-down"></i></button>` : ''}
+          </div>
+          ${sv.summary ? `<p class="cl-sv-summary">${renderMarkup(sv.summary)}</p>` : ''}
+          ${total > 0 ? `<div class="cl-sv-details">${groups}</div>` : ''}
+        </div>`;
+    }
+
+    function buildGroup(cls, icon, label, rawItems) {
+      if (!rawItems || !rawItems.length) return '';
+
+      const grouped = [];
+      rawItems.forEach(item => {
+        if (typeof item === 'string' && item.startsWith('- ')) {
+          if (!grouped.length) grouped.push({ text: '', subitems: [] });
+          grouped[grouped.length - 1].subitems.push(item.slice(2));
+        } else {
+          grouped.push({ text: String(item), subitems: [] });
+        }
+      });
+
+      const listItems = grouped.map(g => {
+        const deprecated = isDeprecated(g.text);
+        const sub = g.subitems.length
+          ? `<ul class="cl-sublist">${g.subitems.map(s =>
+              `<li>${renderMarkup(s)}</li>`).join('')}</ul>`
+          : '';
+        return `<li${deprecated ? ' class="deprecated"' : ''}>
+          <div class="cl-item-row"><span class="cl-item-text">${renderMarkup(g.text)}</span></div>
+          ${sub}
+        </li>`;
+      }).join('');
+
+      return `
+        <div class="cl-group">
+          <div class="cl-group-label ${cls}">
+            <i class="fa-solid ${icon}"></i> ${label}
+          </div>
+          <ul class="cl-changes">${listItems}</ul>
+        </div>`;
+    }
+
+    /* ── Toggle ── */
+    function toggleEntry(btn) {
+      const details = btn.nextElementSibling;
+      const opening = !details.classList.contains('open');
+      details.classList.toggle('open', opening);
+      btn.classList.toggle('open', opening);
+      const total = details.querySelectorAll('.cl-item-row').length;
+      btn.innerHTML = opening
+        ? `<i class="fa-solid fa-chevron-down"></i> ${t('hide')}`
+        : `<i class="fa-solid fa-chevron-down"></i> ${t('show', { n: total })}`;
+    }
+
+    /* ── Sub-version toggle ── */
+    function toggleSv(btn) {
+      const card = btn.closest('.cl-sv');
+      const details = card.querySelector('.cl-sv-details');
+      if (!details) return;
+      const opening = !details.classList.contains('open');
+      details.classList.toggle('open', opening);
+      btn.classList.toggle('open', opening);
+    }
+
+    /* ── Filter ── */
+    function setFilter(f) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-btn').forEach(btn =>
+        btn.classList.toggle('active', btn.dataset.filter === f));
+      renderTimeline();
+    }
+  </script>
+</body>
+</html>

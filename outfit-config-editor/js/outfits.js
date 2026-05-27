@@ -1,21 +1,53 @@
+let addManyMode = false;
+
+function toggleAddMany() {
+  addManyMode = !addManyMode;
+  document.getElementById('addManyToggle').classList.toggle('active', addManyMode);
+  const input = document.getElementById('m_outfit');
+  input.placeholder = addManyMode ? 'Outfit1, Outfit2, Outfit3' : '<Outfit name>';
+  document.getElementById('m_many_hint').style.display = addManyMode ? '' : 'none';
+}
+
 function openAddModal() {
+  addManyMode = false;
   document.getElementById('m_avatar').value = '';
   document.getElementById('m_outfit').value = '';
+  document.getElementById('m_outfit').placeholder = '<Outfit name>';
+  document.getElementById('m_many_hint').style.display = 'none';
+  document.getElementById('addManyToggle').classList.remove('active');
   openModal('addModal');
   setTimeout(() => document.getElementById('m_avatar').focus(), 100);
 }
 
 function confirmAdd() {
   const avatar = document.getElementById('m_avatar').value.trim();
-  const name   = document.getElementById('m_outfit').value.trim();
-  if (!avatar || !name) return;
-  const id = 'o_' + Date.now();
-  outfits.push({ id, avatar, name, data: DEFAULT_OUTFIT() });
-  closeModal('addModal');
-  renderSidebar();
-  selectOutfit(id);
-  notify(t('outfit_added'));
-  saveToStorage();
+  const raw    = document.getElementById('m_outfit').value;
+  if (!avatar || !raw.trim()) return;
+
+  if (addManyMode) {
+    const names = raw.split(',').map(s => s.trim()).filter(Boolean);
+    if (!names.length) return;
+    let lastId;
+    names.forEach(name => {
+      lastId = 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+      outfits.push({ id: lastId, avatar, name, data: DEFAULT_OUTFIT() });
+    });
+    closeModal('addModal');
+    renderSidebar();
+    selectOutfit(lastId);
+    notify(names.length + ' ' + t('outfit_added'));
+    saveToStorage();
+  } else {
+    const name = raw.trim();
+    if (!name) return;
+    const id = 'o_' + Date.now();
+    outfits.push({ id, avatar, name, data: DEFAULT_OUTFIT() });
+    closeModal('addModal');
+    renderSidebar();
+    selectOutfit(id);
+    notify(t('outfit_added'));
+    saveToStorage();
+  }
 }
 
 function openRenameModal(id) {

@@ -16,6 +16,9 @@ function applyTranslations() {
   document.querySelectorAll('[data-t-ph]').forEach(el => {
     el.placeholder = t(el.getAttribute('data-t-ph'));
   });
+  document.querySelectorAll('[data-t-html]').forEach(el => {
+    el.innerHTML = t(el.getAttribute('data-t-html'));
+  });
   const instrList = document.getElementById('instrList');
   if (instrList) {
     instrList.innerHTML = (INSTR[lang] || INSTR.en).map(fn => `<li>${fn()}</li>`).join('');

@@ -5,4 +5,6 @@ let importing = false;
 let pendingDeleteId = null;
 let renameTargetId = null;
 let groupByGroup = true;
+let compactSidebar = false;
+let tagColors = {};
 let saveTimer;

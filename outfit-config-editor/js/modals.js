@@ -6,6 +6,11 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
 
+document.addEventListener('click', e => {
+  if (!e.target.closest('#emojiPickerPopup') && !e.target.closest('.emoji-open-btn'))
+    if (typeof closeEmojiPicker === 'function') closeEmojiPicker();
+});
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape')
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));

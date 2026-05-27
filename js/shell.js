@@ -68,10 +68,20 @@
       <a href="/outfit-config-editor/" data-si="editor">Config Editor</a>
       <a href="/r/mp" class="nav-cta"><span data-si="mp">Marketplace</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
     </div>
-    <div class="lang-switcher">
-      <button data-lang="en" onclick="window.__shell.setLang('en')">EN</button>
-      <button data-lang="es" onclick="window.__shell.setLang('es')">ES</button>
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button data-lang="en" onclick="window.__shell.setLang('en')">EN</button>
+        <button data-lang="es" onclick="window.__shell.setLang('es')">ES</button>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" onclick="window.__shell.toggleMobile()" aria-label="Menu" aria-expanded="false">
+        <i class="fa-solid fa-bars" id="nav-hamburger-icon"></i>
+      </button>
     </div>
+  </div>
+  <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+    ${firstLink}
+    <a href="/outfit-config-editor/" data-si="editor" onclick="window.__shell.closeMobile()">Config Editor</a>
+    <a href="/r/mp" class="nav-cta" onclick="window.__shell.closeMobile()"><span data-si="mp">Marketplace</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
   </div>
 </nav>`;
   }
@@ -102,8 +112,32 @@
   document.body.insertAdjacentHTML('afterbegin', buildNav(logoSub));
   document.body.insertAdjacentHTML('beforeend',  buildFooter());
 
+  /* ── Mobile menu ── */
+  function getMobileEl() { return document.getElementById('nav-mobile'); }
+  function getHamburger() { return document.getElementById('nav-hamburger'); }
+
   /* ── Lang ── */
   window.__shell = {
+    toggleMobile: function () {
+      var m = getMobileEl(), btn = getHamburger();
+      if (!m) return;
+      var open = m.classList.toggle('open');
+      if (btn) {
+        btn.setAttribute('aria-expanded', open);
+        btn.querySelector('i').className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+      }
+      m.setAttribute('aria-hidden', !open);
+    },
+    closeMobile: function () {
+      var m = getMobileEl(), btn = getHamburger();
+      if (!m) return;
+      m.classList.remove('open');
+      m.setAttribute('aria-hidden', 'true');
+      if (btn) {
+        btn.setAttribute('aria-expanded', 'false');
+        btn.querySelector('i').className = 'fa-solid fa-bars';
+      }
+    },
     setLang: function (lang) {
       if (!S[lang]) lang = 'en';
       var s = S[lang];
@@ -136,6 +170,25 @@
     var saved = 'en';
     try { saved = localStorage.getItem('site_lang') || 'en'; } catch(e) {}
     window.__shell.setLang(saved);
+
+    // Close mobile menu on outside click
+    document.addEventListener('click', function (e) {
+      var nav = document.getElementById('shell-nav');
+      if (nav && !nav.contains(e.target)) window.__shell.closeMobile();
+    });
+
+    // Close mobile menu if viewport grows past breakpoint
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 640) window.__shell.closeMobile();
+    });
+
+    // Close on first-link click (it's generated with data-si, no onclick added above)
+    var mobile = getMobileEl();
+    if (mobile) {
+      mobile.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { window.__shell.closeMobile(); });
+      });
+    }
   });
 
 })();

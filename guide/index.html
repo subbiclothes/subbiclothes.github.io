@@ -11,10 +11,11 @@
   <meta property="og:site_name" content="Subbi Clothes">
   <meta property="og:title" content="Subbi Clothes — Guide">
   <meta property="og:description" content="Official guide for Subbi Clothes, the RLV wardrobe HUD for Second Life. Learn how to set up outfits, avatars, accessories, access control, and automation.">
+  <meta property="og:image" content="https://subbiclothes.com/img/store-thumnail.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Subbi Clothes — Guide">
   <meta name="twitter:description" content="Official guide for Subbi Clothes, the RLV wardrobe HUD for Second Life.">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   <meta name="shell-logo-sub" content="Official Guide">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +32,7 @@
       padding: 64px 16px 80px;
     }
     .eyebrow {
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--text-muted);
@@ -67,14 +68,31 @@
       transform: translateY(-3px);
       box-shadow: 0 8px 32px rgba(255,45,120,0.12);
     }
-    .card-eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+    .card-eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
     .card-title   { font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; color: var(--pink); }
-    .card-desc    { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
-    .card-arrow   { margin-top: 10px; font-size: 12px; letter-spacing: 1px; color: var(--pink); }
+    .card-desc    { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+    .card-arrow   { margin-top: 10px; font-size: 13px; letter-spacing: 1px; color: var(--pink); }
     .card.wip { border-left-color: var(--warning); }
     .card.wip .card-title { color: var(--warning); }
     .card.wip .card-arrow { color: var(--warning); }
     .card.wip:hover { border-color: var(--warning); box-shadow: 0 8px 32px rgba(245,166,35,0.10); }
+
+    .cards-section { width: 100%; max-width: 640px; margin-top: 40px; }
+    .section-divider {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .section-divider span {
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--text-dim); white-space: nowrap;
+    }
+    .section-divider::before, .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border-dim);
+    }
+    .card.changelog { border-left-color: #00c4d4; }
+    .card.changelog .card-title { color: #00c4d4; }
+    .card.changelog .card-arrow { color: #00c4d4; }
+    .card.changelog:hover { border-color: #00c4d4; box-shadow: 0 8px 32px rgba(0,196,212,0.10); }
   </style>
 </head>
 <body>
@@ -92,10 +110,24 @@
       </a>
       <a href="https://docs.google.com/document/d/1Fa8ZtVqoi6xgJG9C8XQZUvDBL_cDEyN0NZAsW9kPDdg" target="_blank" rel="noopener" class="card wip">
         <span class="card-eyebrow" data-i18n="v2_eyebrow">In development</span>
-        <span class="card-title">Guide 4.0 <span style="font-size:11px;letter-spacing:1px;">(WIP)</span></span>
+        <span class="card-title">Guide 4.0 <span style="font-size:12px;letter-spacing:1px;">(WIP)</span></span>
         <span class="card-desc" data-i18n="v2_desc">Newer, improved version of the guide — rewritten for the upcoming 4.0 release. More detailed, better organized, and actively updated. Work in progress.</span>
         <span class="card-arrow" data-i18n-html="open_docs">Open in Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i></span>
       </a>
+    </div>
+
+    <div class="cards-section">
+      <div class="section-divider">
+        <span data-i18n="updates_label">Release notes</span>
+      </div>
+      <div class="cards">
+        <a href="/changelog/" class="card changelog">
+          <span class="card-eyebrow" data-i18n="cl_eyebrow">All versions</span>
+          <span class="card-title">Changelog</span>
+          <span class="card-desc" data-i18n="cl_desc">Latest changes across all releases — including public DEV builds and closed beta versions.</span>
+          <span class="card-arrow" data-i18n="cl_arrow">View changelog →</span>
+        </a>
+      </div>
     </div>
   </main>
 
@@ -104,22 +136,30 @@
     /* Page-specific strings — shell.js calls setLang() after handling nav/footer/switcher */
     const STRINGS = {
       en: {
-        eyebrow:    'Documentation',
-        heading:    'Choose a <span>guide version</span>',
-        v1_eyebrow: 'Current release',
-        v1_desc:    'Complete guide for Subbi Clothes 3.3D — setup, folders, HUD navigation, and advanced features.',
-        v2_eyebrow: 'In development',
-        v2_desc:    'Newer, improved version of the guide — rewritten for the upcoming 4.0 release. More detailed, better organized, and actively updated. Work in progress.',
-        open_docs:  'Open in Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>',
+        eyebrow:       'Documentation',
+        heading:       'Choose a <span>guide version</span>',
+        v1_eyebrow:    'Current release',
+        v1_desc:       'Complete guide for Subbi Clothes 3.3D — setup, folders, HUD navigation, and advanced features.',
+        v2_eyebrow:    'In development',
+        v2_desc:       'Newer, improved version of the guide — rewritten for the upcoming 4.0 release. More detailed, better organized, and actively updated. Work in progress.',
+        open_docs:     'Open in Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>',
+        updates_label: 'Release notes',
+        cl_eyebrow:    'All versions',
+        cl_desc:       'Latest changes across all releases — including public DEV builds and closed beta versions.',
+        cl_arrow:      'View changelog →',
       },
       es: {
-        eyebrow:    'Documentación',
-        heading:    'Elige una <span>versión de la guía</span>',
-        v1_eyebrow: 'Versión actual',
-        v1_desc:    'Guía completa para Subbi Clothes 3.3D — configuración, carpetas, navegación del HUD y funciones avanzadas.',
-        v2_eyebrow: 'En desarrollo',
-        v2_desc:    'Versión más reciente y mejorada de la guía — reescrita para la próxima versión 4.0. Más detallada, mejor organizada y en actualización activa. Trabajo en progreso.',
-        open_docs:  'Abrir en Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>',
+        eyebrow:       'Documentación',
+        heading:       'Elige una <span>versión de la guía</span>',
+        v1_eyebrow:    'Versión actual',
+        v1_desc:       'Guía completa para Subbi Clothes 3.3D — configuración, carpetas, navegación del HUD y funciones avanzadas.',
+        v2_eyebrow:    'En desarrollo',
+        v2_desc:       'Versión más reciente y mejorada de la guía — reescrita para la próxima versión 4.0. Más detallada, mejor organizada y en actualización activa. Trabajo en progreso.',
+        open_docs:     'Abrir en Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>',
+        updates_label: 'Notas de versión',
+        cl_eyebrow:    'Todas las versiones',
+        cl_desc:       'Últimos cambios de todas las versiones — incluidas compilaciones DEV públicas y betas cerradas.',
+        cl_arrow:      'Ver changelog →',
       }
     };
 
