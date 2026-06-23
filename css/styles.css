@@ -17,7 +17,7 @@
 
 .hero-badge {
   display: inline-flex; align-items: center; gap: 7px;
-  font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
   color: var(--pink);
   border: 1px solid var(--border);
   background: var(--pink-soft);
@@ -38,7 +38,7 @@
   background-clip: text;
 }
 .hero-sub {
-  font-size: 17px; color: var(--text-muted);
+  font-size: 18px; color: var(--text-muted);
   max-width: 620px; margin: 0 auto 36px;
   line-height: 1.7;
 }
@@ -71,7 +71,7 @@
   margin-bottom: 12px;
 }
 .pillar h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
-.pillar p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+.pillar p { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
 
 /* ── FEATURES ── */
 .features {
@@ -106,7 +106,7 @@
   font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
   margin-bottom: 8px;
 }
-.feature-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+.feature-card p { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
 
 /* ── SCREENSHOTS ── */
 .screenshots-row {
@@ -132,7 +132,7 @@
 }
 .screenshot-item figcaption {
   padding: 10px 14px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
   color: var(--text-muted);
@@ -148,7 +148,7 @@
 }
 .tool-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--pink); background: var(--pink-soft); border: 1px solid var(--border);
   padding: 4px 10px; border-radius: 99px; margin-bottom: 12px;
 }
@@ -165,7 +165,7 @@
 .tool-list { list-style: none; margin-bottom: 28px; }
 .tool-list li {
   display: flex; align-items: center; gap: 10px;
-  font-size: 15px; color: var(--text-muted);
+  font-size: 16px; color: var(--text-muted);
   margin-bottom: 10px;
 }
 .tool-list li i { color: var(--pink); font-size: 13px; flex-shrink: 0; }
@@ -249,7 +249,7 @@
 .saf-card .feature-icon { flex-shrink: 0; margin-bottom: 0; }
 .saf-body h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
 .saf-body h3 span { color: var(--pink); }
-.saf-body p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+.saf-body p { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
 
 /* ── GETTING STARTED ── */
 .howto {
@@ -280,9 +280,9 @@
   margin-bottom: 14px;
 }
 .step h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-.step p  { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+.step p  { font-size: 16px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
 .step-link {
-  font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
   color: var(--pink); text-decoration: none;
   display: inline-flex; align-items: center; gap: 5px;
   transition: opacity .15s;
@@ -290,7 +290,7 @@
 .step-link:hover { opacity: .75; }
 .step-arrow {
   color: var(--text-dim);
-  font-size: 15px;
+  font-size: 16px;
   padding-top: 12px;
   flex-shrink: 0;
   align-self: flex-start;
@@ -304,7 +304,7 @@
 }
 .video-card { display: flex; flex-direction: column; gap: 10px; }
 .video-label {
-  font-size: 15px; color: var(--text-muted);
+  font-size: 16px; color: var(--text-muted);
   font-weight: 600; letter-spacing: 0.3px;
 }
 .video-label span { color: var(--pink); }
@@ -335,7 +335,7 @@
   margin-bottom: 14px; display: block;
 }
 .usecase-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-.usecase-card p  { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+.usecase-card p  { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
 
 /* ── WHAT'S INCLUDED ── */
 .included {
@@ -369,8 +369,8 @@
   margin-top: 4px; flex-shrink: 0;
 }
 .included-list li div { display: flex; flex-direction: column; gap: 2px; }
-.included-list li strong { font-size: 15px; font-weight: 700; }
-.included-list li span  { font-size: 13px; color: var(--text-muted); }
+.included-list li strong { font-size: 16px; font-weight: 700; }
+.included-list li span  { font-size: 14px; color: var(--text-muted); }
 
 /* ── FAQ ── */
 .faq {
@@ -414,7 +414,7 @@
 }
 .faq-item > p {
   padding: 0 20px 18px;
-  font-size: 15px; color: var(--text-muted); line-height: 1.7;
+  font-size: 16px; color: var(--text-muted); line-height: 1.7;
 }
 .faq-item > p code {
   background: var(--bg-hover);
@@ -422,7 +422,7 @@
   border-radius: 4px;
   padding: 1px 6px;
   font-family: 'Share Tech Mono', monospace;
-  font-size: 14px; color: var(--text);
+  font-size: 15px; color: var(--text);
 }
 
 /* ── RESPONSIVE ── */

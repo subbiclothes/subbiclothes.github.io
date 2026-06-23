@@ -154,10 +154,10 @@ function renderEditor(id) {
             <label>${t('gender')}</label>
             <div style="display:flex;gap:5px;align-items:center;">
               <select class="f-gender" style="flex:1;">
-                <option value="Auto"    ${d.gender==='Auto'||!d.gender?'selected':''}>Auto</option>
-                <option value="Neutral" ${d.gender==='Neutral'?'selected':''}>Neutral</option>
-                <option value="Female"  ${d.gender==='Female'?'selected':''}>Female</option>
-                <option value="Male"    ${d.gender==='Male'?'selected':''}>Male</option>
+                <option value="Auto"    ${d.gender==='Auto'||!d.gender?'selected':''}>${t('gender_auto')}</option>
+                <option value="Neutral" ${d.gender==='Neutral'?'selected':''}>${t('gender_neutral')}</option>
+                <option value="Female"  ${d.gender==='Female'?'selected':''}>${t('gender_female')}</option>
+                <option value="Male"    ${d.gender==='Male'?'selected':''}>${t('gender_male')}</option>
               </select>
               ${applyBtn('gender')}
             </div>
@@ -416,7 +416,6 @@ function renderEditor(id) {
       <div class="section-header" onclick="toggleSection('sec_biography')">
         <i class="fa-solid fa-id-card section-icon"></i>
         <span class="section-label">${t('sec_biography')}</span>
-        ${wip}
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
       <div class="section-body">

@@ -9,20 +9,14 @@ document.getElementById('mainPanel').addEventListener('input', () => {
   saveTimer = setTimeout(() => { saveActiveEditor(); saveToStorage(); }, 400);
 });
 
-// Bootstrap: try localStorage first, otherwise load the example config
+// Bootstrap: restore from localStorage, or start empty
 const restored = loadFromStorage();
 loadTagColors();
-if (!restored) {
-  fetch('data/example.config')
-    .then(r => r.text())
-    .then(text => {
-      parseConfig(text);
-      if (outfits.length) selectOutfit(outfits[0].id);
-    })
-    .catch(() => {});
+if (restored && outfits.length) {
+  renderSidebar();
+  selectOutfit(outfits[0].id);
 } else {
   renderSidebar();
-  if (outfits.length) selectOutfit(outfits[0].id);
 }
 applyTranslations();
 

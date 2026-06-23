@@ -106,7 +106,7 @@ body::before {
 .logo-sub {
   display: block;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; font-weight: 500;
+  font-size: 12px; font-weight: 500;
   letter-spacing: 2px; text-transform: uppercase;
   color: var(--text-muted);
   margin-top: 3px;
@@ -119,7 +119,7 @@ body::before {
 }
 .nav-links a {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 15px; font-weight: 600;
+  font-size: 16px; font-weight: 600;
   letter-spacing: 1px; text-transform: uppercase;
   color: var(--text-muted); text-decoration: none;
   transition: color .15s;
@@ -156,7 +156,7 @@ body::before {
   color: var(--text-muted);
   padding: 5px 10px;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 13px; font-weight: 600; letter-spacing: 1px;
+  font-size: 14px; font-weight: 600; letter-spacing: 1px;
   cursor: pointer; transition: all .2s;
 }
 .lang-switcher button:hover:not(.lang-active) {
@@ -187,7 +187,7 @@ body::before {
 .nav-mobile.open { display: flex; }
 .nav-mobile a {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 15px; font-weight: 600;
+  font-size: 16px; font-weight: 600;
   letter-spacing: 1px; text-transform: uppercase;
   color: var(--text-muted); text-decoration: none;
   padding: 14px 24px;
@@ -234,14 +234,14 @@ body::before {
 .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
 .footer-nav a {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 15px; line-height: 21px; color: var(--text-muted); text-decoration: none;
+  font-size: 16px; line-height: 21px; color: var(--text-muted); text-decoration: none;
   letter-spacing: 1px; font-weight: 600; text-transform: uppercase;
   transition: color .15s;
 }
 .footer-nav a:hover { color: var(--text); }
-.footer-bottom p { font-size: 15px; line-height: 22px; color: var(--text-muted); }
+.footer-bottom p { font-size: 16px; line-height: 22px; color: var(--text-muted); }
 .footer-bottom strong { color: var(--text-muted); }
-.footer-version { margin-top: 6px; font-size: 14px; line-height: 19px; }
+.footer-version { margin-top: 6px; font-size: 16px; line-height: 19px; }
 .footer-version strong { color: var(--pink-dim); }
 
 /* ─ Buttons ─ */
@@ -265,7 +265,7 @@ body::before {
 /* ─ Section layout primitives ─ */
 .section-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 .section-eyebrow {
-  font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  font-size: 14px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
   color: var(--pink); margin-bottom: 10px;
 }
 .section-title {
