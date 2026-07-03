@@ -132,7 +132,7 @@
         "Replaced the old per-avatar notecard storage system with the new **OCE (Outfit Config Editor)** tool.",
         "Re-added and improved the hidden **Whitelist/Blacklist easter egg**.",
         "Added the possibility to create individual **biographies** for each outfit (Use **OCE**)",
-        "The HUD is now customizable through a menu and commands."
+        "The HUD is now resizable through a menu (HUD) and commands. ``/55 hud size=[value]`` where [value] is a number between -50 and +50."
       ],
 
       "changed": [
