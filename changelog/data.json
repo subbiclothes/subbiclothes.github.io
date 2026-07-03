@@ -130,7 +130,9 @@
         "Reintroduced and improved **Safe Dangerous Regions** system.",
         "**Replace Clothes** has been fully redesigned and integrated organically into the system. It is **no longer experimental**.",
         "Replaced the old per-avatar notecard storage system with the new **OCE (Outfit Config Editor)** tool.",
-        "Re-added and improved the hidden **Whitelist/Blacklist easter egg**."
+        "Re-added and improved the hidden **Whitelist/Blacklist easter egg**.",
+        "Added the possibility to create individual **biographies** for each outfit (Use **OCE**)",
+        "The HUD is now customizable through a menu and commands."
       ],
 
       "changed": [
@@ -151,7 +153,9 @@
         "Updated several default option values:",
         "- Short Names → **True**",
         "- Anims OnSit → **False**",
-        "- Avatars Access → **True**"
+        "- Avatars Access → **True**",
+        "The \"Memory\" menu was moved inside Others; its future removal is being evaluated.",
+        "Added \"HUD\" menu to center all HUD options."
       ],
 
       "fixed": [
