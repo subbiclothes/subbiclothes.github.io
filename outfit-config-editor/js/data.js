@@ -170,6 +170,22 @@ const COLOR_PRESETS = [
   { label: 'Black',         value: '<0.000, 0.000, 0.000>' },
 ];
 
+// RGB cycle speed steps — n is the raw value stored as "RGB:n" (encodeColorForOutput multiplies by 12 on export)
+// Ordered slowest → fastest: slider fully filled = fastest = lowest exported number.
+const RGB_SPEEDS = [
+  { label: 'x0.005', n: 2000 },
+  { label: 'x0.05',  n: 200  },
+  { label: 'x0.1',   n: 100  },
+  { label: 'x0.25',  n: 40   },
+  { label: 'x0.5',   n: 20   },
+  { label: 'x0.67',  n: 15   },
+  { label: 'x1',     n: 10   },
+  { label: 'x1.5',   n: 7    },
+  { label: 'x2',     n: 5    },
+  { label: 'x4',     n: 3    },
+  { label: 'x10',    n: 1    },
+];
+
 const DEFAULT_OUTFIT = () => ({
   gender: 'Auto',
   animations_enabled: null,

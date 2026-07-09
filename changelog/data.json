@@ -1,117 +1,33 @@
-// ══════════════════════════════════════════════════════════════════════════════
-// Subbi Clothes — Changelog Data  (JSONC — supports // line comments)
-// ══════════════════════════════════════════════════════════════════════════════
-//
-// ── FIELD REFERENCE ──────────────────────────────────────────────────────────
-//
-//  version       string   Display name shown in the timeline header.
-//                         Examples: "DEV-2.0", "Subbi Clothes 3.3D"
-//
-//  date          string   Release date. Supported formats:
-//                           "YYYY-MM-DD"        Full ISO-8601 date (preferred)
-//                           "YYYY-MM"           Month precision only
-//                           "YYYY"              Year precision only
-//                           "Work in progress"  Pinned to the top of the timeline
-//                           "—"                 Unknown / TBD — sorted to the bottom
-//
-//  type          string   Release channel. Controls the colour pill in the UI.
-//                         Allowed values:
-//                           "stable"         — production release
-//                           "dev"            — development / nightly build
-//                           "beta"           — public beta / RC (excluded from "Releases" filter)
-//                           "legacy-stable"  — archived Stable entry; counts as Stable in filters
-//                           "legacy-dev"     — archived DEV entry; counts as DEV in filters
-//                         Legacy types render with reduced opacity/saturation.
-//
-//  version_type  string   Structural importance of the entry.
-//                         Allowed values:
-//                           "major"   — Full release. Rendered full-size in the timeline.
-//                           "middle"  — Moderate update. Rendered slightly smaller.
-//                           "minor"   — Small patch. Nested inside the parent's
-//                                       "Patch history" drawer (sub_versions array).
-//                           "hotfix"  — Urgent bugfix. Same nested rendering as minor.
-//                         Note: "minor" and "hotfix" entries should live inside
-//                         the sub_versions array of their nearest major/middle parent,
-//                         not at the top level.
-//
-//  badge         string   Short label shown on the version chip.
-//                         Examples: "DEV · SC4", "SC 3.0"
-//
-//  summary       string   One-paragraph description of the release shown below
-//                         the version header.
-//
-//  new           array    List of newly added features.
-//  changed       array    List of changed / improved behaviours.
-//  fixed         array    List of bug fixes.
-//  bugs          array    Known remaining bugs at time of release.
-//  hud           array    HUD-specific changes (rendered in purple).
-//
-//  sub_versions  array    Optional. Nested minor/hotfix entries belonging to
-//                         this release. Each item uses the same field schema
-//                         (version, date, version_type, summary, new, changed,
-//                         fixed, bugs, hud). Stats from sub_versions are summed
-//                         cumulatively into the parent's totals display.
-//                         Example:
-//                           "sub_versions": [
-//                             {
-//                               "version": "3.0a",
-//                               "date": "2025-01-15",
-//                               "version_type": "hotfix",
-//                               "summary": "Hotfix for startup crash.",
-//                               "fixed": ["Fixed crash on startup."]
-//                             },
-//                             {
-//                               "version": "3.0b",
-//                               "date": "2025-02-01",
-//                               "version_type": "minor",
-//                               "summary": "Minor QoL improvements.",
-//                               "changed": ["Improved menu responsiveness."],
-//                               "fixed": ["Fixed particle colour reset."]
-//                             }
-//                           ]
-//
-// ── MARKUP MINI-LANGUAGE ─────────────────────────────────────────────────────
-//
-//  Applies to all list items (new / changed / fixed / bugs / hud) and summary.
-//
-//  Inline formatting:
-//    **text**      Bold
-//    _text_        Italic
-//    ~~text~~      Strikethrough
-//    ||text||      Spoiler (blurred, revealed on hover/click)
-//    ``code``      Inline monospace code
-//
-//  Status tags — can appear anywhere in the string:
-//    [fixed:X]     "Fixed in vX" badge (green)
-//    [replaced:X]  "Replaced in vX" badge (orange)
-//    [wip]         Work In Progress badge (yellow)
-//    [breaking]    Breaking Change badge (red)
-//    [note:text]   Inline callout note (muted)
-//
-//  Leading-tag behaviour:
-//    When a status tag ([wip], [breaking], [replaced:X], [fixed:X]) appears at
-//    the very start of an item string — before any other visible text — the
-//    renderer collapses it to a compact icon-only pill and right-aligns the
-//    rest of the content. This keeps list items visually aligned even when only
-//    some carry a status badge and others do not.
-//    Example: "[replaced:DEV-4.0] Introduced a **Tags System**..."
-//
-// ── SUB-LIST SYNTAX ──────────────────────────────────────────────────────────
-//
-//  Any list item whose text begins with "- " (hyphen + space) is rendered as
-//  an indented sub-bullet under the preceding sibling item. Sub-items must be
-//  plain JSON strings in the same array as their parent.
-//  Example:
-//    "changed": [
-//      "Command system now flexible, accepting multiple formats:",
-//        "- on/off, 1/0, true/false, yes/no",
-//        "- Unknown command warnings",
-//        "- Remote access controls"
-//    ]
-//
-// ══════════════════════════════════════════════════════════════════════════════
-
 {
+  "_readme": [
+    "SCHEMA REFERENCE — full docs: changelog/SCHEMA.md",
+    "",
+    "FIELDS (top-level entries, and nested inside sub_versions):",
+    "  version       string   Display name, e.g. \"DEV-2.0\", \"Subbi Clothes 3.3D\"",
+    "  date          string   \"YYYY-MM-DD\" | \"YYYY-MM\" | \"YYYY\" | \"Work in Progress\" | \"—\"",
+    "  type          string   stable | dev | beta | legacy-stable | legacy-dev",
+    "  version_type  string   major | middle | minor | hotfix  (minor/hotfix nest inside sub_versions)",
+    "  badge         string   Short chip label, e.g. \"DEV · SC4\"",
+    "  summary       string   One-paragraph description shown below the version header",
+    "  new / changed / fixed / bugs / hud   array   Lists of markup-formatted strings",
+    "  sub_versions  array    Optional. Nested minor/hotfix entries, same schema as above",
+    "",
+    "INLINE MARKUP (usable inside any string above):",
+    "  **bold**   _italic_   ~~strikethrough~~   ||spoiler||   ``inline code``",
+    "",
+    "STATUS TAGS (usable anywhere in a string):",
+    "  [fixed:X]     \"Fixed in vX\" badge",
+    "  [replaced:X]  \"Replaced in vX\" badge",
+    "  [wip]         Work In Progress badge",
+    "  [breaking]    Breaking Change badge",
+    "  [note:text]   Inline callout note",
+    "  A tag placed at the very start of a string collapses into a compact icon-only pill.",
+    "",
+    "SUB-LIST SYNTAX:",
+    "  A string starting with \"- \" (hyphen + space) renders as an indented sub-bullet",
+    "  under the previous sibling item in the same array."
+  ],
+
   "entries": [
 
     {

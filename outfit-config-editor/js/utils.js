@@ -27,6 +27,37 @@ function setTristate(btn) {
   btn.classList.add('ts-active');
 }
 
+function presetSwatchBg(value) {
+  const h = slVecToHex(value);
+  if (h) return h;
+  if (value === 'Skyblue') return 'skyblue';
+  if (value === 'Rainbow') return 'linear-gradient(135deg,#f00,#f80,#ff0,#0f0,#00f,#80f)';
+  if (value === 'Random')  return 'linear-gradient(135deg,#f66,#fa0,#6e6,#6af,#d6d,#fa0)';
+  return 'linear-gradient(135deg,#f00,#0f0,#00f)';
+}
+
+function getSpeedRow(field) {
+  const id = field.dataset.speedRowId;
+  return id ? document.getElementById(id) : null;
+}
+
+function setSwatchLocked(field, rawValue) {
+  const nativeSwatch = field.querySelector('input.color-swatch');
+  const lockSwatch    = field.querySelector('.color-swatch-lock');
+  if (nativeSwatch) nativeSwatch.style.display = 'none';
+  if (lockSwatch) {
+    lockSwatch.style.background = presetSwatchBg(rawValue);
+    lockSwatch.style.display = '';
+  }
+}
+
+function setSwatchUnlocked(field) {
+  const nativeSwatch = field.querySelector('input.color-swatch');
+  const lockSwatch    = field.querySelector('.color-swatch-lock');
+  if (lockSwatch) lockSwatch.style.display = 'none';
+  if (nativeSwatch) nativeSwatch.style.display = '';
+}
+
 function switchColorTab(btn, mode) {
   const field = btn.closest('.color-field');
   field.querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
@@ -37,23 +68,88 @@ function switchColorTab(btn, mode) {
   if (mode === 'preset') {
     row.style.display  = 'none';
     list.style.display = '';
+    const speedRow = getSpeedRow(field);
+    if (speedRow) speedRow.style.display = 'none';
+    const current = inp.dataset.rawValue || inp.value;
+    const currentBase = /^RGB:\d+$/.test(current) ? 'RGB' : current;
     list.querySelectorAll('.preset-item').forEach(d => {
-      d.classList.toggle('preset-item-active', d.dataset.value === inp.value);
+      d.classList.toggle('preset-item-active', d.dataset.value === currentBase);
     });
   } else {
     list.style.display = 'none';
     row.style.display  = '';
+    if (inp.dataset.rawValue) {
+      inp.value = inp.dataset.rawValue;
+      delete inp.dataset.rawValue;
+      inp.readOnly = false;
+      setSwatchUnlocked(field);
+      updateRgbSpeedUI(field, false);
+    }
     syncSwatchFromText(inp);
   }
 }
 
+function closeColorPresetMenu(field) {
+  field.querySelector('.color-preset-list').style.display = 'none';
+  field.querySelector('.color-manual-row').style.display  = '';
+  field.querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
+  const presetBtn = field.querySelector('.ctab[data-mode="preset"]');
+  if (presetBtn) presetBtn.classList.add('active');
+}
+
 function pickPreset(el) {
-  const field = el.closest('.color-field');
-  const inp   = field.querySelector('input[type=text]');
-  inp.value   = el.dataset.value;
+  const field    = el.closest('.color-field');
+  const inp      = field.querySelector('input[type=text]');
+  const rawValue = el.dataset.value;
+  const isRgb    = rawValue === 'RGB';
+  const prevRaw  = inp.dataset.rawValue || '';
+  const keepSpeed = isRgb && /^RGB:\d+$/.test(prevRaw);
+  inp.value            = el.dataset.label;
+  inp.dataset.rawValue = isRgb ? (keepSpeed ? prevRaw : 'RGB:10') : rawValue;
+  inp.readOnly         = true;
   field.querySelectorAll('.preset-item').forEach(d => d.classList.remove('preset-item-active'));
   el.classList.add('preset-item-active');
-  syncSwatchFromText(inp);
+  setSwatchLocked(field, rawValue);
+  updateRgbSpeedUI(field, isRgb, keepSpeed ? prevRaw : null);
+  closeColorPresetMenu(field);
+}
+
+function updateRgbSpeedUI(field, show, existingRaw) {
+  const row = getSpeedRow(field);
+  if (!row) return;
+  row.style.display = show ? '' : 'none';
+  if (!show) return;
+  let n = 10;
+  const m = existingRaw ? /^RGB:(\d+)$/.exec(existingRaw) : null;
+  if (m) n = parseInt(m[1]);
+  let idx = RGB_SPEEDS.findIndex(s => s.n === n);
+  if (idx < 0) idx = RGB_SPEEDS.findIndex(s => s.n === 10);
+  const range = row.querySelector('.rgb-speed-slider');
+  const label = row.querySelector('.rgb-speed-label');
+  if (range) range.value = idx;
+  if (label) label.textContent = RGB_SPEEDS[idx].label;
+}
+
+function onRgbSpeedChange(rangeEl) {
+  const row = rangeEl.closest('.rgb-speed-row');
+  const cls = row.id.replace(/^rgbSpeedRow_/, '');
+  const inp = document.querySelector('.' + cls);
+  if (!inp) return;
+  const step = RGB_SPEEDS[parseInt(rangeEl.value)];
+  inp.dataset.rawValue = 'RGB:' + step.n;
+  const label = row.querySelector('.rgb-speed-label');
+  if (label) label.textContent = step.label;
+}
+
+function colorInputValue(inp) {
+  return (inp && inp.dataset.rawValue) || (inp ? inp.value : '');
+}
+
+function onColorFieldClick(inp) {
+  if (!inp.readOnly) return;
+  const field = inp.closest('.color-field');
+  const presetBtn = field.querySelector('.ctab[data-mode="preset"]');
+  if (presetBtn) switchColorTab(presetBtn, 'preset');
 }
 
 function slVecToHex(val) {
@@ -71,7 +167,7 @@ function hexToSlVec(hex) {
 }
 
 function syncSwatchFromText(inp) {
-  const swatch = inp.closest('.color-field').querySelector('.color-swatch');
+  const swatch = inp.closest('.color-field').querySelector('input.color-swatch');
   if (!swatch) return;
   const hex = slVecToHex(inp.value);
   if (hex) swatch.value = hex;
@@ -80,4 +176,6 @@ function syncSwatchFromText(inp) {
 function syncTextFromSwatch(swatch) {
   const inp = swatch.closest('.color-field').querySelector('input[type=text]');
   inp.value = hexToSlVec(swatch.value);
+  inp.readOnly = false;
+  delete inp.dataset.rawValue;
 }

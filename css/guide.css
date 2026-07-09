@@ -24,6 +24,8 @@
   --c-teal-b:   rgba(0,188,212,0.3);
   --c-yellow:   rgba(245,166,35,0.1);
   --c-yellow-b: rgba(245,166,35,0.35);
+  --c-red:      rgba(239,68,68,0.1);
+  --c-red-b:    rgba(239,68,68,0.35);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,6 +38,13 @@ body {
   font-size: 16px;
   line-height: 1.65;
 }
+
+/* Fallback for any plain <a> in page content (table cells, callouts, prose)
+   that isn't covered by a more specific rule below — without this, unstyled
+   links fall back to the browser default blue instead of the site's pink.
+   Underlined by default so links read as clickable, not just colored text. */
+a { color: var(--pink); text-decoration: underline; }
+a:hover { opacity: .8; }
 body::before {
   content: '';
   position: fixed; inset: 0; pointer-events: none; z-index: 9999;
@@ -229,15 +238,27 @@ body::before {
 .guide-table tr:last-child td { border-bottom: none; }
 .guide-table tr:hover td { background: var(--bg-hover); }
 .guide-table code { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--pink); background: var(--pink-soft); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; }
+.guide-table .tag-col { width: 1%; white-space: nowrap; text-align: center; }
 
 /* ── CODE ── */
 code { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--pink); background: var(--pink-soft); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; }
 .code-block { background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 16px 20px; font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--text-muted); margin: 18px 0; overflow-x: auto; line-height: 1.7; }
 
-/* ── BADGE ── */
-.badge { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: middle; margin-left: 6px; }
+/* ── BADGE ──
+   Leading marker: sits BEFORE the label/text it tags (margin-right, not
+   margin-left) — e.g. <span class="badge badge-green">NEW</span> Outfit bios */
+.badge { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: middle; margin: 0 6px 0 0; }
 .badge-pink { background: var(--pink-soft); color: var(--pink); border: 1px solid var(--border); }
 .badge-dim  { background: var(--bg-card); color: var(--text-dim); border: 1px solid var(--border-dim); }
+.badge-green  { background: var(--c-green);  color: #1de68a; border: 1px solid var(--c-green-b); }
+.badge-blue   { background: var(--c-blue);   color: #3b82f6; border: 1px solid var(--c-blue-b); }
+.badge-yellow { background: var(--c-yellow); color: #f5a623; border: 1px solid var(--c-yellow-b); }
+.badge-red    { background: var(--c-red);    color: #ef4444; border: 1px solid var(--c-red-b); }
+
+/* ── LEGEND LIST (badge key, one per line instead of wrapped inline) ── */
+.legend-list { list-style: none; padding: 0; margin: 6px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.legend-list li { color: var(--text-muted); margin: 0; font-size: 16px; }
+.legend-list .badge { margin: 0 8px 0 0; }
 
 /* ── VIDEO ── */
 .video-wrap { aspect-ratio: 16/9; max-width: 580px; border-radius: var(--radius); overflow: hidden; margin: 14px 0; border: 1px solid var(--border-dim); }

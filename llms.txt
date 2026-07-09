@@ -6,14 +6,16 @@
 
 - [FAQ](https://subbiclothes.com/faq/): comprehensive Q&A covering setup, folders, permissions, security, and chat commands — the best single page to answer specific questions about how Subbi Clothes works. Bilingual (English/Spanish), includes FAQPage structured data.
 - [Changelog](https://subbiclothes.com/changelog/): full version history, stable and DEV builds, most recent first.
-- [Changelog raw data (JSON)](https://subbiclothes.com/changelog/data.json): the same changelog as structured, documented data — includes an inline field/schema reference at the top of the file.
+- [Changelog raw data (JSON)](https://subbiclothes.com/changelog/data.json): the same changelog as structured, valid JSON — parseable directly (`JSON.parse()`/`fetch().json()`), no comments or preprocessing needed. Includes a top-level `_readme` field with the full field/schema and markup-syntax reference inline; the same reference also lives at [changelog/SCHEMA.md](https://subbiclothes.com/changelog/SCHEMA.md).
 - [Guide](https://subbiclothes.com/guide/): links to the official user guides (current stable release and the 4.0 rewrite in progress).
+- [Stable vs DEV](https://subbiclothes.com/stable-vs-dev/): feature-by-feature comparison table between the Stable (3.3D) and DEV (SC4/4.0) branches — what's new, improved, fixed, or removed in each.
 - [Outfit Config Editor](https://subbiclothes.com/outfit-config-editor/): free companion web tool for configuring outfits visually (animations, particles, colors, permissions, biographies).
 - [Marketplace listing](https://marketplace.secondlife.com/p/Subbi-Clothes-Wardrobe-HUD/22234935): where to buy the HUD.
-- [Full reference (llms-full.txt)](https://subbiclothes.com/llms-full.txt): the complete supplementary knowledge base — folder structure and symbols, permission/command syntax, the full chat command table, and known caveats (e.g. BOM ordering isn't guaranteed) that go beyond what's on the FAQ page. Read this if the FAQ doesn't fully answer a specific technical question.
+- [Full reference (llms-full.txt)](https://subbiclothes.com/llms-full.txt): the complete supplementary knowledge base — folder structure and symbols, permission/command syntax, the full chat command table, an A-Z glossary of terms, and known caveats (e.g. BOM ordering isn't guaranteed) that go beyond what's on the FAQ page. Read this if the FAQ doesn't fully answer a specific technical question.
+- [Discord server](https://discord.com/invite/STcN46YVxG): official community and support server.
 
 ## Notes
 
 - Subbi Clothes only runs inside Second Life with RLVa enabled; this website describes and supports the product, but the product itself is not a web application.
-- The current stable release is 3.3D; version 4.0 is now available as Early access (still officially in development).
-- Support: message Souwind or Aratx in Second Life, or join the official Discord server (linked from the homepage).
+- The current stable release is 3.3D; version 4.0 is now available as Early access (still officially in development) and is the developer-recommended branch.
+- Support: message Souwind or Aratx in Second Life, or join the official Discord server (linked in the footer of every page).

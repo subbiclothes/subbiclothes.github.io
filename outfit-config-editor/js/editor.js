@@ -55,38 +55,74 @@ function tristateHTML(field, value) {
   </div>`;
 }
 
-function colorFieldHTML(cls, value, hintKey) {
+function colorFieldHTML(cls, value, hintKey, excludePresets, enableRgbSpeed) {
+  excludePresets = excludePresets || [];
+  const presets = COLOR_PRESETS.filter(p => !excludePresets.includes(p.value));
   const hex = slVecToHex(value) || '#ffffff';
+  const specialValues = ['Rainbow', 'Random', 'RGB'];
 
-  const presetBg = p => {
-    const h = slVecToHex(p.value);
-    if (h) return `background:${h}`;
-    if (p.value === 'Skyblue') return 'background:skyblue';
-    if (p.value === 'Rainbow') return 'background:linear-gradient(135deg,#f00,#f80,#ff0,#0f0,#00f,#80f)';
-    if (p.value === 'Random')  return 'background:linear-gradient(135deg,#f66,#fa0,#6e6,#6af,#d6d,#fa0)';
-    return 'background:linear-gradient(135deg,#f00,#0f0,#00f)';
-  };
+  const rgbMatch = enableRgbSpeed ? /^RGB(?::(\d+))?$/i.exec(value) : null;
+  const preset = rgbMatch ? presets.find(p => p.value === 'RGB') : presets.find(p => p.value === value);
+  const rgbN = rgbMatch ? (rgbMatch[1] ? parseInt(rgbMatch[1]) : 10) : null;
+  const rawRgbValue = rgbMatch ? `RGB:${rgbN}` : null;
 
-  const listItems = COLOR_PRESETS.map((p, i) => {
-    const active = p.value === value ? 'preset-item-active' : '';
-    const sep = i === 3 ? '<div class="preset-item-sep"></div>' : '';
-    return `${sep}<div class="preset-item ${active}" data-value="${esc(p.value)}" onclick="pickPreset(this)">
-      <span class="preset-item-dot" style="${presetBg(p)}"></span>
+  const listItems = presets.map((p, i) => {
+    const active = p.value === value || (rgbMatch && p.value === 'RGB') ? 'preset-item-active' : '';
+    const sep = (i > 0 && specialValues.includes(presets[i - 1].value) && !specialValues.includes(p.value))
+      ? '<div class="preset-item-sep"></div>' : '';
+    return `${sep}<div class="preset-item ${active}" data-value="${esc(p.value)}" data-label="${esc(p.label)}" onclick="pickPreset(this)">
+      <span class="preset-item-dot" style="background:${presetSwatchBg(p.value)}"></span>
       <span>${esc(p.label)}</span>
     </div>`;
   }).join('');
 
-  return `<div class="color-field">
+  const displayValue = preset ? preset.label : value;
+  const rawAttr       = preset ? ` data-raw-value="${esc(rawRgbValue || preset.value)}"` : '';
+  const readonlyAttr  = preset ? ' readonly' : '';
+  const manualActive  = preset ? '' : ' active';
+  const presetActive  = preset ? ' active' : '';
+  const speedRowAttr  = enableRgbSpeed ? ` data-speed-row-id="rgbSpeedRow_${esc(cls)}"` : '';
+
+  return `<div class="color-field"${speedRowAttr}>
     <div class="color-tabs">
-      <button class="ctab active" onclick="switchColorTab(this,'manual')">${t('color_manual')}</button>
-      <button class="ctab" onclick="switchColorTab(this,'preset')">${t('color_preset')}</button>
+      <button class="ctab${manualActive}" data-mode="manual" onclick="switchColorTab(this,'manual')">${t('color_manual')}</button>
+      <button class="ctab${presetActive}" data-mode="preset" onclick="switchColorTab(this,'preset')">${t('color_preset')}</button>
     </div>
     <div class="color-manual-row">
-      <input type="color" class="color-swatch" value="${hex}" oninput="syncTextFromSwatch(this)"/>
-      <input type="text" class="${cls}" value="${esc(value)}" placeholder="&lt;1.0, 1.0, 1.0&gt;" oninput="syncSwatchFromText(this)"/>
+      <input type="color" class="color-swatch" value="${hex}" oninput="syncTextFromSwatch(this)" style="display:${preset ? 'none' : ''}"/>
+      <span class="color-swatch-lock" style="display:${preset ? '' : 'none'};background:${preset ? presetSwatchBg(preset.value) : ''}"></span>
+      <input type="text" class="${cls}" value="${esc(displayValue)}"${rawAttr}${readonlyAttr} placeholder="&lt;1.0, 1.0, 1.0&gt;" oninput="syncSwatchFromText(this)" onclick="onColorFieldClick(this)"/>
     </div>
     <div class="color-preset-list" style="display:none">${listItems}</div>
     <div class="color-hint">${t(hintKey)}</div>
+  </div>`;
+}
+
+function rgbSpeedSliderHTML(cls, value) {
+  const m = /^RGB(?::(\d+))?$/i.exec(value);
+  const show = !!m;
+  const n = m ? (m[1] ? parseInt(m[1]) : 10) : 10;
+  const defaultIdx = RGB_SPEEDS.findIndex(s => s.n === 10);
+  const found = RGB_SPEEDS.findIndex(s => s.n === n);
+  const idx = found >= 0 ? found : defaultIdx;
+  const ticksId = `rgbSpeedTicks_${esc(cls)}`;
+  const datalistOpts = RGB_SPEEDS.map((s, i) => `<option value="${i}" label="${esc(s.label)}"></option>`).join('');
+  const lastIdx = RGB_SPEEDS.length - 1;
+  const tickNum = s => s.label.replace(/^x0\./, '.').replace(/^x/, '');
+  const tickMarks = RGB_SPEEDS.map((s, i) => `<div class="rgb-speed-tick" style="left:${(i / lastIdx * 100).toFixed(3)}%">
+      <span class="tick-line"></span>
+      ${i % 2 === 0 ? `<span class="tick-num">${esc(tickNum(s))}</span>` : ''}
+    </div>`).join('');
+  return `<div class="rgb-speed-row" id="rgbSpeedRow_${esc(cls)}" style="display:${show ? '' : 'none'}">
+    <div class="rgb-speed-title">${t('rgb_speed_label')}</div>
+    <div class="rgb-speed-controls">
+      <div class="rgb-speed-track-wrap">
+        <input type="range" class="rgb-speed-slider" min="0" max="${lastIdx}" step="1" value="${idx}" list="${ticksId}" oninput="onRgbSpeedChange(this)"/>
+        <datalist id="${ticksId}">${datalistOpts}</datalist>
+        <div class="rgb-speed-ticks">${tickMarks}</div>
+      </div>
+      <span class="rgb-speed-label">${esc(RGB_SPEEDS[idx].label)}</span>
+    </div>
   </div>`;
 }
 
@@ -289,7 +325,7 @@ function renderEditor(id) {
               <label class="toggle"><input type="checkbox" class="f-part-col-start-en" ${d.particles_color_start_enabled ? 'checked' : ''} onchange="toggleColorEnable(this,'partColStartFields');gateColorEnd(this)"><span class="toggle-track"></span></label>
             </div>
             <div id="partColStartFields" style="${d.particles_color_start_enabled ? '' : 'opacity:0.35;pointer-events:none;'}">
-              ${colorFieldHTML('f-part-col-start', d.particles_color_start||'<1.0, 1.0, 1.0>', 'particles_color_hint')}
+              ${colorFieldHTML('f-part-col-start', d.particles_color_start||'<1.0, 1.0, 1.0>', 'particles_color_hint', ['RGB'])}
             </div>
           </div>
           <div>
@@ -298,7 +334,7 @@ function renderEditor(id) {
               <label class="toggle" id="partColEndToggle" style="${!d.particles_color_start_enabled ? 'opacity:0.4;pointer-events:none;' : ''}"><input type="checkbox" class="f-part-col-end-en" ${d.particles_color_end_enabled ? 'checked' : ''} ${!d.particles_color_start_enabled ? 'disabled' : ''} onchange="toggleColorEnable(this,'partColEndFields')"><span class="toggle-track"></span></label>
             </div>
             <div id="partColEndFields" style="${d.particles_color_end_enabled ? '' : 'opacity:0.35;pointer-events:none;'}">
-              ${colorFieldHTML('f-part-col-end', d.particles_color_end||'<1.0, 1.0, 1.0>', 'particles_color_hint')}
+              ${colorFieldHTML('f-part-col-end', d.particles_color_end||'<1.0, 1.0, 1.0>', 'particles_color_hint', ['RGB'])}
             </div>
           </div>
         </div>
@@ -392,7 +428,10 @@ function renderEditor(id) {
             <div class="form-grid">
               <div class="form-group">
                 <label>${t('title_color')}</label>
-                ${colorFieldHTML('f-title-col', d.title_color||'<1.0, 1.0, 1.0>', 'particles_color_hint')}
+                ${colorFieldHTML('f-title-col', d.title_color||'<1.0, 1.0, 1.0>', 'particles_color_hint', [], true)}
+              </div>
+              <div class="form-group rgb-speed-col">
+                ${rgbSpeedSliderHTML('f-title-col', d.title_color||'<1.0, 1.0, 1.0>')}
               </div>
             </div>
           </div>
@@ -817,8 +856,8 @@ function saveActiveEditor() {
   d.particles_duration      = _dur === '' ? null : parseFloat(_dur);
   d.particles_color_start_enabled = get('.f-part-col-start-en') ? get('.f-part-col-start-en').checked : false;
   d.particles_color_end_enabled   = get('.f-part-col-end-en')   ? get('.f-part-col-end-en').checked   : false;
-  d.particles_color_start   = get('.f-part-col-start').value;
-  d.particles_color_end     = get('.f-part-col-end').value;
+  d.particles_color_start   = colorInputValue(get('.f-part-col-start'));
+  d.particles_color_end     = colorInputValue(get('.f-part-col-end'));
   const _nf = sel => { const el = get(sel); return el && el.value.trim() !== '' ? parseFloat(el.value) : null; };
   d.particles_radius       = _nf('.f-part-radius');
   d.particles_alpha_start  = _nf('.f-part-alpha-start');
@@ -830,7 +869,7 @@ function saveActiveEditor() {
   d.title_enabled           = getTs('f-title-en');
   d.title_text              = get('.f-title-txt').value.replace(/\n/g, '\\n');
   d.title_color_enabled     = get('.f-title-col-en') ? get('.f-title-col-en').checked : false;
-  d.title_color             = get('.f-title-col').value;
+  d.title_color             = colorInputValue(get('.f-title-col'));
   if (get('.f-bio')  !== null) d.biography = get('.f-bio').value.replace(/\n/g, '\\n');
   if (get('.f-tags') !== null) d.tags = get('.f-tags').value.trim();
 }

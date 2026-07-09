@@ -293,6 +293,70 @@ Notes on specific commands:
   Check that numbered folders are sequential with no gaps, that skins/alphas/brows aren't placed
   inside them, and that the final Patcher folder is set up correctly.
 
+## Glossary (A-Z quick reference)
+
+Short definitions for terms used throughout this document and the site. Most are explained in
+more detail in the sections above — this is a fast lookup, not a replacement for them.
+
+- **Accessories**: independent items you can attach or remove at any time, regardless of what
+  you're wearing. Supports full scope and all extended symbols (`#` `@` `$` `*`).
+- **Admin access**: temporary elevated access — requested by the admin, approved by the owner,
+  revoked automatically on HUD removal or logout. Different from Master access.
+- **AlphaFix**: folder for items that need a ~10-second delayed load, fixing alpha issues on
+  certain bodies (e.g. Maitreya V-Tech).
+- **Attach / Detach** (folders inside an accessory): Attach's contents are added when the
+  accessory is removed; Detach's contents are removed when the accessory is worn.
+- **Auto-Load (`*`)**: symbol that makes an item attach automatically on avatar replace, Refresh,
+  or Quick Dress. Applies to Accessories, HUDs, and Hairstyle.
+- **Bits**: explicit/NSFW nudity folder (crotch, torso). Hidden if nudity access is off. Takes
+  priority over Undressed if both exist.
+- **Blacklist**: explicitly blocks specific people, regardless of any other access category.
+- **BOM (Bakes on Mesh)**: numbered-folder system for bake layers. In DEV, scope covers Global,
+  Group, and Personal. Ordering is best-effort, not guaranteed (see BOM caveat above).
+- **BonesLock**: DEV system of avatar/bone-related fixes; Lock Ankle is now part of it.
+- **Clicker**: touchable object on the body, separate from the Mini HUD, that opens the same
+  menu. Also runs auto-alpha and controls particle/overhead options.
+- **Dressed**: the default worn-clothes state of an outfit.
+- **Dynamic message variables**: auto-updating placeholders usable in titles/messages, e.g.
+  `{outfit}`, `{avatar}`, `{access}`, `{range}`.
+- **External automation**: the HUD accepting commands sent by objects owned by the HUD owner.
+- **Friends**: access category based on the SL friends list, cumulative with Public/Group/
+  Whitelist.
+- **Group (access)**: access category for anyone sharing your currently active SL group.
+- **Group (folder)**: top-level folder inside `~Subbi_Clothes` containing Outfits — an avatar
+  "type" (e.g. Legacy Body, Reborn Body).
+- **Hairstyle**: optional per-outfit folder where each subfolder is a hairstyle option.
+- **HUD**: both the wearable device itself, and a folder type (always private by default).
+- **Master access**: permanent elevated access, added manually by the owner, stays until removed
+  by hand. Different from Admin access.
+- **Midwear**: underwear that stays active as part of the Dressed state (renamed from "Uwear").
+  Supported on all body parts in DEV.
+- **OCE (Outfit Config Editor)**: free companion web app for configuring outfits — tags, bio,
+  animations, particles — without editing folder names by hand.
+- **Outfit**: an individual avatar/look inside a Group.
+- **Particles**: visual effects on interaction, configurable globally (Settings → Clicker →
+  Particles) or per-outfit via OCE.
+- **PG-Safe+**: automatic/manual safety system with modes DressMe, Replace, BackHome, B.N.
+- **Private folder (`#`)**: symbol restricting a folder to the owner (and permitted whitelisted
+  users).
+- **Public**: base access category — on/off access for anyone.
+- **Random Outfit / Random Avatar**: scope-aware random selection; always excludes private (`#`)
+  entries.
+- **Replace Clothes ("Mix")**: swaps the clothing of one body part between two saved outfits,
+  creating a temporary combined look.
+- **RLV / RLVa**: Restrained Life Viewer(-a) — the scripting API Subbi Clothes depends on.
+- **SAF (Semi-Automatic Folders)**: helper object that creates the required folder structure.
+  Currently SAF v4 in DEV.
+- **Scope**: the three levels a folder can live at — Global, Group, or Personal (Outfit).
+- **SkeletonFix**: toggleable fix for broken skeletons after Replace or Refresh.
+- **Sub-folder (`@` / `$`)**: `@` = normal sub-menu; `$` = auto-detach sub-menu (only one item
+  active at a time).
+- **Tags & Filter**: system for labeling outfits so they can be found via the built-in filter.
+  Set via OCE.
+- **Undressed**: SFW nudity folder (face, arms, hands, feet). Ignored if a Bits folder exists.
+- **Whitelist**: individually added people granted access. Can also be populated via "Detect"
+  (nearby users, 20m range, no cap in DEV).
+
 ## Support
 
 Message Souwind or Aratx in Second Life, or join the official Discord server (linked from the

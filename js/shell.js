@@ -10,22 +10,28 @@
   /* ── Strings ── */
   const S = {
     en: {
-      home:    'Home',
-      guide:   'Guide',
-      faq:     'FAQ',
-      editor:  'Config Editor',
-      mp:      'Marketplace',
+      home:      'Home',
+      guide:     'Guide',
+      faq:       'FAQ',
+      editor:    'Config Editor',
+      mp:        'Marketplace',
+      changelog: 'Changelog',
+      compare:   'Stable vs DEV',
+      discord:   'Discord',
 
-      footer_contact: 'Questions? Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life.',
+      footer_contact: 'Questions? Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life, or join the <a href="/r/discord">Discord</a>.',
       footer_version: 'Latest release: <strong>v3.3D</strong> &nbsp;·&nbsp; 4.0 DEV: Early access',
     },
     es: {
-      home:    'Inicio',
-      guide:   'Guía',
-      faq:     'FAQ',
-      editor:  'Editor de Config',
-      mp:      'Marketplace',
-      footer_contact: '¿Preguntas? Escribe a <strong>Souwind</strong> o <strong>Aratx</strong> en Second Life.',
+      home:      'Inicio',
+      guide:     'Guía',
+      faq:       'FAQ',
+      editor:    'Editor de Config',
+      mp:        'Marketplace',
+      changelog: 'Changelog',
+      compare:   'Stable vs DEV',
+      discord:   'Discord',
+      footer_contact: '¿Preguntas? Escribe a <strong>Souwind</strong> o <strong>Aratx</strong> en Second Life, o únete al <a href="/r/discord">Discord</a>.',
       footer_version: 'Última versión: <strong>v3.3D</strong> &nbsp;·&nbsp; 4.0 DEV: acceso anticipado',
     }
   };
@@ -90,19 +96,20 @@
     return `
 <footer class="site-footer" id="shell-footer">
   <div class="footer-inner">
-    <div class="footer-top">
+    <div class="footer-left">
       <div class="footer-brand">SUBBI<span>CLOTHES</span></div>
-      <nav class="footer-nav">
-        <a href="/r/mp"                data-si="mp">Marketplace</a>
-        <a href="/guide/"              data-si="guide">Guide</a>
-        <a href="/faq/"                data-si="faq">FAQ</a>
-        <a href="/outfit-config-editor/" data-si="editor">Config Editor</a>
-      </nav>
-    </div>
-    <div class="footer-bottom">
-      <p data-si-html="footer_contact">Questions? Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life.</p>
+      <p data-si-html="footer_contact">Questions? Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life, or join the <a href="/r/discord">Discord</a>.</p>
       <p class="footer-version" data-si-html="footer_version">Latest release: <strong>v3.3D</strong> &nbsp;·&nbsp; 4.0 DEV: Early access</p>
     </div>
+    <nav class="footer-nav">
+      <a href="/r/mp"                data-si="mp">Marketplace</a>
+      <a href="/guide/"              data-si="guide">Guide</a>
+      <a href="/faq/"                data-si="faq">FAQ</a>
+      <a href="/outfit-config-editor/" data-si="editor">Config Editor</a>
+      <a href="/changelog/"          data-si="changelog">Changelog</a>
+      <a href="/stable-vs-dev/"      data-si="compare">Stable vs DEV</a>
+      <a href="/r/discord"           data-si="discord">Discord</a>
+    </nav>
   </div>
 </footer>`;
   }

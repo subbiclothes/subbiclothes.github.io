@@ -403,6 +403,7 @@
     <p class="page-eyebrow"><span data-lc="en">Release history</span><span data-lc="es">Historial de versiones</span></p>
     <h1 class="page-title">Subbi Clothes — <span>Changelog</span></h1>
     <p class="page-desc"><span data-lc="en">All changes across every release — stable builds and public DEV versions. Most recent first.</span><span data-lc="es">Todos los cambios de cada versión — builds estables y versiones DEV públicas. Más recientes primero.</span></p>
+    <p class="page-desc"><span data-lc="en">Want the short version? See our <a href="/stable-vs-dev/">Stable vs DEV comparison</a> for what's actually different between the two branches.</span><span data-lc="es">¿Quieres la versión corta? Consulta nuestra <a href="/stable-vs-dev/">comparativa Stable vs DEV</a> para ver qué cambia realmente entre ambas ramas.</span></p>
 
     <!-- ── Release type legend ── -->
     <div class="type-legend">
@@ -599,12 +600,7 @@
     let currentFilter = 'all';
 
     fetch('./data.json')
-      .then(r => r.text())
-      .then(text => {
-        // JSONC support: strip // line-comments while preserving them inside strings
-        const clean = text.replace(/("(?:[^"\\]|\\.)*")|\/\/[^\n]*/g, (m, str) => str || '');
-        return JSON.parse(clean);
-      })
+      .then(r => r.json())
       .then(data => { allEntries = data.entries || []; renderTimeline(); })
       .catch(() => {
         document.getElementById('timeline').innerHTML =

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Subbi Clothes — Stable vs DEV</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <meta name="description" content="Feature-by-feature comparison between Subbi Clothes Stable (3.3D) and the DEV (SC4) branch.">
+  <link rel="canonical" href="https://subbiclothes.com/stable-vs-dev/">
+  <meta name="shell-logo-sub-en" content="Stable vs DEV">
+  <meta name="shell-logo-sub-es" content="Stable vs DEV">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/shell.css">
+  <style>
+    /* ── Page-specific: comparison tables, cards, badges ──
+       Reuses shell.css tokens (--pink, --bg-card, --border-dim, etc.) so this
+       page matches Home/FAQ/Changelog exactly. Only badge accent colors are
+       new — shell.css has no notion of NEW/IMPROVED/FIXED/REMOVED. */
+    :root {
+      --c-blue:     rgba(59,130,246,0.12);
+      --c-blue-b:   rgba(59,130,246,0.35);
+      --c-green:    rgba(29,230,138,0.1);
+      --c-green-b:  rgba(29,230,138,0.3);
+      --c-yellow:   rgba(245,166,35,0.1);
+      --c-yellow-b: rgba(245,166,35,0.35);
+      --c-red:      rgba(239,68,68,0.1);
+      --c-red-b:    rgba(239,68,68,0.35);
+    }
+
+    main { flex: 1; }
+    .cmp-wrap { max-width: 1040px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .section-header { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .section-header i { color: var(--pink); font-size: 20px; }
+    .section-header h1 { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--pink); }
+    .section-intro { color: var(--text-muted); font-size: var(--fs-body); margin-bottom: 24px; max-width: 760px; }
+
+    .cmp-card { background: var(--bg-card); border: 1px solid var(--border-dim); border-left: 3px solid var(--pink); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 28px; max-width: 100%; overflow-x: auto; }
+    .cmp-card h2 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; color: var(--text); text-transform: uppercase; margin: 0 0 16px; }
+    .cmp-card > p { color: var(--text-muted); font-size: var(--fs-body); margin-bottom: 14px; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px; border-radius: var(--radius); margin: 0 0 18px; border: 1px solid var(--border-dim); background: var(--bg-panel); }
+    .callout i { color: var(--pink); margin-top: 2px; flex-shrink: 0; }
+    .callout p { margin: 0; font-size: var(--fs-body); color: var(--text-muted); }
+
+    .legend-list { list-style: none; padding: 0; margin: 6px 0 0; display: flex; flex-direction: column; gap: 8px; }
+    .legend-list li { color: var(--text-muted); margin: 0; font-size: var(--fs-body); }
+    .legend-list .badge { margin: 0 8px 0 0; }
+
+    .cmp-table { width: 100%; border-collapse: collapse; margin: 0 0 18px; font-size: var(--fs-meta); }
+    .cmp-table th { text-align: left; padding: 11px 16px; background: var(--bg-panel); color: var(--text-dim); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border-dim); }
+    .cmp-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-dim); color: var(--text-muted); vertical-align: top; }
+    .cmp-table td strong { color: var(--text); }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table tr:hover td { background: var(--bg-hover); }
+    .cmp-table .tag-col { width: 1%; white-space: nowrap; text-align: center; }
+    .cmp-table code { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--pink); background: var(--pink-soft); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; }
+
+    .badge { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: middle; }
+    .badge-green  { background: var(--c-green);  color: #1de68a; border: 1px solid var(--c-green-b); }
+    .badge-blue   { background: var(--c-blue);   color: #3b82f6; border: 1px solid var(--c-blue-b); }
+    .badge-yellow { background: var(--c-yellow); color: #f5a623; border: 1px solid var(--c-yellow-b); }
+    .badge-red    { background: var(--c-red);    color: #ef4444; border: 1px solid var(--c-red-b); }
+
+    @media (max-width: 600px) { .cmp-wrap { padding: 40px 16px 60px; } }
+  </style>
+</head>
+<body>
+
+  <main>
+    <div class="cmp-wrap">
+
+      <div class="section-header">
+        <i class="fa-solid fa-code-compare"></i>
+        <h1>Stable vs DEV — Which One Should You Use?</h1>
+      </div>
+
+      <p class="section-intro">Subbi Clothes ships on two parallel branches: <strong>Stable (3.3D)</strong>, practically unchanged since June 2024 and no longer receiving support, and <strong>DEV (SC4)</strong>, currently at <strong>DEV-4.0</strong> and under active development. DEV is the <strong>developer-recommended</strong> branch going forward — these tables only list what actually differs between them; the core folder structure (Accessories, HUDs, Hairstyle, scope, symbols) is shared by both.</p>
+
+      <div class="cmp-card">
+        <div class="callout">
+          <i class="fa-solid fa-circle-info"></i>
+          <div>
+            <p>Legend:</p>
+            <ul class="legend-list">
+              <li><span class="badge badge-green">NEW</span> didn't exist in Stable</li>
+              <li><span class="badge badge-yellow">IMPROVED</span> existed, works better now</li>
+              <li><span class="badge badge-blue">FIXED</span> a known Stable bug, resolved in DEV</li>
+              <li><span class="badge badge-red">REMOVED</span> existed in Stable, gone (or disabled) in DEV</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Feature Differences</h2>
+        <table class="cmp-table">
+          <thead><tr><th class="tag-col"></th><th>Feature</th><th>Stable (3.3D)</th><th>DEV (4.0 / early access)</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td class="tag-col"></td><td><strong>Development status</strong></td><td>Mature, no active development</td><td>Actively developed — developer-recommended branch, may still have rough edges</td><td>Stable receives no further updates going forward.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Folder setup tool</strong></td><td>SAF v3</td><td>SAF v4</td><td>Newer version of the same setup helper, DEV/SC4-specific.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Outfit configuration</strong></td><td>Manual, via in-HUD menu — cumbersome</td><td>Manual, via <a href="/outfit-config-editor/">Outfit Config Editor (OCE)</a> — much easier, replaces the old notecard-based flow</td><td>OCE landed in DEV-4.0, replacing the DEV-3.1 notecard flow.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Outfit biographies</strong></td><td>Not available</td><td>Individual biography per outfit, set via OCE</td><td>Same field used by the WIP <code>scfind</code> command.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Outfit tags &amp; filter</strong></td><td>Not available</td><td>Full tag + filter system, set via OCE (originally via <code>~~</code> folder naming)</td><td>Tag system introduced DEV-2.0, moved to OCE in DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Replace Clothes (Mix avatars)*</strong></td><td>Experimental</td><td>Fully redesigned, no longer experimental</td><td>First added (experimental) in SC 3.0 (2021); finalized in DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Rename Clothes</strong></td><td>Comma-separated text box</td><td>Notecard + OCE flow, plus a dedicated button to rename individual pieces</td><td>Text-box method removed DEV-1.0 → notecards DEV-2/3.1 → OCE DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>HUD resizing</strong></td><td>Fixed size</td><td>Resizable via menu (<code>Settings → HUD → Resize HUD</code>) or command</td><td><code>/55 hud size=[-50..+50]</code>, added DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>SkeletonFix</strong></td><td>Not available</td><td>Toggleable fix for broken skeletons on Replace/Refresh</td><td>WIP since DEV-1.1, formalized with its own toggle in DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Extended admin controls</strong></td><td>Not available</td><td>Requestable admin access, including running commands on another user's HUD (use with caution)</td><td>See Admin vs. Master Access in the main guide.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Command syntax</strong></td><td>Classic flat <code>/55 command</code></td><td>Reworked, more consistent namespaced syntax — see <a href="/official-guide/commands-guide/">Chat Commands</a></td><td>Reworked DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Commands toggle</strong></td><td>Experimental — on/off indicator not clearly defined</td><td>Reworked in DEV-4.0 into a direct, clear enable/disable toggle</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>External automation</strong></td><td>Not available</td><td>HUD accepts commands sent by objects owned by the HUD owner — lets you script your own automation</td><td>Added DEV-1.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Body parts</strong></td><td>Fewer dedicated slots</td><td>5 additional dedicated slots: Face, Upper, Hands, Waist, Legs</td><td>"Upper" was previously named "TChest".</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Midwear support</strong></td><td>Uwear supported on select body parts only, and known to misbehave on some of them</td><td>Midwear (renamed from Uwear) supported on <em>all</em> body parts</td><td>Renamed + fixed DEV-1.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>BOM scope</strong></td><td>Personal (Outfit) level only</td><td>Full scope — Global, Group, and Personal</td><td>Expanded DEV-2.0, with improved performance.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Friends access category</strong></td><td>Not available</td><td>Added as its own access category, cumulative with Public/Group/Whitelist</td><td>Added DEV-1.0, expanded DEV-3.1.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Whitelist/Blacklist "Detect"</strong></td><td>10m range, capped at 10 users (inherited from the SC3 line)</td><td>20m range, no user cap</td><td>Improved DEV-1.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Whitelist/Blacklist identification</strong></td><td>Based on display/legacy name — detection could be inconsistent</td><td>Based on UUID and profile — more reliable, unaffected by name changes</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Dynamic message variables</strong></td><td>Not available</td><td>Auto-updating placeholders in titles/messages: <code>{outfit}</code>, <code>{avatar}</code>, <code>{access}</code>, <code>{range}</code>, etc.</td><td><code>{outfit}</code>/<code>{avatar}</code> title tags added DEV-3.1; more confirmed by the developer.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Particles</strong></td><td>Basic particle system</td><td>More options (alternative textures, per-outfit color via OCE); can stay active while your avatar is still loading</td><td>"Dynamic Time Parts" added DEV-1.1.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Animations</strong></td><td>Original animation set</td><td>1 reworked animation (crotch undress) + 3 new ones (2 head undress, 1 face dress/undress)</td><td>Added DEV-3.1.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-red">REMOVED</span></td><td><strong>Coat / Socks logic</strong></td><td>Present (Torso/Feet)</td><td>Removed entirely</td><td>Removed DEV-3.1.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-red">REMOVED</span></td><td><strong>HUD skin &amp; light/dark mode</strong></td><td>Available</td><td>Temporarily disabled</td><td>Disabled in 4.0 DEV due to code restructuring — not a permanent removal.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin: 0;">
+          <i class="fa-solid fa-circle-info"></i>
+          <p><strong>*</strong> "Replace Clothes" swaps the clothing of a single body part between two saved outfits, creating a temporary combined look — a "mix" between two avatars.</p>
+        </div>
+      </div>
+
+      <div class="cmp-card">
+        <h2>Performance, Stability &amp; Reworked Behavior</h2>
+        <p>DEV isn't just new features — a good chunk of its changelog is internal rework that never shows up as a checkbox, plus dozens of smaller bugfixes. Since Stable has seen no meaningful changes since June 2024 and receives no further support, none of this reaches it.</p>
+        <table class="cmp-table">
+          <thead><tr><th class="tag-col"></th><th>Area</th><th>Stable (3.3D)</th><th>DEV (4.0 / early access)</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>HUD performance</strong></td><td>Baseline, no meaningful updates since mid-2024</td><td>Roughly <strong>3× faster</strong>, with reduced simulator impact — optimized RLV script behavior and Settings/Outfits systems</td><td>Per developer — not an independently verified benchmark.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Menu interface &amp; icons</strong></td><td>Text-based, older icon set</td><td>Clearer, more intuitive layout with emojis and updated tick/cross icons, plus additional visual indicators</td><td>Icons refreshed DEV-1.0, emojis DEV-2.0/4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Avatar/bone fixes</strong></td><td>Lock Ankle only, as a standalone command</td><td>Broader <strong>BonesLock</strong> system — Lock Ankle is now part of it, alongside SkeletonFix</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>HUD crash recovery</strong></td><td>Known issue: <code>Menu.lsl</code> could crash/restart, leaving the HUD menu unresponsive after a simulator failure</td><td>Repeated fix attempts (DEV-4.0 is "attempt #5") for this exact issue</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Long-session memory leaks</strong></td><td>Known issue: outfit memory could accumulate over time, rarely causing a stack-heap collision (script reset)</td><td>Fixed memory accumulation and orphaned-listener leaks in <code>menu.lsl</code>; legacy scripts removed</td><td>DEV-3.1.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Multi-user menu block / crosstalk</strong></td><td>Known issue: menus could cross between people interacting with the same HUD/menu at once</td><td>Fixed the bug where enabling all interaction systems at once (Clothes, Avatars, Accessories, Hairstyles, Commands) blocked other users from opening the menu; reworked listener handling</td><td>DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Full HUD lockup</strong></td><td>Known issue: third-party object interactions could completely block the HUD</td><td>Fixed the conflicts causing the block</td><td>DEV-3.1.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>PG-SAFE reliability</strong></td><td>Known issue: PG-SAFE could fail to properly disable public access</td><td>Fixed</td><td>DEV-3.1.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Accidental avatar mixing</strong></td><td>Known issue: replacing avatars didn't always detach everything it should, occasionally leaving leftover items attached</td><td>Resolved as part of the redesigned Replace/Refresh system</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Duplicate accessories</strong></td><td>Known issue: the same accessory could appear more than once depending on scope level (Global/Group/Personal)</td><td>Accessory folders with the same name at different levels no longer create duplicate menu options</td><td>DEV-1.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Typos &amp; inconsistent menu wording</strong></td><td>Known issue across several menus</td><td>Menu descriptions revised across multiple DEV releases</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Minor button issues</strong></td><td>A handful of known issues in various menus</td><td>Addressed across DEV releases</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Settings menu structure</strong></td><td>Flat, older layout</td><td>Reorganized into dedicated categories — new "HUD" menu, "Memory" moved under "Others" — for scalability</td><td>—</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Backhome behavior</strong></td><td>Manual target only</td><td>Reworked to default to your actual SL Home location automatically (custom regions still configurable)</td><td>DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Random Avatar access</strong></td><td>Available, separate entry point</td><td>Repositioned and integrated directly into the Avatars menu for better visibility</td><td>DEV-4.0.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin: 0;">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>This is a curated selection, not the full list — DEV's changelog includes dozens more smaller fixes and tweaks. If you're starting fresh, DEV is the recommended pick — check the <a href="/changelog/">Changelog</a> for the complete, unabridged history per version.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/js/shell.js"></script>
+
+</body>
+</html>

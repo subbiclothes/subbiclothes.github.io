@@ -41,6 +41,12 @@ body {
   flex-direction: column;
 }
 
+/* Fallback for any plain <a> not covered by a more specific rule below —
+   without this, unstyled links fall back to the browser default blue.
+   Underlined by default so links read as clickable, not just colored text. */
+a { color: var(--pink); text-decoration: underline; }
+a:hover { opacity: .8; }
+
 /* ── SCANLINE OVERLAY ── */
 body::before {
   content: '';
@@ -632,6 +638,12 @@ input[type=color].color-swatch {
 input[type=color].color-swatch::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
 input[type=color].color-swatch::-webkit-color-swatch { border: none; border-radius: 50%; }
 input[type=color].color-swatch::-moz-color-swatch { border: none; border-radius: 50%; }
+.color-swatch-lock {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--border); cursor: default;
+  pointer-events: none; flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+}
 .color-preset-list {
   max-height: 148px; overflow-y: auto;
   border: 1px solid var(--border-dim); border-radius: var(--radius);
@@ -650,6 +662,44 @@ input[type=color].color-swatch::-moz-color-swatch { border: none; border-radius:
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
 }
 .preset-item-sep { height: 1px; background: var(--border-dim); margin: 2px 0; }
+.rgb-speed-col { justify-content: center; }
+.rgb-speed-row { display: flex; flex-direction: column; gap: 6px; }
+.rgb-speed-title {
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-dim);
+}
+.rgb-speed-controls {
+  display: flex; align-items: center; gap: 8px;
+}
+.rgb-speed-track-wrap {
+  position: relative; flex: 1; min-width: 0;
+  display: flex; align-items: center;
+  margin-bottom: 12px;
+}
+.rgb-speed-track-wrap input[type=range] {
+  width: 100%; accent-color: var(--pink); cursor: pointer;
+}
+.rgb-speed-ticks {
+  position: absolute; left: 7px; right: 7px; top: 50%;
+  height: 0; pointer-events: none;
+}
+.rgb-speed-tick {
+  position: absolute; top: 0; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+}
+.rgb-speed-tick .tick-line {
+  width: 2px; height: 6px; margin-top: -3px; border-radius: 1px;
+  background: rgba(0,0,0,0.6);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.55);
+}
+.rgb-speed-tick .tick-num {
+  margin-top: 3px; font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; line-height: 1; color: var(--text-muted); white-space: nowrap;
+}
+.rgb-speed-label {
+  font-family: 'Share Tech Mono', monospace; font-size: 12px;
+  font-weight: 600; color: var(--pink); min-width: 44px; text-align: right;
+}
 
 /* ── TRISTATE (Yes / No / Auto) ── */
 .tristate {

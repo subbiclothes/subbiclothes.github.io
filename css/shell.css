@@ -72,6 +72,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Fallback for any plain <a> in page content that isn't covered by a more
+   specific nav/footer/card rule below — without this, unstyled links fall
+   back to the browser default blue instead of the site's pink.
+   Underlined by default so links read as clickable, not just colored text. */
+a { color: var(--pink); text-decoration: underline; }
+a:hover { opacity: .8; }
+
 /* background glow */
 body::after {
   content: '';
@@ -244,19 +251,23 @@ body::before {
   padding: 40px 24px;
   margin-top: auto;
 }
-.footer-inner { max-width: 1100px; margin: 0 auto; }
-.footer-top {
-  display: flex; align-items: baseline; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
-  margin-bottom: 24px;
+.footer-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 24px;
 }
+.footer-left { display: flex; flex-direction: column; gap: 6px; }
 .footer-brand {
   font-family: 'Orbitron', monospace;
   font-size: 16px; font-weight: 700; letter-spacing: 3px;
   text-transform: uppercase; color: var(--text-dim);
+  margin-bottom: 2px;
 }
 .footer-brand span { color: var(--pink-dim); }
-.footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-nav { display: flex; flex-wrap: wrap; gap: 10px 24px; max-width: 480px; justify-content: flex-end; }
+@media (max-width: 480px) {
+  .footer-nav { max-width: none; justify-content: flex-start; }
+}
 .footer-nav a {
   font-family: 'Rajdhani', sans-serif;
   font-size: 16px; line-height: 21px; color: var(--text-muted); text-decoration: none;
@@ -264,9 +275,11 @@ body::before {
   transition: color .15s;
 }
 .footer-nav a:hover { color: var(--text); }
-.footer-bottom p { font-size: 16px; line-height: 22px; color: var(--text-muted); }
-.footer-bottom strong { color: var(--text-muted); }
-.footer-version { margin-top: 6px; font-size: 16px; line-height: 19px; }
+.footer-left p { font-size: 16px; line-height: 22px; color: var(--text-muted); }
+.footer-left strong { color: var(--text-muted); }
+.footer-left a { color: var(--pink); text-decoration: underline; transition: opacity .15s; }
+.footer-left a:hover { opacity: .75; }
+.footer-version { font-size: 16px; line-height: 19px; }
 .footer-version strong { color: var(--pink-dim); }
 
 /* ─ Buttons ─ */
