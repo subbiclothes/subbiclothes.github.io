@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OCE — Loading Screen Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #07000f;
+    --bg-card: #0d0018;
+    --pink: #ff2d78;
+    --pink-dark: #c8146a;
+    --text: #f0f0f5;
+    --text-muted: #a898bc;
+    --border-dim: rgba(255,255,255,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #000;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif;
+    padding: 40px;
+  }
+
+  .screen {
+    position: relative;
+    width: 960px;
+    max-width: 100%;
+    padding: 64px 72px 56px;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 0%, rgba(255,45,120,0.10) 0%, transparent 70%),
+      var(--bg);
+    background-image:
+      radial-gradient(ellipse 70% 60% at 50% 0%, rgba(255,45,120,0.10) 0%, transparent 70%),
+      radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      var(--bg);
+    background-size: auto, 22px 22px, auto;
+    background-position: 0 0, 0 0, 0 0;
+  }
+
+  /* ── Corner brackets (same motif as the brand mark) ── */
+  .bracket { position: absolute; width: 46px; height: 46px; }
+  .bracket span { position: absolute; background: var(--pink); box-shadow: 0 0 8px rgba(255,45,120,0.5); }
+  .bracket .h { width: 46px; height: 3px; }
+  .bracket .v { width: 3px; height: 46px; }
+  .bracket-tl { top: 0; left: 0; }
+  .bracket-tl .h { top: 0; left: 0; }
+  .bracket-tl .v { top: 0; left: 0; }
+  .bracket-tr { top: 0; right: 0; }
+  .bracket-tr .h { top: 0; right: 0; }
+  .bracket-tr .v { top: 0; right: 0; }
+  .bracket-bl { bottom: 0; left: 0; }
+  .bracket-bl .h { bottom: 0; left: 0; }
+  .bracket-bl .v { bottom: 0; left: 0; }
+  .bracket-br { bottom: 0; right: 0; }
+  .bracket-br .h { bottom: 0; right: 0; }
+  .bracket-br .v { bottom: 0; right: 0; }
+
+  .edge-tick { position: absolute; width: 26px; height: 3px; background: var(--pink); opacity: .8; }
+  .edge-tick.top { top: 0; left: 50%; transform: translateX(-50%); }
+  .edge-tick.bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+  /* ── Header: logo + wordmark, centered as a block with the subtitle ── */
+  .header-block { display: flex; flex-direction: column; align-items: center; }
+  .header-row { display: flex; align-items: center; gap: 22px; margin-bottom: 28px; }
+  .logo-mark { width: 74px; height: 74px; flex-shrink: 0; display: block; }
+  .wordmark {
+    font-family: 'Orbitron', monospace;
+    font-size: 44px; font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase;
+    line-height: 1;
+  }
+  .wordmark .w1 { color: var(--text); }
+  .wordmark .w2 { color: var(--pink); }
+
+  .subtitle {
+    font-family: 'Orbitron', monospace;
+    font-size: 26px; font-weight: 600;
+    letter-spacing: 8px; text-transform: uppercase;
+    color: var(--text);
+    text-align: center;
+    margin: 34px 0 40px;
+  }
+
+  /* ── Loading bar ── */
+  .loading-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 700;
+    letter-spacing: 6px; text-transform: uppercase;
+    color: var(--pink);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .progress-track {
+    width: 100%; height: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+  .progress-fill {
+    width: 68%; height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--pink-dark), var(--pink) 70%, #ff6bbd);
+    box-shadow: 0 0 14px rgba(255,45,120,0.55);
+  }
+
+  /* ── Info list ── */
+  .info-list { display: flex; flex-direction: column; gap: 18px; }
+  .info-row { display: flex; align-items: center; gap: 18px; }
+  .info-icon {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border: 1px solid var(--pink);
+    border-radius: 8px;
+    background: rgba(255,45,120,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--pink);
+    font-size: 16px;
+  }
+  .info-text {
+    font-size: 19px; line-height: 1.5;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .info-text strong { color: var(--pink); font-weight: 700; }
+
+  @media (max-width: 620px) {
+    .screen { padding: 40px 24px; }
+    .wordmark { font-size: 30px; letter-spacing: 2px; }
+    .logo-mark { width: 54px; height: 54px; }
+    .subtitle { font-size: 17px; letter-spacing: 4px; }
+    .info-text { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="screen">
+    <div class="bracket bracket-tl"><span class="h"></span><span class="v"></span></div>
+    <div class="bracket bracket-tr"><span class="h"></span><span class="v"></span></div>
+    <div class="bracket bracket-bl"><span class="h"></span><span class="v"></span></div>
+    <div class="bracket bracket-br"><span class="h"></span><span class="v"></span></div>
+    <div class="edge-tick top"></div>
+    <div class="edge-tick bottom"></div>
+
+    <div class="header-block">
+      <div class="header-row">
+        <img class="logo-mark" src="/img/subbiclothes_logo.png" alt="" aria-hidden="true">
+        <div class="wordmark"><span class="w1">SUBBI</span><span class="w2">CLOTHES</span></div>
+      </div>
+
+      <div class="subtitle">Outfit Config Editor (OCE)</div>
+    </div>
+
+    <div class="loading-label">Loading&hellip;</div>
+    <div class="progress-track"><div class="progress-fill"></div></div>
+
+    <div class="info-list">
+      <div class="info-row">
+        <div class="info-icon"><i class="fa-solid fa-shirt"></i></div>
+        <div class="info-text">Outfit Config Editor (OCE) is a free companion web tool for <strong>Subbi Clothes</strong>.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon"><i class="fa-solid fa-eye"></i></div>
+        <div class="info-text">Configure each outfit <strong>visually</strong> — no notecard or JSON editing by hand.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon"><i class="fa-solid fa-window-maximize"></i></div>
+        <div class="info-text">Runs entirely <strong>in your browser</strong>, nothing to install.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon"><i class="fa-solid fa-file-lines"></i></div>
+        <div class="info-text">Exports a <strong>ready-to-paste</strong> notecard straight into your HUD.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon"><i class="fa-solid fa-download"></i></div>
+        <div class="info-text">Imports existing config notecards, so <strong>nothing is lost</strong> when switching from manual to visual editing.</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

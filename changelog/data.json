@@ -115,9 +115,36 @@
   "entries": [
 
     {
-      "version": "DEV-4.0",
+      "version": "DEV-4.1",
       "date": "Work in Progress",
       "type": "beta",
+      "version_type": "middle",
+      "badge": "DEV · SC4",
+
+      "summary": "WIP",
+
+      "new": [
+        "WIP"
+        
+      ],
+
+      "changed": [
+        "WIP"
+        
+      ],
+
+      "fixed": [
+        "WIP"
+      ],
+
+      "bugs": [
+        "WIP"
+      ]
+    },
+    {
+      "version": "DEV-4.0",
+      "date": "2026-07-09",
+      "type": "dev",
       "version_type": "major",
       "badge": "DEV · SC4",
 
@@ -169,7 +196,6 @@
       ],
 
       "bugs": [
-        "``Menu.lsl`` stability issue may still occur after severe simulator crashes or forced script resets.",
         "Some older command aliases may still behave inconsistently with the revised syntax system.",
         "OCE migration may require manual cleanup for legacy avatar configurations in certain setups."
       ]
@@ -178,7 +204,7 @@
     {
       "version": "DEV-3.1",
       "date": "2026-05-12",
-      "type": "dev",
+      "type": "legacy-dev",
       "version_type": "major",
       "badge": "DEV · SC4",
 

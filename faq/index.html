@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Subbi Clothes — FAQ</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <meta name="description" content="Frequently asked questions about Subbi Clothes, the RLV wardrobe HUD for Second Life: setup, folders, permissions, PG-Safe+, chat commands, and troubleshooting.">
+  <link rel="canonical" href="https://subbiclothes.com/faq/">
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://subbiclothes.com/faq/">
+  <meta property="og:site_name" content="Subbi Clothes">
+  <meta property="og:title" content="Subbi Clothes — FAQ">
+  <meta property="og:description" content="Frequently asked questions about Subbi Clothes, the RLV wardrobe HUD for Second Life: setup, folders, permissions, PG-Safe+, chat commands, and troubleshooting.">
+  <meta property="og:image" content="https://subbiclothes.com/img/store-thumnail.png">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Subbi Clothes — FAQ">
+  <meta name="twitter:description" content="Frequently asked questions about Subbi Clothes, the RLV wardrobe HUD for Second Life.">
+  <meta name="shell-logo-sub-en" content="Frequently Asked Questions">
+  <meta name="shell-logo-sub-es" content="Preguntas Frecuentes">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/shell.css">
+
+  <!-- JSON-LD structured data (FAQPage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is Subbi Clothes?", "acceptedAnswer": { "@type": "Answer", "text": "Subbi Clothes is a complete wardrobe management and automation HUD for Second Life, built with LSL and RLVa. Beyond swapping outfits, it includes modules for automation, security, and immersion, such as animations, sounds, and particles." } },
+      { "@type": "Question", "name": "Do I need scripting knowledge to use it?", "acceptedAnswer": { "@type": "Answer", "text": "No. Basic scripting knowledge can help you unlock deeper automation through the chat command system, but it is entirely optional. The HUD is fully menu-driven out of the box." } },
+      { "@type": "Question", "name": "Does Subbi Clothes work with any body or avatar?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Subbi Clothes works with any mesh body and any avatar type. It is not locked to a specific body brand or system." } },
+      { "@type": "Question", "name": "Do I need RLV? Which viewer should I use?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, RLVa must be enabled at all times, the scripts will not respond without it. Firestorm 7.2 or higher is strongly recommended. Also compatible: Alchemy, Aperture, Restrained Love Viewer, Kokua, Catznip, Genesis, Singularity, and Lumiya. Not compatible: Second Life's Official Viewer (no RLV support) and Black Dragon (RLV support removed)." } },
+      { "@type": "Question", "name": "How is Subbi Clothes different from other outfit-management HUDs?", "acceptedAnswer": { "@type": "Answer", "text": "Unlike collar-style RLV systems (OpenCollar, JASX, DDcollar and similar) where outfit changing is one module among many restriction/D-s features, Subbi Clothes is a wardrobe system by design: its permission system (Public, Friends, Group, Whitelist) governs who can manage your look, not submission dynamics, and the owner always keeps ultimate control over their own HUD, above any permission granted to others. Compared to other wardrobe HUDs, it adds granular per-category permissions, an automatic safety system (PG-Safe+), fixes for common Second Life issues such as broken skeletons (SkeletonFix), hover height, and alpha layering order, built-in BOM tattoo support, a dynamic accessories and HUDs system, temporary support access for admins with automatic revocation, setup tools (SAF, the Outfit Config Editor), a decorative social layer via the Clicker (title and particles others can touch), deep customization, and an extensive chat command language. It also runs entirely inside the simulator, with the website and Discord as optional companions rather than dependencies." } },
+      { "@type": "Question", "name": "Is Subbi Clothes Copy, Modify, or Transfer?", "acceptedAnswer": { "@type": "Answer", "text": "The HUD is Copy and partially Modify: you can customize sounds, animations, and some content on the HUD and Clicker, but the scripts themselves are not modifiable. It is not Transfer." } },
+      { "@type": "Question", "name": "How much does Subbi Clothes cost and where do I buy it?", "acceptedAnswer": { "@type": "Answer", "text": "The base price is 850L$ (as of July 2026, occasionally on sale), available on the Second Life Marketplace." } },
+      { "@type": "Question", "name": "Is there a demo version?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, a demo version exists, though it is not always kept fully up to date. Live demonstrations can also be arranged on request." } },
+      { "@type": "Question", "name": "Are there discounts?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Discord members with the Visitor role for at least one month, with some minimal participation, get 10% off. Members granted the Wishlisted role (given by the creator when they notice genuine interest) for at least one week get 15% off. There are also seasonal discounts around Christmas and Subbi Clothes' anniversary." } },
+      { "@type": "Question", "name": "Is there a Second Life group for Subbi Clothes?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, it is public and searchable in Second Life's group search. You also receive an invite automatically when you buy the HUD, or you can request one via a chat command." } },
+      { "@type": "Question", "name": "What are the first steps to set up Subbi Clothes?", "acceptedAnswer": { "@type": "Answer", "text": "Unpack the HUD, create your folder structure with Semi-Automatic Folders v4 (or manually), upload your avatar into the structure, then attach the HUD and start using it. Short tutorial videos cover creating folders with SAF and uploading your avatar." } },
+      { "@type": "Question", "name": "What does Semi-Automatic Folders (SAF) do?", "acceptedAnswer": { "@type": "Answer", "text": "SAF is an in-world helper object, inside the simulator, that builds most of the required folder structure for you, since Second Life does not allow creating nested folders directly with the correct hierarchy. It does not create every possible folder, only the ones considered essential; more advanced folders can be added manually." } },
+      { "@type": "Question", "name": "What are Groups and Outfits in Subbi Clothes?", "acceptedAnswer": { "@type": "Answer", "text": "Inside your Subbi Clothes folder, Groups (also called Avatars) let you subdivide different types of looks, for example different bodies or themes. Inside each Group you place Outfits, which are the actual looks. If you only have one Group or one Outfit, the HUD skips that selection step automatically." } },
+      { "@type": "Question", "name": "Where do I put my clothes and body inside the folder structure?", "acceptedAnswer": { "@type": "Answer", "text": "Body parts have dedicated folders (Head, Face, Upper, Torso, Arms, Hands, Waist, Crotch, Legs, Feet, Bodysuit), alongside system folders such as +Avatar, Accessories, HairStyle, BOM, and HUDs, each with its own special behavior explained in the Outfit Config Editor and the guide. A typical Outfit folder contains all of these together." } },
+      { "@type": "Question", "name": "What is the Outfit Config Editor (OCE)?", "acceptedAnswer": { "@type": "Answer", "text": "OCE is a free companion web tool for visually configuring each outfit: wear animations, timing, particles, colors, permissions, and outfit biographies, without touching a notecard or JSON by hand." } },
+      { "@type": "Question", "name": "What is the difference between Dressed, Underwear, Midwear, Undressed, and Bits?", "acceptedAnswer": { "@type": "Answer", "text": "Underwear is removed whenever you switch to Dressed or Naked. Midwear stays active and is always included as part of the Dressed state, and can be combined with Underwear. Undressed covers safe, non-explicit nudity such as face, arms, hands, and feet, and stays available even with nudity disabled. Bits covers explicit nudity such as crotch or chest, and is hidden automatically if nudity access is off. If an outfit has both Undressed and Bits, Bits takes priority." } },
+      { "@type": "Question", "name": "What is the AlphaFix folder for?", "acceptedAnswer": { "@type": "Answer", "text": "AlphaFix is a folder for items that need to load about 10 seconds late. It fixes alpha-layer issues on certain bodies, such as Maitreya V-Tech." } },
+      { "@type": "Question", "name": "Does Subbi Clothes support BOM (Bakes on Mesh) tattoos?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, through a system of numbered folders that control loading order, plus an automatic BOM folder creator. Because of current limitations in RLVa and recent Second Life optimizations, a guaranteed bake order can no longer be forced with full reliability. It works well in most cases, but it is a best-effort feature rather than a guarantee. If you run into trouble, contact the creator for expanded guidance and a possible fix for your case." } },
+      { "@type": "Question", "name": "What are the Attach and Detach special folders inside an accessory?", "acceptedAnswer": { "@type": "Answer", "text": "Attach: its contents are attached automatically when you remove the accessory. Detach: its contents are removed automatically when you put the accessory on. For example, wearing a hat can automatically hide cat ears via Detach, and taking the hat off brings them back via Attach." } },
+      { "@type": "Question", "name": "What do the # @ $ and * symbols in folder names mean?", "acceptedAnswer": { "@type": "Answer", "text": "A hash symbol makes a folder private and hidden. An at symbol turns a folder into a normal submenu. A dollar symbol turns a folder into an auto-detach submenu, where only one item inside can be active at a time. An asterisk marks an item as auto-load, meaning it attaches automatically when you replace your avatar, refresh, or quick-dress." } },
+      { "@type": "Question", "name": "What is the difference between global, group, and outfit-level Accessories, HUDs, Hairstyle, or BOM?", "acceptedAnswer": { "@type": "Answer", "text": "This is the scope system: folders placed at the global level apply to every outfit, at the group level apply to every outfit within that group, and at the outfit level apply only to that one outfit. Each outfit inherits everything above it in the hierarchy." } },
+      { "@type": "Question", "name": "What is the difference between +Avatar and -Avatar-?", "acceptedAnswer": { "@type": "Answer", "text": "-Avatar- used to hold a body shared across every Outfit within a Group, but it is now deprecated. The current recommendation is to use +Avatar for everything, including body parts shared across multiple outfits." } },
+      { "@type": "Question", "name": "How does the Hairstyle system work?", "acceptedAnswer": { "@type": "Answer", "text": "Hairstyle is an optional per-outfit folder where each subfolder is a hairstyle option. You still need to keep a link to your current hair inside +Avatar or -Avatar-, since Hairstyle itself does not attach a default hair when you change avatars." } },
+      { "@type": "Question", "name": "How do I access the menu?", "acceptedAnswer": { "@type": "Answer", "text": "Four ways: touching the big logo button on the Mini HUD, touching the Clicker, using the Open menu gesture, or via a chat command." } },
+      { "@type": "Question", "name": "What is the Clicker?", "acceptedAnswer": { "@type": "Answer", "text": "The Clicker is a separate touchable object, not the HUD attachment itself, that shows your title and particles above your head and lets others interact with your wardrobe by touching it, opening the same menu as the Mini HUD. It also includes an auto-alpha system that applies an alpha layer over your body if you do not have one equipped, useful during avatar changes." } },
+      { "@type": "Question", "name": "Is there a random outfit option?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, Random Outfit and Random Avatar are scope-aware: run globally, they pick from everything available; run inside a specific group, they only pick from that group. Private, hidden entries are never included." } },
+      { "@type": "Question", "name": "What buttons does the HUD have?", "acceptedAnswer": { "@type": "Answer", "text": "The HUD gives quick access to the most commonly used functions: public permission toggles, and quick actions such as a PG-Safe+ trigger, Accessories, or a Stop button that cancels another person's current interaction with your HUD. The full menu adds per-category permissions and options such as Lock Avatar, which keeps your current avatar from being replaced when switching outfits or groups." } },
+      { "@type": "Question", "name": "Can I let someone else change my clothes or undress me?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, this is fully configurable, from full public access down to a single person on your whitelist, and separately for clothing, avatars, accessories, hairstyle, and nudity." } },
+      { "@type": "Question", "name": "What is the difference between Public, Friends, Group, Whitelist, and Blacklist access?", "acceptedAnswer": { "@type": "Answer", "text": "These are cumulative access categories, not exclusive tiers. Public opens the HUD to everyone, Friends to your Second Life friends, Group to whoever shares your active Second Life group, and Whitelist to individually added people; several can be active at once. Blacklist explicitly blocks specific people regardless of the rest." } },
+      { "@type": "Question", "name": "Can I set different permissions for clothes, avatars, and nudity separately?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, permissions are independent per feature. Clothes, avatars and outfits, accessories, hairstyle, and nudity can each be allowed or denied per access category." } },
+      { "@type": "Question", "name": "What happens if someone without permission tries to change my outfit or undress me?", "acceptedAnswer": { "@type": "Answer", "text": "They simply will not see that option in the menu. If they try through a chat command instead, it is rejected outright. There is no visible failed attempt, the option or command is just not available to them." } },
+      { "@type": "Question", "name": "How do I add someone to my whitelist?", "acceptedAnswer": { "@type": "Answer", "text": "By typing their legacy name, or by using the built-in nearby-detection option to add someone within range without typing anything." } },
+      { "@type": "Question", "name": "Can I give someone temporary admin or support access to my HUD?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, and there are two different mechanisms. Admin access is temporary: the admin requests it, you approve it, and it is revoked automatically the moment the HUD is removed or the person logs off (it can also be revoked manually at any time). Master access works differently: you have to add the person yourself, and it stays permanent until you remove them by hand, similar to an elevated whitelist with broader permissions by default." } },
+      { "@type": "Question", "name": "What does PG-Safe+ do?", "acceptedAnswer": { "@type": "Answer", "text": "PG-Safe+ is an automatic or manual safety system. Depending on the mode you choose, it can re-dress you, swap you to a pre-set safe avatar, or send you back to a safe location, and it can also lock down public access. It can trigger automatically based on region rating, when you are marked Away, or in specific regions you have flagged as dangerous." } },
+      { "@type": "Question", "name": "How does Subbi Clothes know a region is risky?", "acceptedAnswer": { "@type": "Answer", "text": "You can save specific regions as safe or dangerous, and that list takes priority over the general region rating (G, M, A). Even in a region marked safe, PG-Safe+ can still trigger if you are marked Away (Safe-Away, which can be disabled) or if you trigger it manually yourself." } },
+      { "@type": "Question", "name": "Can I control Subbi Clothes with chat commands?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, Subbi Clothes has an extensive chat command system, useful for gestures or fast execution without opening menus. Commands are sent on specific channels depending on your privilege level: the owner's own channel, a high-level admin channel, a restricted guest channel, and a creator-only maintenance channel." } },
+      { "@type": "Question", "name": "How do I request a redelivery of the HUD?", "acceptedAnswer": { "@type": "Answer", "text": "Via the chat command /55 redelivery, which sends you a fresh copy of the latest available version." } },
+      { "@type": "Question", "name": "The HUD is not responding or will not dress me, what should I check first?", "acceptedAnswer": { "@type": "Answer", "text": "Make sure RLVa is actually enabled in your viewer, then try detaching and re-attaching the HUD. That alone resolves most first-time issues." } },
+      { "@type": "Question", "name": "I changed outfits and my clothing or skeleton looks wrong, what do I do?", "acceptedAnswer": { "@type": "Answer", "text": "Use Refresh. It reloads your whole avatar and clears up leftovers or a broken skeleton caused by lag or Second Life itself. If that does not fix it, contact the creator for a possible solution." } },
+      { "@type": "Question", "name": "My BOM tattoo is not loading in the right order, what should I check?", "acceptedAnswer": { "@type": "Answer", "text": "BOM ordering is not 100% guaranteed currently, so first check that your numbered folders are sequential with no gaps, that skins, alphas, and brows are not placed inside them, and that the final Patcher folder is set up correctly." } },
+      { "@type": "Question", "name": "What is the current version of Subbi Clothes?", "acceptedAnswer": { "@type": "Answer", "text": "Subbi Clothes 3.3D is the current stable release. A new major version, 4.0, is now available as Early access, though it's still officially in development." } },
+      { "@type": "Question", "name": "Where do I get help with Subbi Clothes?", "acceptedAnswer": { "@type": "Answer", "text": "Message Souwind or Aratx in Second Life, or join the official Discord server." } },
+      { "@type": "Question", "name": "Where can I see the full changelog?", "acceptedAnswer": { "@type": "Answer", "text": "The changelog page lists every release, including public DEV builds and beta versions, with full details of what changed." } }
+    ]
+  }
+  </script>
+
+  <style>
+    main { flex: 1; padding: 56px 24px 90px; max-width: 820px; margin: 0 auto; width: 100%; }
+
+    .page-eyebrow { font-size: var(--fs-label); letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .page-title   { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--text); margin-bottom: 8px; }
+    .page-title span { color: var(--pink); }
+    .page-desc    { font-size: var(--fs-lead); color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; max-width: 620px; }
+
+    .qa-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 44px; }
+    .qa-jump a {
+      font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: var(--fs-label); letter-spacing: .5px;
+      color: var(--text-muted); text-decoration: none;
+      border: 1px solid var(--border-dim); border-radius: 20px; padding: 5px 13px;
+      transition: color .15s, border-color .15s;
+    }
+    .qa-jump a:hover { color: var(--pink); border-color: var(--border); }
+
+    .qa-cat { margin-bottom: 48px; scroll-margin-top: 24px; }
+    .qa-cat-title {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: var(--fs-subtitle-1);
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--pink);
+      padding-bottom: 10px; margin-bottom: 16px; border-bottom: 1px solid var(--border-dim);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .qa-cat-title i { font-size: 16px; }
+
+    .faq-list { display: flex; flex-direction: column; gap: 10px; }
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .faq-item[open] { border-color: var(--border); }
+    .faq-item summary {
+      padding: 16px 18px;
+      font-size: var(--fs-body); font-weight: 700; letter-spacing: .2px;
+      cursor: pointer; list-style: none;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '\f067'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+      font-size: 13px; color: var(--text-dim); flex-shrink: 0; transition: color .15s;
+    }
+    .faq-item[open] summary::after { content: '\f068'; color: var(--pink); }
+    .faq-answer { padding: 0 18px 18px; font-size: var(--fs-body); color: var(--text-muted); line-height: 1.7; }
+    .faq-answer code {
+      background: var(--bg-hover); border: 1px solid var(--border-dim); border-radius: 4px;
+      padding: 1px 6px; font-family: 'Share Tech Mono', monospace; font-size: var(--fs-meta); color: var(--text);
+    }
+    .faq-answer strong { color: var(--text); font-weight: 600; }
+    .faq-answer .qa-list { margin: 10px 0 0 20px; flex-direction: column; gap: 7px; }
+    /* .qa-list is not a <span>, so it needs its own explicit lang rules
+       (self-contained, doesn't rely on the span[data-lc] rules below). */
+    .faq-answer .qa-list[data-lc="en"] { display: flex; }
+    .faq-answer .qa-list[data-lc="es"] { display: none; }
+    html[lang="es"] .faq-answer .qa-list[data-lc="en"] { display: none; }
+    html[lang="es"] .faq-answer .qa-list[data-lc="es"] { display: flex; }
+    .faq-answer pre.qa-tree {
+      margin-top: 10px; padding: 12px 16px; overflow-x: auto;
+      background: var(--bg-hover); border: 1px solid var(--border-dim); border-radius: var(--radius);
+      font-family: 'Share Tech Mono', monospace; font-size: var(--fs-meta); color: var(--text); line-height: 1.6;
+    }
+
+    .qa-note {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: var(--fs-meta); color: var(--warning); line-height: 1.6;
+      background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.2);
+      border-radius: var(--radius); padding: 12px 14px; margin-top: 10px;
+    }
+    .qa-note i { margin-top: 2px; flex-shrink: 0; }
+
+    /* Bilingual content toggle (data-lc) now lives in shell.css — shared
+       with Home. Don't redeclare it here. */
+  </style>
+</head>
+<body>
+
+  <main>
+    <p class="page-eyebrow"><span data-lc="en">Help center</span><span data-lc="es">Centro de ayuda</span></p>
+    <h1 class="page-title"><span data-lc="en">Frequently Asked <span>Questions</span></span><span data-lc="es">Preguntas <span>Frecuentes</span></span></h1>
+    <p class="page-desc">
+      <span data-lc="en">Everything about setting up, configuring, and using Subbi Clothes — from your first install to permissions, security, and chat commands.</span>
+      <span data-lc="es">Todo sobre instalar, configurar y usar Subbi Clothes — desde tu primera instalación hasta permisos, seguridad y comandos de chat.</span>
+    </p>
+
+    <nav class="qa-jump" aria-label="Sections">
+      <a href="#discovery"><span data-lc="en">Overview</span><span data-lc="es">Resumen</span></a>
+      <a href="#setup"><span data-lc="en">Setup</span><span data-lc="es">Configuración</span></a>
+      <a href="#folders"><span data-lc="en">Folders</span><span data-lc="es">Carpetas</span></a>
+      <a href="#daily-use"><span data-lc="en">Daily use</span><span data-lc="es">Uso diario</span></a>
+      <a href="#permissions"><span data-lc="en">Permissions</span><span data-lc="es">Permisos</span></a>
+      <a href="#security"><span data-lc="en">Security</span><span data-lc="es">Seguridad</span></a>
+      <a href="#commands"><span data-lc="en">Commands</span><span data-lc="es">Comandos</span></a>
+      <a href="#troubleshooting"><span data-lc="en">Troubleshooting</span><span data-lc="es">Problemas</span></a>
+      <a href="#version"><span data-lc="en">Version &amp; support</span><span data-lc="es">Versión y soporte</span></a>
+    </nav>
+
+    <!-- ══════════ OVERVIEW ══════════ -->
+    <section class="qa-cat" id="discovery">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-circle-info"></i><span data-lc="en">Overview</span><span data-lc="es">Resumen</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What is Subbi Clothes?</span><span data-lc="es">¿Qué es Subbi Clothes?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Subbi Clothes is a complete wardrobe management and automation HUD for Second Life, built with LSL and RLVa. Beyond swapping outfits, it includes modules for automation, security, and immersion — animations, sounds, and particles on every change.</span>
+            <span class="lc-block" data-lc="es">Subbi Clothes es un HUD completo de gestión y automatización de guardarropa para Second Life, programado en LSL y RLVa. Más allá de cambiar de outfit, incluye módulos de automatización, seguridad e inmersión — animaciones, sonidos y partículas en cada cambio.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Do I need scripting knowledge to use it?</span><span data-lc="es">¿Necesito saber scripting para usarlo?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">No. Basic scripting knowledge can help you unlock deeper automation through the chat command system, but it's entirely optional — the HUD is fully menu-driven out of the box.</span>
+            <span class="lc-block" data-lc="es">No. Tener conocimientos básicos de scripting puede ayudarte a desbloquear una automatización más profunda a través del sistema de comandos de chat, pero es totalmente opcional — el HUD funciona completo por menús desde el primer momento.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Does it work with any body or avatar?</span><span data-lc="es">¿Funciona con cualquier cuerpo o avatar?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes. Subbi Clothes works with any mesh body and any avatar type — it isn't locked to a specific body brand or system.</span>
+            <span class="lc-block" data-lc="es">Sí. Subbi Clothes funciona con cualquier cuerpo mesh y cualquier tipo de avatar — no está limitado a una marca o sistema de cuerpo concreto.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Do I need RLV? Which viewer should I use?</span><span data-lc="es">¿Necesito RLV? ¿Qué visor debería usar?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes — <code>RLVa</code> must be enabled at all times, the scripts won't respond without it. <strong>Firestorm 7.2+</strong> is strongly recommended. Also compatible: Alchemy, Aperture, Restrained Love Viewer, Kokua, Catznip, Genesis, Singularity, and Lumiya. <strong>Not compatible:</strong> Second Life's Official Viewer (no RLV support) and Black Dragon (RLV support removed).</span>
+            <span class="lc-block" data-lc="es">Sí — <code>RLVa</code> debe estar activo todo el tiempo, los scripts no responderán sin él. Se recomienda encarecidamente <strong>Firestorm 7.2+</strong>. También compatibles: Alchemy, Aperture, Restrained Love Viewer, Kokua, Catznip, Genesis, Singularity y Lumiya. <strong>No compatibles:</strong> el Visor Oficial de Second Life (sin soporte RLV) y Black Dragon (soporte RLV eliminado).</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">How is it different from other outfit-management HUDs?</span><span data-lc="es">¿En qué se diferencia de otros HUDs de gestión de outfits?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Unlike collar-style RLV systems (OpenCollar, JASX, DDcollar and similar) where outfit changing is one module among many restriction/D-s features, Subbi Clothes is a wardrobe system by design — its permission system (Public/Friends/Group/Whitelist) governs who can manage your look, not submission dynamics, and <strong>the owner always keeps ultimate control over their own HUD</strong>, above any permission granted to others.</span>
+            <span class="lc-block" data-lc="es">A diferencia de los sistemas RLV tipo collar (OpenCollar, JASX, DDcollar y similares), donde el cambio de outfit es un módulo más entre muchas funciones de restricción/D-s, Subbi Clothes es un sistema de guardarropa por diseño — su sistema de permisos (Public/Friends/Group/Whitelist) regula quién puede gestionar tu apariencia, no dinámicas de sumisión, y <strong>el dueño siempre mantiene el control máximo sobre su propio HUD</strong>, por encima de cualquier permiso concedido a terceros.</span>
+            <span class="lc-block" data-lc="en">Compared to other wardrobe HUDs, it adds:</span>
+            <span class="lc-block" data-lc="es">Frente a otros HUDs de guardarropa, añade:</span>
+            <ul class="qa-list" data-lc="en">
+              <li>Granular per-category permissions (clothes, avatars, accessories, hairstyle, nudity, remote commands, hidden folders) — not just one all-or-nothing key.</li>
+              <li>An automatic safety system (<strong>PG-Safe+</strong>) that detects risky situations and reacts on its own.</li>
+              <li>Fixes for common Second Life annoyances: broken skeletons after avatar changes (<strong>SkeletonFix</strong>), hover height, and alpha layering order (it doesn't include alpha layers itself — it manages the order so the ones your clothes already have work correctly).</li>
+              <li>BOM tattoo support built into the outfit-change flow.</li>
+              <li>A dynamic, automatable accessories and HUDs system, independent from clothing.</li>
+              <li>Temporary support access for admins, with automatic revocation.</li>
+              <li>Setup tools (SAF, the Outfit Config Editor) so you can build and maintain your own wardrobe without depending on external support.</li>
+              <li>A decorative social layer — the Clicker shows a title and particles above your head that others can touch.</li>
+              <li>Runs entirely inside the simulator — the website, Discord, and OCE are optional companions, not dependencies.</li>
+              <li>Deep customization: sounds, animations, particles, colors, and text, all user-configurable.</li>
+              <li>An extensive chat command language for people who want fine text-based control, not just menus.</li>
+              <li>Active, ongoing development with a quality-of-life focus, plus a few hidden easter eggs for people who like to explore.</li>
+            </ul>
+            <ul class="qa-list" data-lc="es">
+              <li>Permisos muy granulares por categoría (ropa, avatares, accesorios, peinado, desnudez, comandos remotos, carpetas ocultas) — no una única llave de todo o nada.</li>
+              <li>Un sistema de seguridad automático (<strong>PG-Safe+</strong>) que detecta situaciones de riesgo y reacciona por sí solo.</li>
+              <li>Soluciones a problemas comunes de Second Life: huesos rotos tras cambiar de avatar (<strong>SkeletonFix</strong>), altura del avatar (hover), y orden de las capas alpha (no incluye las alphas en sí — regula el orden para que las que ya trae tu ropa funcionen bien).</li>
+              <li>Soporte de tatuajes BOM integrado en el propio flujo de cambio de outfit.</li>
+              <li>Un sistema de accesorios y HUDs dinámico y automatizable, independiente de la ropa.</li>
+              <li>Acceso de soporte temporal para admins, con revocación automática.</li>
+              <li>Herramientas de configuración (SAF, el Outfit Config Editor) para montar y mantener tu guardarropa sin depender de soporte externo.</li>
+              <li>Una capa social decorativa — el Clicker muestra un título y partículas sobre tu cabeza que otros pueden tocar.</li>
+              <li>Funciona enteramente dentro del simulador — la web, Discord y OCE son complementos opcionales, no dependencias.</li>
+              <li>Personalización profunda: sonidos, animaciones, partículas, colores y textos, todo configurable por el usuario.</li>
+              <li>Un extenso lenguaje de comandos de chat para quien quiera control fino por texto, no solo menús.</li>
+              <li>Desarrollo activo y constante con enfoque en mejorar el día a día, y algún easter egg escondido para quien le guste explorar.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Is it Copy, Modify, or Transfer? Can I have several copies?</span><span data-lc="es">¿Es Copy, Mod o Transfer? ¿Puedo tener varias copias?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">The HUD is <strong>Copy</strong> and partially <strong>Modify</strong> — you can customize sounds, animations, and some content on the HUD and Clicker, but the scripts themselves aren't modifiable. It is <strong>not Transfer</strong>.</span>
+            <span class="lc-block" data-lc="es">El HUD es <strong>Copy</strong> y parcialmente <strong>Mod</strong> — puedes personalizar sonidos, animaciones y algo de contenido del HUD y del Clicker, pero los scripts en sí no son modificables. <strong>No es Transfer</strong>.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">How much does it cost and where do I buy it?</span><span data-lc="es">¿Cuánto cuesta y dónde se compra?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Base price is <strong>850L$</strong> (as of July 2026, occasionally on sale), available on the <a href="https://marketplace.secondlife.com/p/Subbi-Clothes-Wardrobe-HUD/22234935" target="_blank" rel="noopener">Second Life Marketplace</a>.</span>
+            <span class="lc-block" data-lc="es">El precio base es <strong>850L$</strong> (a fecha de julio de 2026, a veces en oferta), disponible en el <a href="https://marketplace.secondlife.com/p/Subbi-Clothes-Wardrobe-HUD/22234935" target="_blank" rel="noopener">Marketplace de Second Life</a>.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Is there a demo version?</span><span data-lc="es">¿Hay una versión de prueba/demo?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes, a demo version exists (it isn't always kept fully up to date). Live demonstrations can also be arranged on request.</span>
+            <span class="lc-block" data-lc="es">Sí, existe una versión demo (no siempre está totalmente actualizada). También se pueden concertar demostraciones en vivo bajo petición.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Are there discounts?</span><span data-lc="es">¿Hay descuentos?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes. Discord members with the <strong>Visitor</strong> role for at least one month, with some minimal participation, get <strong>10% off</strong>. Members granted the <strong>Wishlisted</strong> role (given by the creator when they notice genuine interest) for at least one week get <strong>15% off</strong>. There are also seasonal discounts around <strong>Christmas</strong> and Subbi Clothes' <strong>anniversary</strong>.</span>
+            <span class="lc-block" data-lc="es">Sí. Los miembros de Discord con el rol <strong>Visitante</strong> durante al menos un mes, con algo de participación mínima, obtienen un <strong>10% de descuento</strong>. Los miembros con el rol <strong>Wishlisted</strong> (otorgado por el creador al detectar interés genuino) durante al menos una semana obtienen un <strong>15% de descuento</strong>. También hay descuentos de temporada por <strong>Navidad</strong> y por el <strong>aniversario</strong> de Subbi Clothes.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Is there a Second Life group?</span><span data-lc="es">¿Hay un grupo de Second Life?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes, it's public and searchable in Second Life's group search. You also get an invite automatically when you buy the HUD, or you can request one via a chat command.</span>
+            <span class="lc-block" data-lc="es">Sí, es público y se puede buscar en el buscador de grupos de Second Life. También recibes una invitación automáticamente al comprar el HUD, o puedes pedirla por comando de chat.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ SETUP ══════════ -->
+    <section class="qa-cat" id="setup">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-folder-tree"></i><span data-lc="en">Setup</span><span data-lc="es">Configuración inicial</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What are the first steps to set it up?</span><span data-lc="es">¿Cuáles son los primeros pasos para configurarlo?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Unpack the HUD → create your folder structure with <strong>Semi-Automatic Folders v4</strong> (or manually) → upload your avatar into the structure → attach the HUD and start using it. Two short tutorial videos cover the trickiest parts: <a href="https://www.youtube.com/watch?v=OUh9iOEGYMk" target="_blank" rel="noopener">creating folders with SAF</a> and <a href="https://www.youtube.com/watch?v=pEBKrMhseH0" target="_blank" rel="noopener">uploading your avatar</a>.</span>
+            <span class="lc-block" data-lc="es">Desempaqueta el HUD → crea tu estructura de carpetas con <strong>Semi-Automatic Folders v4</strong> (o a mano) → sube tu avatar a la estructura → adjunta el HUD y empieza a usarlo. Hay dos vídeos tutoriales cortos para las partes más delicadas: <a href="https://www.youtube.com/watch?v=OUh9iOEGYMk" target="_blank" rel="noopener">crear las carpetas con SAF</a> y <a href="https://www.youtube.com/watch?v=pEBKrMhseH0" target="_blank" rel="noopener">subir tu avatar</a>.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What does Semi-Automatic Folders (SAF) do?</span><span data-lc="es">¿Qué hace Semi-Automatic Folders (SAF)?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">SAF is an in-world helper object that builds most of the required folder structure for you — Second Life doesn't allow creating nested folders with the correct hierarchy in one step, so a little manual reorganizing is still needed afterward. It doesn't create every possible folder, only the ones considered essential; more advanced folders can be added manually.</span>
+            <span class="lc-block" data-lc="es">SAF es un objeto ayudante dentro del simulador que construye la mayor parte de la estructura de carpetas necesaria por ti — Second Life no permite crear carpetas anidadas con la jerarquía correcta en un solo paso, así que hace falta reorganizar algo manualmente después. No crea todas las carpetas posibles, solo las que se consideran esenciales; las carpetas más avanzadas se pueden añadir a mano.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What are Groups and Outfits?</span><span data-lc="es">¿Qué son Grupos y Outfits?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Inside your Subbi Clothes folder, <strong>Groups</strong> (also called Avatars) let you subdivide different types of looks — for example, different bodies or themes. Inside each Group you place <strong>Outfits</strong>, which are the actual looks. If you only have one Group or one Outfit, the HUD skips that selection step automatically.</span>
+            <span class="lc-block" data-lc="es">Dentro de tu carpeta de Subbi Clothes, los <strong>Grupos</strong> (también llamados Avatares) te permiten subdividir distintos tipos de looks — por ejemplo, cuerpos o temáticas distintas. Dentro de cada Grupo colocas los <strong>Outfits</strong>, que son los looks concretos. Si solo tienes un Grupo o un Outfit, el HUD se salta esa elección automáticamente.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Where do I put my clothes and body in the folder structure?</span><span data-lc="es">¿Dónde pongo mi ropa y cuerpo en la estructura de carpetas?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Body parts have dedicated folders, alongside system folders like <code>+Avatar</code>, <code>Accessories</code>, <code>HairStyle</code>, <code>BOM</code>, and <code>HUDs</code> (each with its own special behavior, explained in the Outfit Config Editor and the guide). A typical Outfit looks like this:</span>
+            <span class="lc-block" data-lc="es">Las partes del cuerpo tienen carpetas dedicadas, junto a carpetas de sistema como <code>+Avatar</code>, <code>Accessories</code>, <code>HairStyle</code>, <code>BOM</code> y <code>HUDs</code> (cada una con su propio comportamiento especial, explicado en el Outfit Config Editor y la guía). Un Outfit típico se ve así:</span>
+            <pre class="qa-tree">#RLV/Subbi_Clothes/
+└── Group Name/
+    └── Outfit Name/
+        ├── +Avatar
+        ├── Accessories
+        ├── HairStyle
+        ├── BOM
+        ├── HUDs
+        ├── AlphaFix
+        ├── Head
+        ├── Face
+        ├── Upper
+        ├── Torso
+        ├── Arms
+        ├── Hands
+        ├── Waist
+        ├── Crotch
+        ├── Legs
+        ├── Feet
+        └── Bodysuit</pre>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What is the Outfit Config Editor (OCE)?</span><span data-lc="es">¿Qué es el Outfit Config Editor (OCE)?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">A free companion web tool for visually configuring each outfit — wear animations, timing, particles, colors, permissions, and outfit biographies — without touching a notecard or JSON by hand.</span>
+            <span class="lc-block" data-lc="es">Una herramienta web gratuita complementaria para configurar visualmente cada outfit — animaciones de vestir, tiempos, partículas, colores, permisos y biografías de outfit — sin tocar una notecard ni JSON a mano.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ FOLDERS ══════════ -->
+    <section class="qa-cat" id="folders">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-layer-group"></i><span data-lc="en">Folders &amp; organization</span><span data-lc="es">Carpetas y organización</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Dressed vs. Underwear vs. Midwear vs. Undressed vs. Bits — what's the difference?</span><span data-lc="es">¿Diferencia entre Dressed, Underwear, Midwear, Undressed y Bits?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en"><strong>Underwear</strong> is removed whenever you switch to Dressed or Naked. <strong>Midwear</strong> stays active and is always included as part of the Dressed state — you can combine both. <strong>Undressed</strong> covers safe/SFW nudity (face, arms, hands, feet) and stays available even with nudity disabled. <strong>Bits</strong> covers explicit/NSFW nudity (crotch, chest) and is hidden automatically if nudity access is off. If an outfit has both, Bits takes priority.</span>
+            <span class="lc-block" data-lc="es"><strong>Underwear</strong> se quita al cambiar a Dressed o Naked. <strong>Midwear</strong> se mantiene activo y siempre forma parte del estado Dressed — se pueden combinar ambos. <strong>Undressed</strong> cubre desnudez segura/SFW (cara, brazos, manos, pies) y sigue disponible aunque la desnudez esté desactivada. <strong>Bits</strong> cubre desnudez explícita/NSFW (crotch, pecho) y se oculta automáticamente si el acceso a desnudez está desactivado. Si un outfit tiene ambas, Bits tiene prioridad.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What is the AlphaFix folder for?</span><span data-lc="es">¿Para qué sirve la carpeta AlphaFix?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">A folder for items that need to load about 10 seconds late — it fixes alpha-layer issues on certain bodies, such as Maitreya V-Tech.</span>
+            <span class="lc-block" data-lc="es">Una carpeta para objetos que necesitan cargarse con unos 10 segundos de retraso — soluciona problemas de capas alpha en ciertos cuerpos, como Maitreya V-Tech.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Does it support BOM (Bakes on Mesh) tattoos?</span><span data-lc="es">¿Soporta tatuajes BOM (Bakes on Mesh)?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes, through a system of numbered folders that control loading order, plus an automatic BOM folder creator. Because of current limitations in RLVa and recent Second Life optimizations, a guaranteed bake order can no longer be forced with full reliability — it works well in most cases, but it's a best-effort feature rather than a guarantee. If you're running into trouble with it, contact the creator for expanded guidance and a possible fix for your specific case.</span>
+            <span class="lc-block" data-lc="es">Sí, mediante un sistema de carpetas numeradas que controla el orden de carga, más un creador automático de carpetas BOM. Debido a limitaciones actuales de RLVa y optimizaciones recientes de Second Life, ya no se puede forzar un orden de bakeo garantizado al 100% — funciona bien en la mayoría de los casos, pero es una función de mejor esfuerzo, no una garantía. Si tienes problemas con esto, contacta con el creador para información ampliada y una posible solución para tu caso concreto.</span>
+            <div class="qa-note"><i class="fa-solid fa-triangle-exclamation"></i><span data-lc="en">This is a known platform-level limitation affecting all RLV-based BOM systems, not just Subbi Clothes.</span><span data-lc="es">Es una limitación conocida a nivel de plataforma que afecta a todos los sistemas BOM basados en RLV, no solo a Subbi Clothes.</span></div>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What are the Attach/Detach special folders inside an accessory?</span><span data-lc="es">¿Qué son las carpetas especiales Attach/Detach dentro de un accesorio?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en"><strong>Attach</strong>: its contents are attached automatically when you remove the accessory. <strong>Detach</strong>: its contents are removed automatically when you put the accessory on. Example: wearing a hat can automatically hide your cat ears (Detach), and taking the hat off brings them back (Attach).</span>
+            <span class="lc-block" data-lc="es"><strong>Attach</strong>: su contenido se adjunta automáticamente al quitarte el accesorio. <strong>Detach</strong>: su contenido se quita automáticamente al ponerte el accesorio. Ejemplo: ponerte un sombrero puede ocultar automáticamente tus orejas de gato (Detach), y al quitarte el sombrero vuelven a aparecer (Attach).</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What do the # @ $ and * symbols in folder names mean?</span><span data-lc="es">¿Qué significan los símbolos # @ $ y * en los nombres de carpeta?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en"><code>#</code> makes a folder private/hidden. <code>@</code> turns a folder into a normal submenu. <code>$</code> turns a folder into an "auto-detach" submenu — only one item inside can be active at a time, perfect for mutually exclusive options. <code>*</code> marks an item as auto-load — it attaches automatically when you replace your avatar, refresh, or quick-dress.</span>
+            <span class="lc-block" data-lc="es"><code>#</code> hace que una carpeta sea privada/oculta. <code>@</code> convierte una carpeta en un submenú normal. <code>$</code> convierte una carpeta en un submenú "auto-detach" — solo un elemento dentro puede estar activo a la vez, perfecto para opciones mutuamente excluyentes. <code>*</code> marca un elemento como auto-carga — se adjunta automáticamente al reemplazar tu avatar, hacer refresh o vestir rápido.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What's the difference between global, group, and outfit-level Accessories/HUDs/Hairstyle/BOM?</span><span data-lc="es">¿Diferencia entre Accessories/HUDs/Hairstyle/BOM global, de grupo y de outfit?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">This is the "scope" system: folders placed at the <strong>global</strong> level apply to every outfit, at the <strong>group</strong> level apply to every outfit in that group, and at the <strong>outfit</strong> level apply only to that one outfit — each outfit inherits everything above it.</span>
+            <span class="lc-block" data-lc="es">Es el sistema de "scope": las carpetas a nivel <strong>global</strong> aplican a todos los outfits, a nivel de <strong>grupo</strong> aplican a todos los outfits de ese grupo, y a nivel de <strong>outfit</strong> aplican solo a ese outfit — cada outfit hereda todo lo que tiene por encima.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">+Avatar vs. -Avatar- — what's the difference?</span><span data-lc="es">¿Diferencia entre +Avatar y -Avatar-?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en"><code>-Avatar-</code> used to hold a body shared across every Outfit in a Group, but it's now deprecated — the current recommendation is to use <code>+Avatar</code> for everything, including body parts shared across multiple outfits.</span>
+            <span class="lc-block" data-lc="es"><code>-Avatar-</code> se usaba para guardar un cuerpo compartido por todos los Outfits de un Grupo, pero está en desuso — la recomendación actual es usar <code>+Avatar</code> para todo, incluidas las partes del cuerpo compartidas entre varios outfits.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">How does the Hairstyle system work?</span><span data-lc="es">¿Cómo funciona el sistema de Hairstyle?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Hairstyle is an optional per-outfit folder where each subfolder is a hairstyle option. You still need to keep a link to your current hair inside <code>+Avatar</code>/<code>-Avatar-</code>, since Hairstyle itself doesn't attach a default hair on avatar change.</span>
+            <span class="lc-block" data-lc="es">Hairstyle es una carpeta opcional por outfit donde cada subcarpeta es un peinado. Aun así hay que mantener un link de tu pelo actual dentro de <code>+Avatar</code>/<code>-Avatar-</code>, ya que Hairstyle en sí no adjunta un pelo por defecto al cambiar de avatar.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ DAILY USE ══════════ -->
+    <section class="qa-cat" id="daily-use">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-shirt"></i><span data-lc="en">Daily use &amp; the HUD</span><span data-lc="es">Uso diario y el HUD</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">How do I access the menu?</span><span data-lc="es">¿Cómo accedo al menú?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Four ways: touching the big logo button on the Mini HUD, touching the <strong>Clicker</strong>, using the <strong>"Open menu"</strong> gesture, or via a chat command.</span>
+            <span class="lc-block" data-lc="es">De cuatro formas: tocando el botón grande con el logo del Mini HUD, tocando el <strong>Clicker</strong>, usando el gesture <strong>"Open menu"</strong>, o mediante comando de chat.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What is the "Clicker"?</span><span data-lc="es">¿Qué es el "Clicker"?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">A separate touchable object (not the HUD attachment itself) that shows your title and particles above your head, and lets others interact with your wardrobe by touching it — opening the same menu as the Mini HUD. It also includes an <strong>auto-alpha</strong> system: it applies an alpha layer over your body if you don't have one equipped, which is handy during avatar changes.</span>
+            <span class="lc-block" data-lc="es">Un objeto tocable independiente (no el propio HUD) que muestra tu título y partículas sobre tu cabeza, y permite a otros interactuar con tu guardarropa tocándolo — abriendo el mismo menú que el Mini HUD. También incluye un sistema de <strong>auto-alpha</strong>: aplica una capa alpha sobre tu cuerpo si no llevas ninguna equipada, útil durante los cambios de avatar.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Is there a random outfit option?</span><span data-lc="es">¿Hay una opción de outfit aleatorio?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes — Random Outfit/Avatar is scope-aware: run it globally and it picks from everything available, run it inside a specific group and it only picks from that group. Private (<code>#</code>) entries are never included.</span>
+            <span class="lc-block" data-lc="es">Sí — Random Outfit/Avatar es consciente del "scope": ejecutado globalmente elige entre todo lo disponible, ejecutado dentro de un grupo concreto solo elige de ese grupo. Las entradas privadas (<code>#</code>) nunca se incluyen.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What buttons does the HUD have?</span><span data-lc="es">¿Qué botones tiene el HUD?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">The HUD gives you quick access to the most commonly used functions — public permission toggles, and quick actions like a PG-Safe+ trigger, Accessories, or a <strong>Stop</strong> button that cancels another person's current interaction with your HUD. The full menu adds per-category permissions and options like <strong>Lock Avatar</strong> (keeps your current avatar from being replaced when switching outfits/groups — handy for trying clothes on a different avatar).</span>
+            <span class="lc-block" data-lc="es">El HUD te da acceso rápido a las funciones más utilizadas — interruptores de permisos públicos, y acciones rápidas como un disparador de PG-Safe+, Accesorios, o un botón <strong>Stop</strong> que cancela la interacción actual de otra persona con tu HUD. El menú completo añade permisos por categoría y opciones como <strong>Lock Avatar</strong> (evita que tu avatar actual se reemplace al cambiar de outfit/grupo — útil para probar ropa en otro avatar).</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ PERMISSIONS ══════════ -->
+    <section class="qa-cat" id="permissions">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-lock"></i><span data-lc="en">Permissions &amp; sharing control</span><span data-lc="es">Permisos y control compartido</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Can I let someone else change my clothes or undress me?</span><span data-lc="es">¿Puedo dejar que otra persona cambie mi ropa o me desnude?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes — fully configurable, from full public access down to a single person on your whitelist, and separately for clothing, avatars, accessories, hairstyle, and nudity.</span>
+            <span class="lc-block" data-lc="es">Sí — totalmente configurable, desde acceso público completo hasta una sola persona en tu whitelist, y por separado para ropa, avatares, accesorios, peinado y desnudez.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What's the difference between Public, Friends, Group, Whitelist, and Blacklist?</span><span data-lc="es">¿Diferencia entre Public, Friends, Group, Whitelist y Blacklist?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">They're <strong>cumulative</strong> access categories, not exclusive tiers: <strong>Public</strong> opens the HUD to everyone, <strong>Friends</strong> to your Second Life friends, <strong>Group</strong> to whoever shares your active SL group, and <strong>Whitelist</strong> to individually added people — several can be active at once. <strong>Blacklist</strong> explicitly blocks specific people regardless of the rest.</span>
+            <span class="lc-block" data-lc="es">Son categorías de acceso <strong>acumulativas</strong>, no niveles excluyentes: <strong>Public</strong> abre el HUD a todo el mundo, <strong>Friends</strong> a tus amigos de Second Life, <strong>Group</strong> a quien comparta tu grupo activo de SL, y <strong>Whitelist</strong> a gente añadida individualmente — varias pueden estar activas a la vez. <strong>Blacklist</strong> bloquea explícitamente a personas concretas por encima de todo lo demás.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Can I set different permissions per category (clothes, avatars, nudity...)?</span><span data-lc="es">¿Puedo dar permisos distintos por categoría (ropa, avatares, desnudez...)?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes, permissions are independent per feature — clothes, avatars/outfits, accessories, hairstyle, and nudity can each be allowed or denied per access category.</span>
+            <span class="lc-block" data-lc="es">Sí, los permisos son independientes por función — ropa, avatares/outfits, accesorios, peinado y desnudez se pueden permitir o denegar por separado para cada categoría de acceso.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What happens if someone without permission tries to change my outfit or undress me?</span><span data-lc="es">¿Qué pasa si alguien sin permiso intenta cambiar mi outfit o desnudarme?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">They simply won't see that option in the menu at all. If they try via a chat command instead, it's rejected outright — there's no visible "failed attempt," the option or command just isn't available to them.</span>
+            <span class="lc-block" data-lc="es">Simplemente no verán esa opción en el menú. Si lo intentan por comando de chat, se rechaza directamente — no hay un "intento fallido" visible, la opción o el comando simplemente no está disponible para ellos.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">How do I add someone to my whitelist?</span><span data-lc="es">¿Cómo añado a alguien a mi whitelist?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">By typing their legacy name, or using the built-in nearby-detection option to add someone within range without typing anything.</span>
+            <span class="lc-block" data-lc="es">Escribiendo su legacy name, o usando la opción de detección por cercanía para añadir a alguien dentro de rango sin escribir nada.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Can I give someone temporary admin/support access to my HUD?</span><span data-lc="es">¿Puedo dar a alguien acceso de admin/soporte temporal a mi HUD?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes, and there are two different mechanisms. <strong>Admin access</strong> is temporary: the admin requests it, you approve it, and it's <strong>revoked automatically</strong> the moment the HUD is removed or the person logs off (it can also be revoked manually at any time). <strong>Master access</strong> works differently — you have to add the person yourself, and it stays <strong>permanent</strong> until you remove them by hand. Think of it as an elevated whitelist: broader permissions by default, but nothing about it is automatic or temporary.</span>
+            <span class="lc-block" data-lc="es">Sí, y hay dos mecanismos distintos. El <strong>acceso Admin</strong> es temporal: el admin lo solicita, tú lo apruebas, y se <strong>revoca automáticamente</strong> en cuanto se remueve el HUD o la persona cierra sesión (también se puede revocar manualmente en cualquier momento). El <strong>acceso Master</strong> funciona diferente — tienes que añadir tú mismo a la persona, y se mantiene <strong>permanente</strong> hasta que la quites a mano. Es como una whitelist con esteroides: permisos más amplios por defecto, pero nada en él es automático ni temporal.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ SECURITY ══════════ -->
+    <section class="qa-cat" id="security">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-shield-halved"></i><span data-lc="en">Security — PG-Safe+</span><span data-lc="es">Seguridad — PG-Safe+</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What does PG-Safe+ do?</span><span data-lc="es">¿Qué hace PG-Safe+?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">It's the automatic/manual safety system: depending on the mode you choose, it can re-dress you, swap you to a pre-set "safe" avatar, or send you back to a safe location — and it can also lock down public access. It can trigger automatically based on region rating, when you're marked Away, or in specific regions you've flagged as dangerous.</span>
+            <span class="lc-block" data-lc="es">Es el sistema de seguridad automático/manual: según el modo elegido, puede volver a vestirte, cambiarte a un avatar "seguro" preconfigurado, o teleportarte a una ubicación segura — y también puede bloquear el acceso público. Puede activarse automáticamente según la calificación de la región, cuando estás marcado como Away, o en regiones concretas que hayas marcado como peligrosas.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">How does it know a region is risky?</span><span data-lc="es">¿Cómo sabe que una región es de riesgo?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">You can save specific regions as "safe" or "dangerous" — that list takes priority over the general region rating (G/M/A). Even in a region marked safe, PG-Safe+ can still trigger if you're marked Away (<strong>Safe-Away</strong>, which can be disabled as an option) or if you trigger it manually yourself.</span>
+            <span class="lc-block" data-lc="es">Puedes guardar regiones concretas como "seguras" o "peligrosas" — esa lista tiene prioridad sobre la calificación general de la región (G/M/A). Incluso en una región marcada como segura, PG-Safe+ puede seguir activándose si estás marcado como Away (<strong>Safe-Away</strong>, desactivable mediante opción) o si lo fuerzas tú manualmente.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ COMMANDS ══════════ -->
+    <section class="qa-cat" id="commands">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-terminal"></i><span data-lc="en">Chat commands</span><span data-lc="es">Comandos de chat</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Can I control the HUD with chat commands?</span><span data-lc="es">¿Puedo controlar el HUD con comandos de chat?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Yes — Subbi Clothes has an extensive chat command system, useful for gestures or fast execution without opening menus. Commands are sent on specific channels depending on your privilege level: your own owner channel, a high-level admin channel, a restricted guest channel, and a creator-only maintenance channel.</span>
+            <span class="lc-block" data-lc="es">Sí — Subbi Clothes tiene un extenso sistema de comandos de chat, útil para gestos o ejecución rápida sin abrir menús. Los comandos se envían por canales específicos según tu nivel de privilegio: tu propio canal de dueño, un canal de administración de alto nivel, un canal restringido de invitados, y un canal de mantenimiento exclusivo del creador.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">How do I request a redelivery of the HUD?</span><span data-lc="es">¿Cómo pido una redelivery del HUD?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Via chat command: <code>/55 redelivery</code> — sends you a fresh copy of the latest available version.</span>
+            <span class="lc-block" data-lc="es">Con el comando de chat <code>/55 redelivery</code> — te envía una copia nueva de la última versión disponible.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ TROUBLESHOOTING ══════════ -->
+    <section class="qa-cat" id="troubleshooting">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-wrench"></i><span data-lc="en">Troubleshooting</span><span data-lc="es">Solución de problemas</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">The HUD isn't responding / won't dress me — what should I check first?</span><span data-lc="es">El HUD no responde / no me viste — ¿qué reviso primero?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Make sure <code>RLVa</code> is actually enabled in your viewer, then try detaching and re-attaching the HUD — that alone fixes most first-time issues.</span>
+            <span class="lc-block" data-lc="es">Comprueba que <code>RLVa</code> está realmente activo en tu visor, y luego desadjunta y vuelve a adjuntar el HUD — eso soluciona la mayoría de los problemas iniciales.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">I changed outfits and my clothing or skeleton looks wrong — what do I do?</span><span data-lc="es">Cambié de outfit y mi ropa o esqueleto están mal — ¿qué hago?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Use <strong>Refresh</strong> — it reloads your whole avatar and clears up leftovers or a broken skeleton caused by lag or Second Life itself. If that doesn't fix it, contact the creator for a possible solution (this may take more digging on their end).</span>
+            <span class="lc-block" data-lc="es">Usa <strong>Refresh</strong> — recarga tu avatar completo y arregla restos o un esqueleto roto causados por lag o por el propio Second Life. Si no se soluciona, contacta con el creador para una posible solución (puede requerir algo más de esfuerzo por su parte).</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">My BOM tattoo isn't loading in the right order — what should I check?</span><span data-lc="es">Mi tatuaje BOM no carga en el orden correcto — ¿qué reviso?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">BOM ordering isn't 100% guaranteed right now (see above) — check that your numbered folders are sequential with no gaps, that skins/alphas/brows aren't placed inside them, and that the final "Patcher" folder is set up correctly.</span>
+            <span class="lc-block" data-lc="es">El orden BOM no está garantizado al 100% actualmente (ver arriba) — comprueba que tus carpetas numeradas son consecutivas sin saltos, que no hay skins/alphas/cejas dentro de ellas, y que la carpeta final "Patcher" está bien configurada.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ══════════ VERSION & SUPPORT ══════════ -->
+    <section class="qa-cat" id="version">
+      <h2 class="qa-cat-title"><i class="fa-solid fa-code-branch"></i><span data-lc="en">Version &amp; support</span><span data-lc="es">Versión y soporte</span></h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-lc="en">What's the current version?</span><span data-lc="es">¿Cuál es la versión actual?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Subbi Clothes <strong>3.3D</strong> is the current stable release. A new major version, <strong>4.0</strong>, is now available as <strong>Early access</strong> — still officially in development.</span>
+            <span class="lc-block" data-lc="es">Subbi Clothes <strong>3.3D</strong> es la versión estable actual. Una nueva versión mayor, <strong>4.0</strong>, ya está disponible en <strong>acceso anticipado</strong> — sigue oficialmente en desarrollo.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Where do I get help?</span><span data-lc="es">¿Dónde consigo ayuda?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life, or join the official Discord server.</span>
+            <span class="lc-block" data-lc="es">Escribe a <strong>Souwind</strong> o <strong>Aratx</strong> en Second Life, o únete al servidor oficial de Discord.</span>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-lc="en">Where can I see the full changelog?</span><span data-lc="es">¿Dónde veo el historial de cambios completo?</span></summary>
+          <div class="faq-answer">
+            <span class="lc-block" data-lc="en">The <a href="/changelog/">changelog page</a> lists every release, including public DEV builds and beta versions, with full details of what changed.</span>
+            <span class="lc-block" data-lc="es">La <a href="/changelog/">página de changelog</a> lista todas las versiones, incluyendo builds DEV públicas y versiones beta, con el detalle completo de qué cambió.</span>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/js/shell.js"></script>
+</body>
+</html>

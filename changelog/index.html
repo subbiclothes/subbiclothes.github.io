@@ -6,6 +6,7 @@
   <title>Subbi Clothes — Changelog</title>
   <meta name="description" content="Changelog for Subbi Clothes. All changes across every release — Stable and public DEV builds, most recent first.">
   <link rel="canonical" href="https://subbiclothes.com/changelog/">
+  <link rel="alternate" type="application/json" href="/changelog/data.json" title="Subbi Clothes — full changelog data (raw JSON, all versions and entries)">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://subbiclothes.com/changelog/">
   <meta property="og:site_name" content="Subbi Clothes">
@@ -16,7 +17,40 @@
   <meta name="twitter:title" content="Subbi Clothes — Changelog">
   <meta name="twitter:description" content="All changes across every release — Stable and public DEV builds, most recent first.">
   <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
-  <meta name="shell-logo-sub" content="Changelog">
+  <meta name="shell-logo-sub-en" content="Changelog">
+  <meta name="shell-logo-sub-es" content="Changelog">
+
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://subbiclothes.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Changelog", "item": "https://subbiclothes.com/changelog/" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "name": "Subbi Clothes — Changelog",
+        "description": "Changelog for Subbi Clothes. All changes across every release — Stable and public DEV builds, most recent first.",
+        "url": "https://subbiclothes.com/changelog/",
+        "isPartOf": { "@type": "WebSite", "name": "Subbi Clothes", "url": "https://subbiclothes.com/" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://subbiclothes.com/#software",
+        "name": "Subbi Clothes",
+        "url": "https://subbiclothes.com/",
+        "softwareVersion": "3.3D",
+        "description": "The current stable release of Subbi Clothes is 3.3D. A new major version, 4.0, is now available as Early access, though it's still officially in development."
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -32,10 +66,17 @@
     }
 
     /* ── Page header ── */
-    .page-eyebrow { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .page-eyebrow { font-size: var(--fs-label); letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
     .page-title   { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--text); margin-bottom: 8px; }
     .page-title span { color: #00c4d4; }
-    .page-desc    { font-size: 16px; color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; max-width: 560px; }
+    .page-desc    { font-size: var(--fs-lead); color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; max-width: 560px; }
+    .raw-data-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-dim); text-decoration: none;
+      margin-top: 32px; transition: color .15s;
+    }
+    .raw-data-link:hover { color: var(--text-muted); }
+    .raw-data-link i { font-size: 11px; }
 
     /* ── Type legend ── */
     .type-legend {
@@ -63,18 +104,18 @@
       color: var(--pink);
     }
     .type-card p {
-      font-size: 16px; color: var(--text-muted); line-height: 1.5; margin: 0;
+      font-size: var(--fs-body); color: var(--text-muted); line-height: 1.5; margin: 0;
     }
     .type-legacy-note {
       display: flex; flex-direction: column; gap: 6px;
       margin-top: 8px; margin-bottom: 28px;
-      font-size: 16px; color: var(--text-muted);
+      font-size: var(--fs-body); color: var(--text-muted);
     }
     .type-legacy-note .legacy-note-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .type-legacy-note .cl-badge { font-size: 9px; padding: 2px 7px; margin-top: 0; }
     .legacy-note-hint {
       display: flex; align-items: center; gap: 7px;
-      font-size: 15px; color: var(--warning);
+      font-size: var(--fs-meta); color: var(--warning);
     }
     .type-card-head .cl-badge   { margin-top: 0; }
 
@@ -133,7 +174,7 @@
 
     /* Header row */
     .cl-header  { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; flex-wrap: wrap; }
-    .cl-summary { font-size: 16px; color: #c8bcd8; line-height: 1.55; flex: 1; }
+    .cl-summary { font-size: var(--fs-body); color: #c8bcd8; line-height: 1.55; flex: 1; }
     .cl-stats   { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
     .cl-stat    { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
     .cl-stat.new { background: rgba(29,230,138,0.10); color: #1de68a; }
@@ -179,7 +220,7 @@
     .cl-changes { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .cl-changes > li {
       display: flex; flex-direction: column; gap: 4px;
-      font-size: 16px; line-height: 1.55; color: #cec4e0;
+      font-size: var(--fs-body); line-height: 1.55; color: #cec4e0;
     }
     .cl-item-row { display: flex; gap: 9px; align-items: baseline; }
     .cl-item-row::before {
@@ -198,7 +239,7 @@
       margin-top: 8px; padding-left: 22px;
     }
     .cl-sublist li {
-      font-size: 15px; color: var(--text-dim);
+      font-size: var(--fs-meta); color: var(--text-dim);
       display: flex; gap: 8px; align-items: baseline; line-height: 1.45;
     }
     .cl-sublist li::before { content: '–'; flex-shrink: 0; font-size: 12px; }
@@ -359,61 +400,63 @@
 <body>
 
   <main>
-    <p class="page-eyebrow" data-i18n="eyebrow">Release history</p>
-    <h1 class="page-title" data-i18n-html="title">Subbi Clothes — <span>Changelog</span></h1>
-    <p class="page-desc" data-i18n="desc">All changes across every release — stable builds and public DEV versions. Most recent first.</p>
+    <p class="page-eyebrow"><span data-lc="en">Release history</span><span data-lc="es">Historial de versiones</span></p>
+    <h1 class="page-title">Subbi Clothes — <span>Changelog</span></h1>
+    <p class="page-desc"><span data-lc="en">All changes across every release — stable builds and public DEV versions. Most recent first.</span><span data-lc="es">Todos los cambios de cada versión — builds estables y versiones DEV públicas. Más recientes primero.</span></p>
 
     <!-- ── Release type legend ── -->
     <div class="type-legend">
       <div class="type-card stable">
         <div class="type-card-head">
-          <span class="cl-badge stable" data-i18n="f_stable">Stable</span>
+          <span class="cl-badge stable"><span data-lc="en">Stable</span><span data-lc="es">Estable</span></span>
         </div>
-        <p data-i18n="tdesc_stable">Properly documented and extensively tested. Fewer features, but stable and reliable. Not exempt from unidentified bugs.</p>
+        <p><span data-lc="en">Properly documented and extensively tested. Fewer features, but stable and reliable. Not exempt from unidentified bugs.</span><span data-lc="es">Correctamente documentadas y muy testeadas. Menos funciones, estables y fiables. No exentas de bugs no identificados.</span></p>
       </div>
       <div class="type-card dev">
         <div class="type-card-head">
-          <span class="cl-badge dev" data-i18n="f_dev">DEV</span>
-          <span class="type-rec" data-i18n="tdesc_dev_rec">★ Recommended</span>
+          <span class="cl-badge dev">DEV</span>
+          <span class="type-rec"><span data-lc="en">★ Recommended</span><span data-lc="es">★ Recomendada</span></span>
         </div>
-        <p data-i18n="tdesc_dev">Highly reliable, less tested than Stable. Public and reviewed changelogs. Generally 100% functional — may have known or unidentified bugs. More features, better optimized, more QoL.</p>
+        <p><span data-lc="en">Highly reliable, less tested than Stable. Public and reviewed changelogs. Generally 100% functional — may have known or unidentified bugs. More features, better optimized, more QoL.</span><span data-lc="es">Altamente fiable pero menos testeada que Stable. Logs públicos y revisados. Generalmente 100% funcionales — pueden tener bugs conocidos o no. Más funciones, mejor optimizadas y más QoL.</span></p>
       </div>
       <div class="type-card beta">
         <div class="type-card-head">
-          <span class="cl-badge beta" data-i18n="f_beta">Beta</span>
+          <span class="cl-badge beta">Beta</span>
         </div>
-        <p data-i18n="tdesc_beta">Active development line. High risk of unidentified bugs. Documentation may be absent — including changelogs. Unstable, but generally functional.</p>
+        <p><span data-lc="en">Active development line. High risk of unidentified bugs. Documentation may be absent — including changelogs. Unstable, but generally functional.</span><span data-lc="es">Línea en desarrollo activo. Alta posibilidad de bugs no identificados. Documentación escasa o inexistente. Inestable, pero generalmente funcional.</span></p>
       </div>
     </div>
     <div class="type-legacy-note">
       <div class="legacy-note-row">
         <span class="cl-badge legacy-stable">Legacy Stable</span>
         <span class="cl-badge legacy-dev">Legacy DEV</span>
-        <span data-i18n="tdesc_legacy">are older versions of their respective lines with slightly reduced visual prominence.</span>
+        <span><span data-lc="en">are older versions of their respective lines with slightly reduced visual prominence.</span><span data-lc="es">son versiones antiguas de sus respectivas líneas con menor prominencia visual.</span></span>
       </div>
       <div class="legacy-note-hint">
         <i class="fa-solid fa-circle-arrow-up"></i>
-        <span data-i18n="tdesc_legacy_hint">If you are using a legacy version, consider updating to a more recent release.</span>
+        <span><span data-lc="en">If you are using a legacy version, consider updating to a more recent release.</span><span data-lc="es">Si usas una versión legacy, considera actualizar a una versión más reciente.</span></span>
       </div>
     </div>
 
     <div class="filter-bar">
-      <button class="filter-btn active" data-filter="all"    onclick="setFilter('all')"    data-i18n="f_all">Releases</button>
-      <button class="filter-btn"        data-filter="stable" onclick="setFilter('stable')" data-i18n="f_stable">Stable</button>
-      <button class="filter-btn"        data-filter="dev"    onclick="setFilter('dev')"    data-i18n="f_dev">DEV</button>
-      <button class="filter-btn"        data-filter="beta"   onclick="setFilter('beta')"   data-i18n="f_beta">Beta</button>
+      <button class="filter-btn active" data-filter="all"    onclick="setFilter('all')"><span data-lc="en">Releases</span><span data-lc="es">Versiones</span></button>
+      <button class="filter-btn"        data-filter="stable" onclick="setFilter('stable')"><span data-lc="en">Stable</span><span data-lc="es">Estable</span></button>
+      <button class="filter-btn"        data-filter="dev"    onclick="setFilter('dev')">DEV</button>
+      <button class="filter-btn"        data-filter="beta"   onclick="setFilter('beta')">Beta</button>
     </div>
 
     <div class="timeline" id="timeline">
       <div class="cl-loading">
         <i class="fa-solid fa-circle-notch fa-spin"></i>
-        Loading changelog…
+        <span data-lc="en">Loading changelog…</span><span data-lc="es">Cargando changelog…</span>
       </div>
     </div>
     <div class="cl-empty" id="clEmpty" style="display:none;">
       <i class="fa-solid fa-timeline"></i>
-      No entries match the selected filter.
+      <span data-lc="en">No entries match the selected filter.</span><span data-lc="es">Ninguna entrada coincide con el filtro.</span>
     </div>
+
+    <a href="./data.json" class="raw-data-link"><i class="fa-solid fa-code"></i> <span data-lc="en">View raw changelog data (JSON)</span><span data-lc="es">Ver datos del changelog en bruto (JSON)</span></a>
   </main>
 
   <script src="/js/shell.js"></script>
@@ -537,83 +580,15 @@
     }
 
     /* ════════════════════════════════════════════
-       i18n
+       i18n — bilingual content is emitted directly into the generated
+       HTML as <span data-lc="en">/<span data-lc="es"> pairs (same pattern
+       as the rest of the site, see css/shell.css). No language state is
+       tracked here: the timeline never needs to re-render on a language
+       switch, since both languages are already in the DOM and shell.js's
+       html[lang] + the shared CSS toggle handle the rest.
     ════════════════════════════════════════════ */
-    const STRINGS = {
-      en: {
-        eyebrow:      'Release history',
-        title:        'Subbi Clothes — <span>Changelog</span>',
-        desc:         'All changes across every release — stable builds and public DEV versions. Most recent first.',
-        f_all:        'Releases',
-        f_stable:     'Stable',
-        f_dev:        'DEV',
-        f_beta:       'Beta',
-        empty:        'No entries match the selected filter.',
-        g_new:        'New',
-        g_chg:        'Changed',
-        g_fix:        'Fixed',
-        g_hud:        'HUD Changes',
-        g_bug:        'Known Bugs',
-        hide:         'Hide changes',
-        show:         'Show {n} changes',
-        sv_title:     'Patch history',
-        sv_hide:      'Hide',
-        sv_show:      'Show {n}',
-        tdesc_stable: 'Properly documented and extensively tested. Fewer features, but stable and reliable. Not exempt from unidentified bugs.',
-        tdesc_dev:    'Highly reliable, less tested than Stable. Public and reviewed changelogs. Generally 100% functional — may have known or unidentified bugs. More features, better optimized, more QoL.',
-        tdesc_dev_rec:'★ Recommended',
-        tdesc_beta:   'Active development line. High risk of unidentified bugs. Documentation may be absent — including changelogs. Unstable, but generally functional.',
-        tdesc_legacy:       'are older versions of their respective lines with slightly reduced visual prominence.',
-        tdesc_legacy_hint:  'If you are using a legacy version, consider updating to a more recent release.',
-      },
-      es: {
-        eyebrow:      'Historial de versiones',
-        title:        'Subbi Clothes — <span>Changelog</span>',
-        desc:         'Todos los cambios de cada versión — builds estables y versiones DEV públicas. Más recientes primero.',
-        f_all:        'Versiones',
-        f_stable:     'Estable',
-        f_dev:        'DEV',
-        f_beta:       'Beta',
-        empty:        'Ninguna entrada coincide con el filtro.',
-        g_new:        'Nuevo',
-        g_chg:        'Cambios',
-        g_fix:        'Correcciones',
-        g_hud:        'Cambios en HUD',
-        g_bug:        'Bugs Conocidos',
-        hide:         'Ocultar cambios',
-        show:         'Ver {n} cambios',
-        sv_title:     'Historial de parches',
-        sv_hide:      'Ocultar',
-        sv_show:      'Ver {n}',
-        tdesc_stable: 'Correctamente documentadas y muy testeadas. Menos funciones, estables y fiables. No exentas de bugs no identificados.',
-        tdesc_dev:    'Altamente fiable pero menos testeada que Stable. Logs públicos y revisados. Generalmente 100% funcionales — pueden tener bugs conocidos o no. Más funciones, mejor optimizadas y más QoL.',
-        tdesc_dev_rec:'★ Recomendada',
-        tdesc_beta:   'Línea en desarrollo activo. Alta posibilidad de bugs no identificados. Documentación escasa o inexistente. Inestable, pero generalmente funcional.',
-        tdesc_legacy:       'son versiones antiguas de sus respectivas líneas con menor prominencia visual.',
-        tdesc_legacy_hint:  'Si usas una versión legacy, considera actualizar a una versión más reciente.',
-      }
-    };
-
-    let currentLang = 'en';
-
-    function t(key, vars) {
-      const s = STRINGS[currentLang] || STRINGS.en;
-      let str = s[key] !== undefined ? s[key] : (STRINGS.en[key] || key);
-      if (vars) Object.entries(vars).forEach(([k, v]) => str = str.replace(`{${k}}`, v));
-      return str;
-    }
-
-    function setLang(lang) {
-      currentLang = STRINGS[lang] ? lang : 'en';
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const v = t(el.dataset.i18n);
-        if (v !== el.dataset.i18n) el.textContent = v;
-      });
-      document.querySelectorAll('[data-i18n-html]').forEach(el => {
-        const v = t(el.dataset.i18nHtml);
-        if (v !== el.dataset.i18nHtml) el.innerHTML = v;
-      });
-      renderTimeline();
+    function lc(en, es) {
+      return `<span data-lc="en">${en}</span><span data-lc="es">${es}</span>`;
     }
 
     /* ════════════════════════════════════════════
@@ -633,7 +608,7 @@
       .then(data => { allEntries = data.entries || []; renderTimeline(); })
       .catch(() => {
         document.getElementById('timeline').innerHTML =
-          '<div class="cl-empty"><i class="fa-solid fa-triangle-exclamation"></i>Could not load changelog.</div>';
+          `<div class="cl-empty"><i class="fa-solid fa-triangle-exclamation"></i>${lc('Could not load changelog.', 'No se pudo cargar el changelog.')}</div>`;
       });
 
     function renderTimeline() {
@@ -686,18 +661,18 @@
       ].join('');
 
       const groups = [
-        buildGroup('new', 'fa-plus',                   t('g_new'), e.new),
-        buildGroup('chg', 'fa-arrow-right-arrow-left', t('g_chg'), e.changed),
-        buildGroup('fix', 'fa-wrench',                 t('g_fix'), e.fixed),
-        buildGroup('hud', 'fa-display',                t('g_hud'), e.hud),
-        buildGroup('bug', 'fa-bug',                    t('g_bug'), e.bugs),
+        buildGroup('new', 'fa-plus',                   lc('New', 'Nuevo'), e.new),
+        buildGroup('chg', 'fa-arrow-right-arrow-left', lc('Changed', 'Cambios'), e.changed),
+        buildGroup('fix', 'fa-wrench',                 lc('Fixed', 'Correcciones'), e.fixed),
+        buildGroup('hud', 'fa-display',                lc('HUD Changes', 'Cambios en HUD'), e.hud),
+        buildGroup('bug', 'fa-bug',                    lc('Known Bugs', 'Bugs Conocidos'), e.bugs),
       ].join('');
 
       const subVer = buildSubVersions(e.sub_versions);
 
       const toggleLabel = expandedByDefault
-        ? t('hide')
-        : t('show', { n: total });
+        ? lc('Hide changes', 'Ocultar cambios')
+        : lc(`Show ${total} changes`, `Ver ${total} cambios`);
 
       const hasContent = total > 0 || subVer;
 
@@ -727,7 +702,7 @@
       const items = arr.map(sv => buildSubEntry(sv)).join('');
       return `
         <div class="cl-subversions">
-          <div class="cl-subversions-title"><i class="fa-solid fa-code-branch"></i> ${t('sv_title')}</div>
+          <div class="cl-subversions-title"><i class="fa-solid fa-code-branch"></i> ${lc('Patch history', 'Historial de parches')}</div>
           ${items}
         </div>`;
     }
@@ -751,11 +726,11 @@
       ].join('');
 
       const groups = [
-        buildGroup('new', 'fa-plus',                   t('g_new'), sv.new),
-        buildGroup('chg', 'fa-arrow-right-arrow-left', t('g_chg'), sv.changed),
-        buildGroup('fix', 'fa-wrench',                 t('g_fix'), sv.fixed),
-        buildGroup('hud', 'fa-display',                t('g_hud'), sv.hud),
-        buildGroup('bug', 'fa-bug',                    t('g_bug'), sv.bugs),
+        buildGroup('new', 'fa-plus',                   lc('New', 'Nuevo'), sv.new),
+        buildGroup('chg', 'fa-arrow-right-arrow-left', lc('Changed', 'Cambios'), sv.changed),
+        buildGroup('fix', 'fa-wrench',                 lc('Fixed', 'Correcciones'), sv.fixed),
+        buildGroup('hud', 'fa-display',                lc('HUD Changes', 'Cambios en HUD'), sv.hud),
+        buildGroup('bug', 'fa-bug',                    lc('Known Bugs', 'Bugs Conocidos'), sv.bugs),
       ].join('');
 
       return `
@@ -765,7 +740,7 @@
             <span class="cl-sv-version">${esc(sv.version)}</span>
             ${sv.date ? `<span class="cl-sv-date">${esc(sv.date)}</span>` : ''}
             <div class="cl-sv-stats">${stats}</div>
-            ${total > 0 ? `<button class="cl-sv-toggle" onclick="toggleSv(this)" title="${t('sv_show',{n:total})}"><i class="fa-solid fa-chevron-down"></i></button>` : ''}
+            ${total > 0 ? `<button class="cl-sv-toggle" onclick="toggleSv(this)"><i class="fa-solid fa-chevron-down"></i></button>` : ''}
           </div>
           ${sv.summary ? `<p class="cl-sv-summary">${renderMarkup(sv.summary)}</p>` : ''}
           ${total > 0 ? `<div class="cl-sv-details">${groups}</div>` : ''}
@@ -814,8 +789,8 @@
       btn.classList.toggle('open', opening);
       const total = details.querySelectorAll('.cl-item-row').length;
       btn.innerHTML = opening
-        ? `<i class="fa-solid fa-chevron-down"></i> ${t('hide')}`
-        : `<i class="fa-solid fa-chevron-down"></i> ${t('show', { n: total })}`;
+        ? `<i class="fa-solid fa-chevron-down"></i> ${lc('Hide changes', 'Ocultar cambios')}`
+        : `<i class="fa-solid fa-chevron-down"></i> ${lc(`Show ${total} changes`, `Ver ${total} cambios`)}`;
     }
 
     /* ── Sub-version toggle ── */

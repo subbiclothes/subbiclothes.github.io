@@ -44,6 +44,7 @@
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
+.logo-icon img { width: 100%; height: 100%; display: block; }
 
 /* ─ Logo wordmark ─ */
 .logo-wordmark {
@@ -89,4 +90,41 @@
 .lang-switcher button.lang-active {
   background: var(--pink);
   color: #fff;
+}
+
+/* ─ Hamburger button (hidden until the responsive breakpoint) ─ */
+.nav-hamburger {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); font-size: 18px;
+  padding: 6px 8px; border-radius: var(--radius, 8px);
+  transition: color .15s; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.nav-hamburger:hover { color: #f0f0f5; }
+
+/* ─ Mobile dropdown menu ─ */
+.nav-mobile {
+  display: none;
+  flex-direction: column;
+  border-top: 1px solid var(--border-dim, rgba(255,255,255,0.07));
+}
+.nav-mobile.open { display: flex; }
+.nav-mobile a {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-muted); text-decoration: none;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border-dim, rgba(255,255,255,0.07));
+  display: flex; align-items: center; gap: 8px;
+  transition: color .15s, background .15s;
+}
+.nav-mobile a:hover { color: #f0f0f5; background: rgba(255,255,255,0.05); }
+.nav-mobile a.nav-cta { color: var(--pink) !important; }
+
+/* ─ Responsive breakpoint: collapse nav-links into the hamburger ─ */
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
 }

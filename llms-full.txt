@@ -1,0 +1,307 @@
+# Subbi Clothes — Full Reference
+
+> This is the companion file to /llms.txt, following the llms-full.txt convention: a single
+> file with the complete supplementary knowledge about Subbi Clothes that isn't already spelled
+> out on /faq/, /changelog/, or /guide/. It exists so an AI assistant answering questions about
+> the product has accurate, complete detail instead of guessing or hallucinating. This file is
+> not linked from the site navigation — it is a resource for AI/LLM consumption, not human
+> browsing (though anyone is welcome to read it).
+>
+> Precedence: if anything here conflicts with /faq/, /changelog/, or a direct statement from the
+> product's creator, those win. This file will be updated as things change, but treat the
+> changelog's most recent entry as the freshest authority on what currently ships.
+
+## What it is
+
+Subbi Clothes is a complete wardrobe management and automation HUD for Second Life, built with
+LSL and RLVa. It handles outfit/avatar switching, accessories, permissions, and automatic safety
+(PG-Safe+), all from a single wearable. It is not a collar-style RLV restriction system — its
+permission system (Public/Friends/Group/Whitelist) governs who can manage your look, not
+submission dynamics, and the owner always keeps ultimate control over their own HUD.
+
+Works with any mesh body and any avatar type — not locked to a specific body brand or system.
+Requires a viewer with RLVa support (Firestorm 7.2+ strongly recommended; also compatible:
+Alchemy, Aperture, Restrained Love Viewer, Kokua, Catznip, Genesis, Singularity, Lumiya; NOT
+compatible: Second Life's Official Viewer, Black Dragon).
+
+Licensing: the HUD is Copy and partially Modify (sounds, animations, and some content on the
+HUD/Clicker are customizable; the scripts themselves are not modifiable). It is not Transfer.
+
+Pricing: base price 850L$ (as of July 2026, occasionally on sale), on the Second Life
+Marketplace. Discord discounts: "Visitor" role for ≥1 month with some participation → 10% off;
+"Wishlisted" role (granted by the creator on genuine interest) for ≥1 week → 15% off. Seasonal
+discounts around Christmas and the product's anniversary. A demo version exists (not always kept
+fully up to date); live demonstrations can be arranged on request. There is a public Second Life
+group, searchable in-world, automatically invited on purchase or requestable via chat command.
+
+## Versions currently shipping
+
+- **3.3D** — current stable release, sold on the Marketplace.
+- **4.0 DEV** — Early access, publicly available (launched 2026-07-09) as a parallel track
+  alongside 3.3D, not a replacement for it. Still officially in development. The same
+  Marketplace pack that used to include 3.3D + an earlier DEV build now includes 3.3D + 4.0 DEV.
+  Comes with the new SC4 box edition: SAF v4, an in-world OCE (Outfit Config Editor) shortcut
+  object that links to the web tool, and BOM Creator v3.
+- **DEV-4.1** — work in progress, not yet released. Do not describe anything from it as shipping
+  or confirmed; treat it as roadmap only.
+
+Request a redelivery of the latest available version any time with `/55 redelivery`.
+
+## Setup
+
+1. Unpack the HUD.
+2. Create your folder structure with SAF (Semi-Automatic Folders, currently v4) — an in-world
+   helper object. Rez or attach it and touch it to start. It builds most of the required
+   structure automatically (14 folders) but does not create every possible folder, only the ones
+   considered essential; more advanced folders can be added manually, or via the follow-up
+   commands SAF v4 itself offers right after finishing:
+   - Extra body parts: Face, Upper, Hands, Waist, Legs.
+   - Group-shared bodypart-state folders: +Dressed, +Underwear, +Bits (run from inside a
+     bodypart folder, e.g. Torso).
+   SAF's own leftover/trash objects are universal textures, not physical objects — lower impact
+   if a user forgets to delete them.
+3. Upload your avatar/clothes into the structure (Firestorm recommended).
+4. Attach the HUD and start using it.
+
+### Groups/Avatars and Outfits
+
+Inside your Subbi Clothes folder, **Groups** (also called Avatars) subdivide different types of
+looks — e.g. different bodies or themes. Inside each Group you place **Outfits**, the actual
+looks. If you only have one Group or one Outfit, the HUD skips that selection step automatically.
+
+### Tags and outfit biographies
+
+Tagging outfits (so the built-in filter can find them later) and writing outfit biographies are
+now handled per-outfit inside the **Outfit Config Editor (OCE)** — no folder renaming involved.
+This replaced an older manual method, still functional but deprecated: appending `~~` followed
+by space-separated tags directly to the folder name (e.g. `Red Demon ~~ Anime Hot Evil`, tags
+separated by spaces only, no commas). The filter search is not recursive — it searches Groups,
+or searches inside one chosen Group, not both at once.
+
+### Folder structure
+
+Body parts have dedicated folders: Head, Face, Upper, Torso, Arms, Hands, Waist, Crotch, Legs,
+Feet, Bodysuit. Alongside them, system folders: `+Avatar`, `Accessories`, `HairStyle`, `BOM`,
+`HUDs`, `AlphaFix`.
+
+- **Dressed / Underwear / Midwear / Undressed / Bits**: Underwear is removed whenever you switch
+  to Dressed or Naked. Midwear (renamed from "Uwear" in 4.0 terminology) stays active and is
+  always included as part of the Dressed state — the two can be combined, and Midwear is the
+  recommended option since it's more portable across HUD versions than "Keep Underwear".
+  Undressed covers safe/SFW nudity (face, arms, hands, feet) and stays available even with
+  nudity disabled. Bits covers explicit/NSFW nudity (crotch, chest/torso) and is hidden
+  automatically if nudity access is off. If an outfit has both, Bits takes priority and
+  Undressed is ignored.
+- **AlphaFix**: items that need to load about 10 seconds late (this was 25s in the old guide;
+  10s is the current, updated figure). Fixes alpha-layer issues on certain bodies, e.g. Maitreya
+  V-Tech.
+- **Attach/Detach** (inside an accessory): Attach's contents are attached automatically when you
+  remove the accessory; Detach's contents are removed automatically when you put the accessory
+  on. Example: wearing a hat can Detach your cat ears, and taking the hat off Attaches them back.
+- **Folder-name symbols**: `#` = private/hidden (works on Groups/Avatars, Outfits, Accessories,
+  Hairstyles). `@` = normal submenu. `$` = "auto-detach" submenu — only one item inside can be
+  active at a time, for mutually exclusive options. `*` = "Auto-Load" — attaches automatically on
+  avatar replace, Refresh, or Quick Dress; applies to Accessories, HUDs, and Hairstyle (only one
+  hair should be marked at a time, and no loose hair should sit in +Avatar/-Avatar- while a
+  forced one is in use).
+- **Scope system**: folders at the global level (`~Subbi_Clothes/`) apply to every outfit; at
+  group level (`~Subbi_Clothes/Group/`) apply to every outfit in that group; at outfit level
+  (`~Subbi_Clothes/Group/Outfit/`) apply only to that outfit. Applies to Accessories, HUDs,
+  Hairstyle, BOM, and +Avatar. Groups/Outfits themselves have no scope or subcarpetas — fixed
+  structure.
+- **+Avatar vs -Avatar-**: `-Avatar-` is deprecated. Current recommendation: use `+Avatar` for
+  everything, including body parts shared across multiple outfits (previously documented as
+  "shared body per Group" via `-Avatar-` — no longer the recommended practice, though it may
+  still work technically).
+- **HUDs (folder type)**: private by default, support scope and `@`/`$` subfolders, but no
+  documented `*` auto-load behavior specific to HUDs — access is shared via explicit permissions
+  instead.
+- **BOM support caveat**: BOM support is **not guaranteed**. RLVa has no native tools to manage
+  BOM bake order correctly, and recent Second Life optimizations broke the methods used to force
+  load/bake order. The numbered-folder system (BOM Creator v3, groups of 10, with a mandatory
+  final "Patcher" folder holding an empty universal layer/texture the HUD attaches/removes
+  automatically) still works in most cases, and manually removing/re-adding a tattoo sometimes
+  fixes ordering — but it is a best-effort feature, not a guarantee. Do not describe BOM as fully
+  solved in any public-facing content.
+
+## Daily use
+
+- **Opening the menu**: touching the big logo button on the Mini HUD, touching the Clicker,
+  using the "Open menu" gesture, or via chat command.
+- **Random Outfit/Avatar**: scope-aware — run globally it picks from everything available, run
+  inside a specific group it only picks from that group. Private (`#`) entries are never
+  included.
+- **The Clicker**: a separate touchable object (not the HUD attachment itself) that shows your
+  title and particles above your head and opens the same menu as the Mini HUD when touched. It
+  also includes an auto-alpha system: applies an alpha layer over your body if you don't have one
+  equipped, useful during avatar changes.
+- **HUD buttons**: quick access to the most-used functions (public permission toggles, quick
+  actions like a PG-Safe+ trigger, Accessories, a Stop button that cancels someone else's current
+  interaction with your HUD). The full menu adds per-category permissions and options like
+  **Lock Avatar** — keeps your current avatar from being replaced when switching outfits/groups,
+  handy for trying clothes on a different avatar.
+- **Replace Clothes**: as of DEV-4.0, fully redesigned and integrated organically into the
+  system — no longer experimental (older documentation describing it as experimental is
+  outdated).
+- **SkeletonFix**: fixes broken skeletons after an avatar change. Appeared as a WIP option in an
+  earlier DEV build and was formalized with its own toggle (in Replace/Refresh) in DEV-4.0.
+- **HUD resizing**: `/55 hud size=[value]`, where value is a number between -50 and +50 (added in
+  DEV-4.0).
+
+## Permissions & access control
+
+Categories are cumulative, not exclusive tiers: **Public** (everyone), **Friends** (your Second
+Life friends list — does not require manually adding people, unlike Whitelist), **Group**
+(whoever shares your currently-active Second Life group — internally "Same Group (Active)"),
+**Whitelist** (individually added people). Several can be active at once. **Blacklist**
+explicitly blocks specific people regardless of the rest.
+
+Permissions are independent per feature: Clothes, Avatars/Outfits, Accessories, Hairstyle,
+Nudity, and Commands can each be allowed or denied per access category.
+
+If someone without permission tries to change your outfit or undress you, they simply don't see
+that option in the menu; a chat-command attempt is rejected outright. There's no visible failed
+attempt — the option or command is just not available to them.
+
+Adding someone to your whitelist: `wlist add [name]`, `wlist rem [name]`, `wlist check`.
+
+### Elevated access — two distinct mechanisms
+
+These are commonly confused; they are not the same thing:
+
+- **Admin access**: temporary. The admin requests it, the owner approves it, and it is revoked
+  automatically the moment the HUD is removed or the person logs off (also revocable manually at
+  any time, via `admin.eject`).
+- **Master access** (Masterlist, `owner add [name]`): permanent. The owner must add the person
+  manually (it isn't requested) and it stays until removed by hand — effectively an elevated
+  whitelist with broader permissions by default. No automatic revocation.
+
+## Security / PG-Safe+
+
+PG-Safe+ is an automatic or manual safety system. Depending on the configured mode it can
+re-dress you, swap you to a pre-set safe avatar, or send you back to a safe location, and can
+lock down public access. Confirmed modes still in effect: DressMe, Replace, BackHome, B.N (these
+carry over unchanged from older documentation). Two additional modes/triggers, "Safe Sit" and
+"Safe Foes", are under evaluation but are **not official** — do not present them as confirmed
+features anywhere public.
+
+Safe/Dangerous Regions lists you configure take **priority** over the general Safe Rating
+(region G/M/A). Even so, PG-Safe+ still triggers via Safe-Away (disableable) or if manually
+forced, even in a region marked safe.
+
+## Chat commands
+
+Subbi Clothes has an extensive chat command system for gestures or fast execution without
+opening menus.
+
+### Channels
+
+- `/55` — Owner only (or an object owned by the owner, message prefixed with `sc:`). Standard
+  user commands, basic and advanced functions.
+- `/65` — VIP/Masters: the owner, an actively-granted admin, anyone on the Masterlist, or anyone
+  whose access category has the `Adv.Commands` permission enabled. Broadly equivalent in power
+  to `/55`.
+- `/45` — External/remote: anyone, only if "Remote Access" is enabled and their access category
+  has the `Remote` permission enabled. The message must be prefixed with the owner's legacy name
+  (e.g. `Jane Doe wear.outfit MyLook`).
+- `/75` — Administration channel, reserved for the creator and hardcoded admin UUIDs; used for
+  maintenance/support tooling. Not documented here — not relevant to end users.
+
+### Permission command syntax
+
+`perm.<category>.<name>[=<value>]`. Categories: `pub`/`public`, `wl`/`whitelist`, `fr`/`friends`,
+`gr`/`group`. Names: `clothes`, `outfits`, `accessories`, `hairstyle`, `nudity`, `remote`,
+`random`, `distance`, `huds`, `adv.commands`/`advcmd`, `hid.folders`/`hidfld`. Public toggles
+without needing a value; the rest need `=on`/`=off` explicitly. `remote` controls whether someone
+in that category can use the `/45` external channel; `random` controls access to Random
+Outfit/Avatar.
+
+### Command reference (DEV-4.1 tables, most current available; WIP/not fully complete)
+
+| Category | Command | Description |
+|---|---|---|
+| Outfit | `@@<path>` | Shortcut: replace avatar/outfit |
+| Outfit | `outfit.wear <path>` / `.replace` / `.change` | Replace outfit (no argument opens the menu) |
+| Outfit | `outfit.menu` | Open the outfits menu |
+| Outfit | `outfit.random` | Random outfit |
+| Outfit | `outfit.back` / `.prev` / `.undo` | Return to the previous outfit |
+| Outfit | `outfit.refresh` / `.reload` / `.rebuild` | Reload the current outfit |
+| Outfit | `outfit.qdress` / `qdress` | Quick dress |
+| Outfit | `outfit.qundress` / `qundress` | Quick undress |
+| Outfit | `outfit.safe` / `.pg+` | Trigger safe mode |
+| Accessories | `++<item>` / `acc.add <item\|all>` | Add accessory |
+| Accessories | `--<item>` / `acc.remove <item\|all>` | Remove accessory |
+| Accessories | `acc.menu` | Accessories menu |
+| HUDs | `h++<item>` / `huds.add` | Add HUD |
+| HUDs | `h--<item>` / `huds.remove` | Remove HUD |
+| HUDs | `huds.menu` | HUDs menu |
+| HUD (self) | `hud.swap` | Swap HUD position |
+| HUD (self) | `hud.size ±N` / `.show` / `.reset` | Scale the HUD |
+| HUD (self) | `hud.texture.<part>=<skin>` | Change a HUD part's texture |
+| Hair | `hair.set <style>` | Set hairstyle directly |
+| Hair | `hair.menu` | Open hairstyle menu |
+| Clothing (bodyparts) | `<part>++` / `<part>--` | Cycle state (dressed → underwear → undressed) |
+| Clothing (bodyparts) | `<part>.set <state>` | Set state directly (head/face/upper/torso/arms/hands/waist/crotch/legs/feet/bodysuit) |
+| Clothing (bodyparts) | `clothes.lock` / `.hardlock` / `.unlock [part]` | Lock/unlock clothing (see note below — roleplay feature, not a real restriction) |
+| Lists | `+<list> <name>` / `-<list> <name>` / `=<list>` | Add/remove/view a list (wl/whitelist/wlist, bl/blacklist/blist, twl, tbl, sreg, dreg, m/masters) |
+| Config | `settings.<opt>=<val>` / `stg.` / `set.` | General settings |
+| Config | `access.<opt>` / `perm.<opt>` | Permissions and access |
+| Config | `pgsafe` / `.on` / `.off` / `.mode=<mode>` | PG-Safe mode control |
+| Title/Overhead | `title.set <text>` | Set title text |
+| Title/Overhead | `title.say <text>` | Show a temporary message |
+| Title/Overhead | `title.show <bool>` / `title=<bool>` | Show/hide title |
+| Particles | `particles.<bool>` / `particles=<bool>` | Enable/disable |
+| Particles | `particles.color=<value>` | Change color |
+| Particles | `particles.time=<n>` | Change duration |
+| Particles | `particles.texture=<uuid>` | Change texture |
+| Clicker | `clicker.menu` | Open the Clicker menu |
+| Clicker | `clicker.say <text>` | Temporary message via Clicker |
+| Clicker | `clicker.title.set` / `.say` | Same as `title.*` but via Clicker |
+| Clicker | `clicker.particles.*` | Same as `particles.*` but via Clicker |
+| Info | `show.status` / `.bio` / `.version` / `.owners` / `.access` / `.memory [-e]` / `.perms (_sprm)` | Query HUD info |
+| Info | `get.discord` / `.web` / `.support` / `.group` | Informational links (chat) |
+| Info | `open.oce` / `.web` / `.guide` / `.changelog` / `.discord` | Open links (browser) |
+| Utility | `getinv [path] [-i]` | List RLV folders (supports `../`, `./` navigation) |
+| Utility | `rem.all [-s]` / `rem.<path>` | Detach everything, or a specific path |
+| Utility | `sc.stop` / `sc stop` | Stop active interactions |
+| Utility | `cls` / `clear` / `scls [-s\|-m]` | Clear chat |
+| Utility | `alpha` | Toggle alpha view |
+| Utility | `scfind [-v]` | Broadcast search (see SCFind note below) |
+| Admin | `admin.eject` | Revoke an active admin's control |
+
+Notes on specific commands:
+
+- **`clothes.lock` / `.hardlock` / `.unlock`**: currently a WIP feature, roleplay/submission-
+  themed — not a technical lock against third parties. `clothes.lock [part]`: anyone who isn't
+  the owner/master sees the option greyed out as `[LOCKED]` and it does nothing if touched; the
+  owner can still interact with that part normally. `clothes.hardlock [part]`: same lock effect,
+  but also applied to the owner themself — though the owner can disable it any time via a direct
+  button, so it isn't a real restriction, just a roleplay affordance.
+- **`scfind [-v]`**: WIP, in active development for the DEV-4.1 line. Broadcasts a message to the
+  whole region/parcel; other Subbi Clothes HUDs with the option enabled respond with
+  `<username> - {gender} - {bio} - {custom message}` (gender, bio, and message are optional; bio
+  only shows if set). Intended for finding people to interact/roleplay with in the region.
+  Redelivery: `/55 redelivery` resends the latest available version.
+
+## Troubleshooting
+
+- **HUD not responding / won't dress**: confirm RLVa is actually enabled in your viewer, then
+  detach and re-attach the HUD. Resolves most first-time issues.
+  - Removed/stale clothing after a change: use Refresh (`outfit.refresh`) — reloads the whole
+  avatar and clears leftovers or a broken skeleton caused by lag or Second Life itself.
+- **BOM not baking in the right order**: not 100% guaranteed currently (see BOM caveat above).
+  Check that numbered folders are sequential with no gaps, that skins/alphas/brows aren't placed
+  inside them, and that the final Patcher folder is set up correctly.
+
+## Support
+
+Message Souwind or Aratx in Second Life, or join the official Discord server (linked from the
+homepage). Personal support and constant updates are included with the HUD.
+
+---
+
+*A note on scope: this file intentionally omits the `/75` administration channel's exact command
+syntax (creator/hardcoded-admin-only maintenance and security tooling) — it carries no value for
+end users and isn't meant to be public reference material. It also omits anything still under
+internal evaluation and not yet confirmed as an official feature (e.g. unreleased PG-Safe+ modes,
+or DEV-4.1 roadmap items not yet built) — don't present those as shipping.*

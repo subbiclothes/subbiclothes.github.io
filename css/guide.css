@@ -42,23 +42,12 @@ body::before {
   background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
 }
 
-/* ── NAV ── */
-.site-nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(10,10,12,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-inner {
-  max-width: 1200px; margin: 0 auto;
-  padding: 0 24px; height: 68px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.nav-links { display: flex; align-items: center; gap: 24px; }
-.nav-links a { color: var(--text-muted); text-decoration: none; font-size: 16px; font-weight: 600; letter-spacing: 1px; transition: color .15s; }
-.nav-links a:hover { color: var(--text); }
-.nav-cta { color: var(--pink) !important; border: 1px solid var(--border); padding: 6px 14px; border-radius: var(--radius); transition: background .15s !important; }
-.nav-cta:hover { background: var(--pink-soft) !important; }
+/* Nav chrome (.site-nav, .nav-inner, .nav-links, .nav-cta, hamburger, mobile
+   dropdown) lives in css/header.css, shared with Outfit Config Editor — don't
+   redeclare it here. A duplicate unconditional .nav-links rule used to live
+   in this file and silently won over header.css's responsive breakpoint
+   (same specificity, loaded later), which is why the mobile menu never
+   collapsed. */
 
 /* ── LAYOUT ── */
 .guide-wrap {
@@ -84,31 +73,42 @@ body::before {
 /* ── GUIDE CONTENT ── */
 .guide-content { flex: 1; min-width: 0; padding: 32px 0 80px; }
 
-/* ── SECTION CARD ── */
-.guide-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dim);
-  border-left: 3px solid var(--pink);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  margin-bottom: 24px;
-  scroll-margin-top: 88px;
-}
+/* ── SECTION (H2 level) — a light grouping, not a bordered box.
+   The actual visual "card" is one level down, per sub-topic — see
+   .guide-card below. This is what fixes the wall-of-content feeling:
+   a big topic like "Advanced Folders" used to be ONE giant card with
+   8 sub-topics crammed inside; now each sub-topic is its own card. ── */
+.guide-section { margin-bottom: 56px; }
+.guide-section:last-child { margin-bottom: 0; }
 
 /* ── SECTION HEADER ── */
 .section-header {
   display: flex; align-items: center; gap: 10px;
-  padding-bottom: 14px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
-.section-header i { color: var(--pink); font-size: 18px; }
+.section-header i { color: var(--pink); font-size: 20px; }
 .section-header h2 {
   font-family: 'Orbitron', monospace;
-  font-size: 18px; font-weight: 700; letter-spacing: 1px;
+  font-size: 20px; font-weight: 700; letter-spacing: 1px;
   color: var(--pink);
 }
-.section-intro { color: var(--text-muted); margin-bottom: 20px; max-width: 680px; }
+.section-intro { color: var(--text-muted); margin-bottom: 24px; max-width: 680px; }
+
+/* ── CARD (H3 level) — one per sub-topic ── */
+.guide-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--pink);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 28px;
+  scroll-margin-top: 88px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.guide-card:last-child { margin-bottom: 0; }
 
 /* ── SUB-HEADINGS ── */
 .guide-content h3 {
@@ -116,20 +116,22 @@ body::before {
   font-family: 'Rajdhani', sans-serif;
   font-size: 16px; font-weight: 700; letter-spacing: 1px;
   color: var(--text); text-transform: uppercase;
-  margin: 24px 0 12px;
+  margin: 0 0 16px;
 }
 .guide-content h3 i { color: var(--pink); font-size: 16px; }
-.guide-content h4 { font-size: 16px; font-weight: 700; color: var(--text-muted); margin: 16px 0 8px; letter-spacing: 0.5px; }
-.guide-content p { color: var(--text-muted); margin-bottom: 12px; }
+.guide-content h4 { font-size: 16px; font-weight: 700; color: var(--text-muted); margin: 22px 0 10px; letter-spacing: 0.5px; }
+.guide-content h4:first-child { margin-top: 0; }
+.guide-content p { color: var(--text-muted); margin-bottom: 14px; }
+.guide-content p:last-child { margin-bottom: 0; }
 .guide-content p strong, .guide-content li strong { color: var(--text); font-weight: 600; }
-.guide-content ul, .guide-content ol { padding-left: 20px; margin-bottom: 12px; }
-.guide-content li { color: var(--text-muted); margin-bottom: 5px; }
+.guide-content ul, .guide-content ol { padding-left: 20px; margin-bottom: 14px; }
+.guide-content li { color: var(--text-muted); margin-bottom: 7px; }
 
 /* ── CALLOUTS ── */
 .callout {
   display: flex; gap: 12px; align-items: flex-start;
-  padding: 14px 16px; border-radius: var(--radius);
-  margin: 14px 0;
+  padding: 16px 18px; border-radius: var(--radius);
+  margin: 18px 0;
   border: 1px solid var(--border-dim);
   background: var(--bg-panel);
   border-left: 3px solid var(--pink);
@@ -147,7 +149,7 @@ body::before {
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px; margin: 16px 0;
+  gap: 16px; margin: 20px 0;
 }
 .feature-card {
   background: var(--bg-panel);
@@ -168,7 +170,7 @@ body::before {
 .card-pink  { background: var(--pink-soft); border-color: var(--border);   }
 
 /* ── INFO CARDS (2-col) ── */
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
 .info-card {
   background: var(--bg-panel); border: 1px solid var(--border-dim);
   border-radius: var(--radius); padding: 14px 16px; font-size: 16px;
@@ -184,7 +186,7 @@ body::before {
 .info-card.teal i { color: rgba(0,188,212,0.9); }
 
 /* ── NUMBERED STEPS ── */
-.steps-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.steps-list { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
 .step-item {
   display: flex; gap: 14px; align-items: flex-start;
   background: var(--bg-panel); border: 1px solid var(--border-dim);
@@ -205,7 +207,7 @@ body::before {
 .step-body a:hover { text-decoration: underline; }
 
 /* ── HUD BUTTON CARDS ── */
-.hud-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 14px 0; }
+.hud-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin: 18px 0; }
 .hud-card {
   background: var(--bg-panel); border: 1px solid var(--border-dim);
   border-radius: var(--radius); padding: 16px 12px;
@@ -220,9 +222,9 @@ body::before {
 .hud-card p { font-size: 14px; margin: 0; line-height: 1.4; }
 
 /* ── TABLE ── */
-.guide-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 16px; }
-.guide-table th { text-align: left; padding: 9px 14px; background: var(--bg-panel); color: var(--text-dim); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border-dim); }
-.guide-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-dim); color: var(--text-muted); vertical-align: top; }
+.guide-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 16px; }
+.guide-table th { text-align: left; padding: 11px 16px; background: var(--bg-panel); color: var(--text-dim); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border-dim); }
+.guide-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-dim); color: var(--text-muted); vertical-align: top; }
 .guide-table td strong { color: var(--text); }
 .guide-table tr:last-child td { border-bottom: none; }
 .guide-table tr:hover td { background: var(--bg-hover); }
@@ -230,7 +232,7 @@ body::before {
 
 /* ── CODE ── */
 code { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--pink); background: var(--pink-soft); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; }
-.code-block { background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 16px 20px; font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--text-muted); margin: 14px 0; overflow-x: auto; line-height: 1.7; }
+.code-block { background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 16px 20px; font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--text-muted); margin: 18px 0; overflow-x: auto; line-height: 1.7; }
 
 /* ── BADGE ── */
 .badge { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: middle; margin-left: 6px; }

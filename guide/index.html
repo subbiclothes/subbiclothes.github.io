@@ -16,7 +16,32 @@
   <meta name="twitter:title" content="Subbi Clothes — Guide">
   <meta name="twitter:description" content="Official guide for Subbi Clothes, the RLV wardrobe HUD for Second Life.">
   <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
-  <meta name="shell-logo-sub" content="Official Guide">
+  <meta name="shell-logo-sub-en" content="Official Guide">
+  <meta name="shell-logo-sub-es" content="Guía Oficial">
+
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://subbiclothes.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Guide", "item": "https://subbiclothes.com/guide/" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "name": "Subbi Clothes — Guide",
+        "description": "Official guide for Subbi Clothes, the RLV wardrobe HUD for Second Life. Learn how to set up outfits, avatars, accessories, access control, and automation.",
+        "url": "https://subbiclothes.com/guide/",
+        "isPartOf": { "@type": "WebSite", "name": "Subbi Clothes", "url": "https://subbiclothes.com/" }
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -32,7 +57,7 @@
       padding: 64px 16px 80px;
     }
     .eyebrow {
-      font-size: 12px;
+      font-size: var(--fs-label);
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--text-muted);
@@ -68,10 +93,11 @@
       transform: translateY(-3px);
       box-shadow: 0 8px 32px rgba(255,45,120,0.12);
     }
-    .card-eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
-    .card-title   { font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; color: var(--pink); }
-    .card-desc    { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
-    .card-arrow   { margin-top: 10px; font-size: 13px; letter-spacing: 1px; color: var(--pink); }
+    .card-eyebrow { font-size: var(--fs-label); letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+    .card-title   { font-family: 'Orbitron', monospace; font-size: var(--fs-subtitle-1); font-weight: 700; color: var(--pink); }
+    .card-title .wip-tag { font-size: var(--fs-label); letter-spacing: 1px; }
+    .card-desc    { font-size: var(--fs-meta); color: var(--text-muted); line-height: 1.55; }
+    .card-arrow   { margin-top: 10px; font-size: var(--fs-label); letter-spacing: 1px; color: var(--pink); }
     .card.wip { border-left-color: var(--warning); }
     .card.wip .card-title { color: var(--warning); }
     .card.wip .card-arrow { color: var(--warning); }
@@ -83,7 +109,7 @@
       margin-bottom: 20px;
     }
     .section-divider span {
-      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      font-size: var(--fs-label); letter-spacing: 3px; text-transform: uppercase;
       color: var(--text-dim); white-space: nowrap;
     }
     .section-divider::before, .section-divider::after {
@@ -98,81 +124,39 @@
 <body>
 
   <main>
-    <p class="eyebrow" data-i18n="eyebrow">Documentation</p>
-    <h1 data-i18n-html="heading">Choose a <span>guide version</span></h1>
+    <p class="eyebrow"><span data-lc="en">Documentation</span><span data-lc="es">Documentación</span></p>
+    <h1><span data-lc="en">Choose a <span>guide version</span></span><span data-lc="es">Elige una <span>versión de la guía</span></span></h1>
 
     <div class="cards">
       <a href="https://docs.google.com/document/d/1NDiYi7shHj9DzMIr35uasNOvS0vTzGvx8MglADWJNeI" target="_blank" rel="noopener" class="card">
-        <span class="card-eyebrow" data-i18n="v1_eyebrow">Current release</span>
+        <span class="card-eyebrow"><span data-lc="en">Current release</span><span data-lc="es">Versión actual</span></span>
         <span class="card-title">Guide 3.3D</span>
-        <span class="card-desc" data-i18n="v1_desc">Complete guide for Subbi Clothes 3.3D — setup, folders, HUD navigation, and advanced features.</span>
-        <span class="card-arrow" data-i18n-html="open_docs">Open in Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i></span>
+        <span class="card-desc"><span data-lc="en">Complete guide for Subbi Clothes 3.3D — setup, folders, HUD navigation, and advanced features.</span><span data-lc="es">Guía completa para Subbi Clothes 3.3D — configuración, carpetas, navegación del HUD y funciones avanzadas.</span></span>
+        <span class="card-arrow"><span data-lc="en">Open in Google Docs</span><span data-lc="es">Abrir en Google Docs</span> <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i></span>
       </a>
       <a href="https://docs.google.com/document/d/1Fa8ZtVqoi6xgJG9C8XQZUvDBL_cDEyN0NZAsW9kPDdg" target="_blank" rel="noopener" class="card wip">
-        <span class="card-eyebrow" data-i18n="v2_eyebrow">In development</span>
-        <span class="card-title">Guide 4.0 <span style="font-size:12px;letter-spacing:1px;">(WIP)</span></span>
-        <span class="card-desc" data-i18n="v2_desc">Newer, improved version of the guide — rewritten for the upcoming 4.0 release. More detailed, better organized, and actively updated. Work in progress.</span>
-        <span class="card-arrow" data-i18n-html="open_docs">Open in Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i></span>
+        <span class="card-eyebrow"><span data-lc="en">In development</span><span data-lc="es">En desarrollo</span></span>
+        <span class="card-title">Guide 4.0 <span class="wip-tag">(WIP)</span></span>
+        <span class="card-desc"><span data-lc="en">Newer, improved version of the guide — rewritten for the upcoming 4.0 release. More detailed, better organized, and actively updated. Work in progress.</span><span data-lc="es">Versión más reciente y mejorada de la guía — reescrita para la próxima versión 4.0. Más detallada, mejor organizada y en actualización activa. Trabajo en progreso.</span></span>
+        <span class="card-arrow"><span data-lc="en">Open in Google Docs</span><span data-lc="es">Abrir en Google Docs</span> <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i></span>
       </a>
     </div>
 
     <div class="cards-section">
       <div class="section-divider">
-        <span data-i18n="updates_label">Release notes</span>
+        <span><span data-lc="en">Release notes</span><span data-lc="es">Notas de versión</span></span>
       </div>
       <div class="cards">
         <a href="/changelog/" class="card changelog">
-          <span class="card-eyebrow" data-i18n="cl_eyebrow">All versions</span>
+          <span class="card-eyebrow"><span data-lc="en">All versions</span><span data-lc="es">Todas las versiones</span></span>
           <span class="card-title">Changelog</span>
-          <span class="card-desc" data-i18n="cl_desc">Latest changes across all releases — including public DEV builds and closed beta versions.</span>
-          <span class="card-arrow" data-i18n="cl_arrow">View changelog →</span>
+          <span class="card-desc"><span data-lc="en">Latest changes across all releases — including public DEV builds and closed beta versions.</span><span data-lc="es">Últimos cambios de todas las versiones — incluidas compilaciones DEV públicas y betas cerradas.</span></span>
+          <span class="card-arrow"><span data-lc="en">View changelog →</span><span data-lc="es">Ver changelog →</span></span>
         </a>
       </div>
     </div>
   </main>
 
   <script src="/js/shell.js"></script>
-  <script>
-    /* Page-specific strings — shell.js calls setLang() after handling nav/footer/switcher */
-    const STRINGS = {
-      en: {
-        eyebrow:       'Documentation',
-        heading:       'Choose a <span>guide version</span>',
-        v1_eyebrow:    'Current release',
-        v1_desc:       'Complete guide for Subbi Clothes 3.3D — setup, folders, HUD navigation, and advanced features.',
-        v2_eyebrow:    'In development',
-        v2_desc:       'Newer, improved version of the guide — rewritten for the upcoming 4.0 release. More detailed, better organized, and actively updated. Work in progress.',
-        open_docs:     'Open in Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>',
-        updates_label: 'Release notes',
-        cl_eyebrow:    'All versions',
-        cl_desc:       'Latest changes across all releases — including public DEV builds and closed beta versions.',
-        cl_arrow:      'View changelog →',
-      },
-      es: {
-        eyebrow:       'Documentación',
-        heading:       'Elige una <span>versión de la guía</span>',
-        v1_eyebrow:    'Versión actual',
-        v1_desc:       'Guía completa para Subbi Clothes 3.3D — configuración, carpetas, navegación del HUD y funciones avanzadas.',
-        v2_eyebrow:    'En desarrollo',
-        v2_desc:       'Versión más reciente y mejorada de la guía — reescrita para la próxima versión 4.0. Más detallada, mejor organizada y en actualización activa. Trabajo en progreso.',
-        open_docs:     'Abrir en Google Docs <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>',
-        updates_label: 'Notas de versión',
-        cl_eyebrow:    'Todas las versiones',
-        cl_desc:       'Últimos cambios de todas las versiones — incluidas compilaciones DEV públicas y betas cerradas.',
-        cl_arrow:      'Ver changelog →',
-      }
-    };
-
-    function setLang(lang) {
-      if (!STRINGS[lang]) lang = 'en';
-      const s = STRINGS[lang];
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        if (s[el.dataset.i18n] !== undefined) el.textContent = s[el.dataset.i18n];
-      });
-      document.querySelectorAll('[data-i18n-html]').forEach(el => {
-        if (s[el.dataset.i18nHtml] !== undefined) el.innerHTML = s[el.dataset.i18nHtml];
-      });
-    }
-  </script>
 </body>
 </html>

@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://subbiclothes.com/sitemap.xml
+
+# AI/LLM-oriented resource index: https://subbiclothes.com/llms.txt

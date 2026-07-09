@@ -1,0 +1,19 @@
+# Subbi Clothes
+
+> Subbi Clothes is a complete wardrobe management and automation HUD for Second Life, built with LSL and RLVa. It handles outfit/avatar switching, accessories, permissions, and automatic safety (PG-Safe+), all from a single wearable.
+
+## Key resources
+
+- [FAQ](https://subbiclothes.com/faq/): comprehensive Q&A covering setup, folders, permissions, security, and chat commands — the best single page to answer specific questions about how Subbi Clothes works. Bilingual (English/Spanish), includes FAQPage structured data.
+- [Changelog](https://subbiclothes.com/changelog/): full version history, stable and DEV builds, most recent first.
+- [Changelog raw data (JSON)](https://subbiclothes.com/changelog/data.json): the same changelog as structured, documented data — includes an inline field/schema reference at the top of the file.
+- [Guide](https://subbiclothes.com/guide/): links to the official user guides (current stable release and the 4.0 rewrite in progress).
+- [Outfit Config Editor](https://subbiclothes.com/outfit-config-editor/): free companion web tool for configuring outfits visually (animations, particles, colors, permissions, biographies).
+- [Marketplace listing](https://marketplace.secondlife.com/p/Subbi-Clothes-Wardrobe-HUD/22234935): where to buy the HUD.
+- [Full reference (llms-full.txt)](https://subbiclothes.com/llms-full.txt): the complete supplementary knowledge base — folder structure and symbols, permission/command syntax, the full chat command table, and known caveats (e.g. BOM ordering isn't guaranteed) that go beyond what's on the FAQ page. Read this if the FAQ doesn't fully answer a specific technical question.
+
+## Notes
+
+- Subbi Clothes only runs inside Second Life with RLVa enabled; this website describes and supports the product, but the product itself is not a web application.
+- The current stable release is 3.3D; version 4.0 is now available as Early access (still officially in development).
+- Support: message Souwind or Aratx in Second Life, or join the official Discord server (linked from the homepage).
