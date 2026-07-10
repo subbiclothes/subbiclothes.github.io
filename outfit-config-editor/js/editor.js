@@ -10,10 +10,10 @@ function showApplyMenu(e, fieldKey) {
   const src = outfits.find(x => x.id === activeId);
   if (!src) return;
   _applyField = fieldKey;
-  const gCount = outfits.filter(o => o.avatar === src.avatar && o.id !== src.id).length;
+  const gCount = outfits.filter(o => o.groupId === src.groupId && o.id !== src.id).length;
   const aCount = outfits.filter(o => o.id !== src.id).length;
   const menu = document.getElementById('applyMenuPopup');
-  document.getElementById('applyMenuGroup').innerHTML = `<i class="fa-solid fa-users"></i> ${src.avatar} <span class="apply-count">(${gCount})</span>`;
+  document.getElementById('applyMenuGroup').innerHTML = `<i class="fa-solid fa-users"></i> ${esc(groupName(src))} <span class="apply-count">(${gCount})</span>`;
   document.getElementById('applyMenuAll').innerHTML = `<i class="fa-solid fa-layer-group"></i> ${t('all_outfits')} <span class="apply-count">(${aCount})</span>`;
   const panel = document.getElementById('mainPanel');
   const panelRect = panel.getBoundingClientRect();
@@ -36,7 +36,7 @@ function applyToOutfits(toGroup) {
   if (!src) return;
   const val = src.data[_applyField];
   const targets = toGroup
-    ? outfits.filter(o => o.avatar === src.avatar && o.id !== src.id)
+    ? outfits.filter(o => o.groupId === src.groupId && o.id !== src.id)
     : outfits.filter(o => o.id !== src.id);
   targets.forEach(o => { o.data[_applyField] = val; });
   saveToStorage();
@@ -126,16 +126,86 @@ function rgbSpeedSliderHTML(cls, value) {
   </div>`;
 }
 
-function renderEditor(id) {
-  const o = outfits.find(x => x.id === id);
-  if (!o) return;
-  const d = o.data;
-  document.getElementById('emptyState').style.display = 'none';
-  const ec = document.getElementById('editorContainer');
-  ec.style.display = '';
+/* ══════════════════════════════════════════════════════════════════════
+   SHARED SECTION BUILDERS
+   These take only a settings object `d` (same shape for an outfit's
+   .data or a group's .data) and are reused, unmodified, by both the
+   outfit editor (renderEditor) and the group editor (renderGroupEditor).
+   Adding a field here (e.g. a new bodypart) automatically appears in both.
+   ══════════════════════════════════════════════════════════════════════ */
 
+function renderSettingsSectionHTML(d, showApplyButtons) {
   const wip = `<span class="wip-badge">${t('wip')}</span>`;
+  const ab = field => showApplyButtons ? applyBtn(field) : '';
+  return `
+    <div class="section" id="sec_settings">
+      <div class="section-header" onclick="toggleSection('sec_settings')">
+        <i class="fa-solid fa-sliders section-icon"></i>
+        <span class="section-label">${t('sec_settings')}</span>
+        <i class="fa-solid fa-chevron-down section-chevron"></i>
+      </div>
+      <div class="section-body">
+        <div class="form-grid" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label>${t('gender')}</label>
+            <div style="display:flex;gap:5px;align-items:center;">
+              <select class="f-gender" style="flex:1;">
+                <option value="Auto"    ${d.gender==='Auto'||!d.gender?'selected':''}>${t('gender_auto')}</option>
+                <option value="Neutral" ${d.gender==='Neutral'?'selected':''}>${t('gender_neutral')}</option>
+                <option value="Female"  ${d.gender==='Female'?'selected':''}>${t('gender_female')}</option>
+                <option value="Male"    ${d.gender==='Male'?'selected':''}>${t('gender_male')}</option>
+              </select>
+              ${ab('gender')}
+            </div>
+            <div class="toggle-desc">${t('gender_desc')}</div>
+          </div>
+          <div class="form-group">
+            <label>${t('pg_safe_mode')} ${wip}</label>
+            <select class="f-pg-safe">
+              <option value="" ${!d.pg_safe_mode?'selected':''}>${t('pg_none')}</option>
+              <option value="Dress me"       ${d.pg_safe_mode==='Dress me'?'selected':''}>${t('pg_opt_dress')}</option>
+              <option value="Replace Avatar" ${d.pg_safe_mode==='Replace Avatar'?'selected':''}>${t('pg_opt_replace')}</option>
+              <option value="Block Nudity"   ${d.pg_safe_mode==='Block Nudity'?'selected':''}>${t('pg_opt_block')}</option>
+            </select>
+            <div class="toggle-desc">${t('pg_safe_mode_desc')}</div>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">${t('anim_enabled')}</div><div class="toggle-desc">${t('anim_enabled_desc')}</div></div>
+          <div style="display:flex;align-items:center;gap:5px;">${ab('animations_enabled')}${tristateHTML('f-anim', d.animations_enabled)}</div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">${t('skelfix_change')}</div><div class="toggle-desc">${t('skelfix_change_desc')}</div></div>
+          <div style="display:flex;align-items:center;gap:5px;">${ab('skelfix_change')}${tristateHTML('f-skelfix-change', d.skelfix_change)}</div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">${t('skelfix_reload')}</div><div class="toggle-desc">${t('skelfix_reload_desc')}</div></div>
+          <div style="display:flex;align-items:center;gap:5px;">${ab('skelfix_reload')}${tristateHTML('f-skelfix-reload', d.skelfix_reload)}</div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">${t('nudity')}</div><div class="toggle-desc">${t('nudity_desc')}</div></div>
+          <div style="display:flex;align-items:center;gap:5px;">${ab('nudity_permission')}${tristateHTML('f-nudity', d.nudity_permission)}</div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">${t('hairstyle_perm')} ${wip}</div><div class="toggle-desc">${t('hairstyle_perm_desc')}</div></div>
+          <div style="display:flex;align-items:center;gap:5px;">${ab('hairstyle_permission')}${tristateHTML('f-hairstyle', d.hairstyle_permission)}</div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">${t('clothes_perm')} ${wip}</div><div class="toggle-desc">${t('clothes_perm_desc')}</div></div>
+          <div style="display:flex;align-items:center;gap:5px;">${ab('clothes_permission')}${tristateHTML('f-clothes', d.clothes_permission)}</div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">${t('lock_ankles')} ${wip}</div><div class="toggle-desc">${t('lock_ankles_desc')}</div></div>
+          <div style="display:flex;align-items:center;gap:5px;">${ab('lock_ankles')}${tristateHTML('f-lock-ankles', d.lock_ankles)}</div>
+        </div>
+        <p class="editor-hint editor-hint-bare" style="margin-top:14px;">
+          <i class="fa-solid fa-circle-info"></i>&nbsp;${t('auto_hint')}
+        </p>
+      </div>
+    </div>`;
+}
 
+function renderBodypartsSectionHTML(d) {
   const bpRows = BODY_PARTS.map(p => {
     const bp = d.bodyparts[p] || {};
     const def = BP_DEFAULTS[p] || {};
@@ -154,119 +224,7 @@ function renderEditor(id) {
     </tr>`;
   }).join('');
 
-  ec.innerHTML = `
-  <div class="outfit-editor" id="editor_${id}">
-    <div class="editor-title-row">
-      <div>
-        <div class="editor-title">${o.avatar} / ${o.name}</div>
-        <div class="editor-subtitle" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);">"${o.avatar}/${o.name}"</div>
-      </div>
-      <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;">
-        <button class="btn btn-ghost btn-sm" onclick="openRenameModal('${id}')">
-          <i class="fa-solid fa-pen"></i> ${t('btn_rename')}
-        </button>
-        <button class="btn btn-ghost btn-sm" onclick="duplicateOutfit('${id}')">
-          <i class="fa-solid fa-copy"></i> ${t('btn_duplicate')}
-        </button>
-        <button class="btn btn-ghost btn-sm" onclick="copyOutfitConfig('${id}')">
-          <i class="fa-solid fa-code"></i> ${t('copy_outfit')}
-        </button>
-        <button class="btn btn-danger btn-sm" onclick="confirmDeleteOutfit('${id}')">
-          <i class="fa-solid fa-trash"></i> ${t('btn_delete')}
-        </button>
-      </div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div class="section" id="sec_settings">
-      <div class="section-header" onclick="toggleSection('sec_settings')">
-        <i class="fa-solid fa-sliders section-icon"></i>
-        <span class="section-label">${t('sec_settings')}</span>
-        <i class="fa-solid fa-chevron-down section-chevron"></i>
-      </div>
-      <div class="section-body">
-        <div class="form-grid" style="margin-bottom:16px;">
-          <div class="form-group">
-            <label>${t('gender')}</label>
-            <div style="display:flex;gap:5px;align-items:center;">
-              <select class="f-gender" style="flex:1;">
-                <option value="Auto"    ${d.gender==='Auto'||!d.gender?'selected':''}>${t('gender_auto')}</option>
-                <option value="Neutral" ${d.gender==='Neutral'?'selected':''}>${t('gender_neutral')}</option>
-                <option value="Female"  ${d.gender==='Female'?'selected':''}>${t('gender_female')}</option>
-                <option value="Male"    ${d.gender==='Male'?'selected':''}>${t('gender_male')}</option>
-              </select>
-              ${applyBtn('gender')}
-            </div>
-            <div class="toggle-desc">${t('gender_desc')}</div>
-          </div>
-          <div class="form-group">
-            <label>${t('pg_safe_mode')} ${wip}</label>
-            <select class="f-pg-safe">
-              <option value="" ${!d.pg_safe_mode?'selected':''}>${t('pg_none')}</option>
-              <option value="Dress me"       ${d.pg_safe_mode==='Dress me'?'selected':''}>${t('pg_opt_dress')}</option>
-              <option value="Replace Avatar" ${d.pg_safe_mode==='Replace Avatar'?'selected':''}>${t('pg_opt_replace')}</option>
-              <option value="Block Nudity"   ${d.pg_safe_mode==='Block Nudity'?'selected':''}>${t('pg_opt_block')}</option>
-            </select>
-            <div class="toggle-desc">${t('pg_safe_mode_desc')}</div>
-          </div>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">${t('anim_enabled')}</div><div class="toggle-desc">${t('anim_enabled_desc')}</div></div>
-          <div style="display:flex;align-items:center;gap:5px;">${applyBtn('animations_enabled')}${tristateHTML('f-anim', d.animations_enabled)}</div>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">${t('skelfix_change')}</div><div class="toggle-desc">${t('skelfix_change_desc')}</div></div>
-          <div style="display:flex;align-items:center;gap:5px;">${applyBtn('skelfix_change')}${tristateHTML('f-skelfix-change', d.skelfix_change)}</div>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">${t('skelfix_reload')}</div><div class="toggle-desc">${t('skelfix_reload_desc')}</div></div>
-          <div style="display:flex;align-items:center;gap:5px;">${applyBtn('skelfix_reload')}${tristateHTML('f-skelfix-reload', d.skelfix_reload)}</div>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">${t('nudity')}</div><div class="toggle-desc">${t('nudity_desc')}</div></div>
-          <div style="display:flex;align-items:center;gap:5px;">${applyBtn('nudity_permission')}${tristateHTML('f-nudity', d.nudity_permission)}</div>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">${t('hairstyle_perm')} ${wip}</div><div class="toggle-desc">${t('hairstyle_perm_desc')}</div></div>
-          <div style="display:flex;align-items:center;gap:5px;">${applyBtn('hairstyle_permission')}${tristateHTML('f-hairstyle', d.hairstyle_permission)}</div>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">${t('clothes_perm')} ${wip}</div><div class="toggle-desc">${t('clothes_perm_desc')}</div></div>
-          <div style="display:flex;align-items:center;gap:5px;">${applyBtn('clothes_permission')}${tristateHTML('f-clothes', d.clothes_permission)}</div>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">${t('lock_ankles')} ${wip}</div><div class="toggle-desc">${t('lock_ankles_desc')}</div></div>
-          <div style="display:flex;align-items:center;gap:5px;">${applyBtn('lock_ankles')}${tristateHTML('f-lock-ankles', d.lock_ankles)}</div>
-        </div>
-        <p class="editor-hint editor-hint-bare" style="margin-top:14px;">
-          <i class="fa-solid fa-circle-info"></i>&nbsp;${t('auto_hint')}
-        </p>
-      </div>
-    </div>
-
-    <!-- TAGS -->
-    <div class="section" id="sec_tags">
-      <div class="section-header" onclick="toggleSection('sec_tags')">
-        <i class="fa-solid fa-tags section-icon"></i>
-        <span class="section-label">${t('sec_tags')}</span>
-        <i class="fa-solid fa-chevron-down section-chevron"></i>
-      </div>
-      <div class="section-body">
-        <div style="display:flex;gap:6px;align-items:center;">
-          <div style="flex:1;position:relative;">
-            <div class="tag-input-wrap" id="tagWrap_${id}">
-              <input type="text" class="tag-text-input" id="tagInput_${id}" autocomplete="off" spellcheck="false"/>
-            </div>
-            <input type="hidden" class="f-tags" id="tagHidden_${id}" value="${esc(d.tags||'')}"/>
-            <div class="tag-ac-dropdown" id="tagAc_${id}" style="display:none;"></div>
-          </div>
-          <button class="btn btn-ghost btn-sm tag-add-btn" id="tagAddBtn_${id}" type="button" title="Add existing tag"><i class="fa-solid fa-plus"></i></button>
-        </div>
-        <div class="toggle-desc" style="margin-top:6px;">${t('tags_desc')}</div>
-      </div>
-    </div>
-
-    <!-- BODYPARTS -->
+  return `
     <div class="section" id="sec_bodyparts">
       <div class="section-header" onclick="toggleSection('sec_bodyparts')">
         <i class="fa-solid fa-person section-icon"></i>
@@ -294,9 +252,12 @@ function renderEditor(id) {
           <div class="tip-content">${t('footer_hint')}</div>
         </details>
       </div>
-    </div>
+    </div>`;
+}
 
-    <!-- PARTICLES -->
+function renderParticlesSectionHTML(d) {
+  const wip = `<span class="wip-badge">${t('wip')}</span>`;
+  return `
     <div class="section" id="sec_particles">
       <div class="section-header" onclick="toggleSection('sec_particles')">
         <i class="fa-solid fa-wand-magic-sparkles section-icon"></i>
@@ -399,9 +360,12 @@ function renderEditor(id) {
           </ul>
         </details>
       </div>
-    </div>
+    </div>`;
+}
 
-    <!-- TITLE -->
+function renderTitleSectionHTML(d) {
+  const wip = `<span class="wip-badge">${t('wip')}</span>`;
+  return `
     <div class="section" id="sec_title">
       <div class="section-header" onclick="toggleSection('sec_title')">
         <i class="fa-solid fa-tag section-icon"></i>
@@ -436,6 +400,27 @@ function renderEditor(id) {
             </div>
           </div>
         </div>
+        <label class="title-modes-heading">${t('title_modes_heading')}</label>
+        <div class="title-mode-options">
+          <label class="title-mode-option">
+            <input type="checkbox" class="f-title-mode-seq" ${d.title_mode === 'sequential' ? 'checked' : ''} onchange="setTitleMode(this,'sequential')"/>
+            <span>
+              <span class="title-mode-option-title">${t('title_mode_sequential')}</span>
+              <span class="title-mode-option-desc">${t('title_mode_sequential_desc')}</span>
+            </span>
+          </label>
+          <label class="title-mode-option">
+            <input type="checkbox" class="f-title-mode-scroll" ${d.title_mode === 'scroll' ? 'checked' : ''} onchange="setTitleMode(this,'scroll')"/>
+            <span>
+              <span class="title-mode-option-title">${t('title_mode_scroll')}</span>
+              <span class="title-mode-option-desc">${t('title_mode_scroll_desc')}</span>
+            </span>
+          </label>
+        </div>
+        <div class="title-scroll-size-row" id="titleScrollSizeRow" style="display:${d.title_mode === 'scroll' ? '' : 'none'}">
+          <label>${t('title_mode_scroll_size')}</label>
+          <input type="number" class="f-title-scroll-size" min="1" max="50" value="${d.title_scroll_size ?? 5}"/>
+        </div>
         <details class="tip-box" style="margin-top:12px;">
           <summary><i class="fa-solid fa-circle-info tip-icon"></i>${t('title_tokens_summary')}</summary>
           <ul>
@@ -448,9 +433,11 @@ function renderEditor(id) {
           </ul>
         </details>
       </div>
-    </div>
+    </div>`;
+}
 
-    <!-- BIOGRAPHY -->
+function renderBiographySectionHTML(d) {
+  return `
     <div class="section" id="sec_biography">
       <div class="section-header" onclick="toggleSection('sec_biography')">
         <i class="fa-solid fa-id-card section-icon"></i>
@@ -472,11 +459,152 @@ function renderEditor(id) {
           </div>
         </div>
       </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   OUTFIT EDITOR
+   ══════════════════════════════════════════════════════════════════════ */
+
+function renderEditor(id) {
+  const o = outfits.find(x => x.id === id);
+  if (!o) return;
+  const d = o.data;
+  activeMode = 'outfit';
+  document.getElementById('emptyState').style.display = 'none';
+  const ec = document.getElementById('editorContainer');
+  ec.style.display = '';
+
+  ec.innerHTML = `
+  <div class="outfit-editor" id="editor_${id}">
+    <div class="editor-title-row">
+      <div>
+        <div class="editor-title">${esc(groupName(o))} / ${esc(o.name)}</div>
+        <div class="editor-subtitle" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);">"${esc(groupName(o))}/${esc(o.name)}"</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="openRenameModal('${id}')">
+          <i class="fa-solid fa-pen"></i> ${t('btn_rename')}
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="duplicateOutfit('${id}')">
+          <i class="fa-solid fa-copy"></i> ${t('btn_duplicate')}
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="copyOutfitConfig('${id}')">
+          <i class="fa-solid fa-code"></i> ${t('copy_outfit')}
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteOutfit('${id}')">
+          <i class="fa-solid fa-trash"></i> ${t('btn_delete')}
+        </button>
+      </div>
     </div>
+
+    ${renderSettingsSectionHTML(d, true)}
+
+    <!-- TAGS -->
+    <div class="section" id="sec_tags">
+      <div class="section-header" onclick="toggleSection('sec_tags')">
+        <i class="fa-solid fa-tags section-icon"></i>
+        <span class="section-label">${t('sec_tags')}</span>
+        <i class="fa-solid fa-chevron-down section-chevron"></i>
+      </div>
+      <div class="section-body">
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div style="flex:1;position:relative;">
+            <div class="tag-input-wrap" id="tagWrap_${id}">
+              <input type="text" class="tag-text-input" id="tagInput_${id}" autocomplete="off" spellcheck="false"/>
+            </div>
+            <input type="hidden" class="f-tags" id="tagHidden_${id}" value="${esc(d.tags||'')}"/>
+            <div class="tag-ac-dropdown" id="tagAc_${id}" style="display:none;"></div>
+          </div>
+          <button class="btn btn-ghost btn-sm tag-add-btn" id="tagAddBtn_${id}" type="button" title="Add existing tag"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="toggle-desc" style="margin-top:6px;">${t('tags_desc')}</div>
+      </div>
+    </div>
+
+    ${renderBodypartsSectionHTML(d)}
+    ${renderParticlesSectionHTML(d)}
+    ${renderTitleSectionHTML(d)}
+    ${renderBiographySectionHTML(d)}
 
   </div>`;
 
-  initTagWidget(id);
+  initTagWidget(id, 'outfit');
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   GROUP EDITOR (GCE)
+   Mutually exclusive with the outfit editor above — both render into the
+   same #editorContainer, so identical section ids (sec_settings, etc.)
+   are safe to reuse verbatim.
+   ══════════════════════════════════════════════════════════════════════ */
+
+function renderGroupEditor(id) {
+  const g = groups.find(x => x.id === id);
+  if (!g) return;
+  const d = g.data;
+  activeMode = 'group';
+  document.getElementById('emptyState').style.display = 'none';
+  const ec = document.getElementById('editorContainer');
+  ec.style.display = '';
+
+  const outfitCount = outfits.filter(o => o.groupId === id).length;
+
+  ec.innerHTML = `
+  <div class="outfit-editor" id="group_editor_${id}">
+    <div class="editor-title-row">
+      <div>
+        <div class="editor-title"><i class="fa-solid fa-users" style="font-size:14px;margin-right:6px;"></i>${esc(g.name)}</div>
+        <div class="editor-subtitle" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);">${t('group_editor_subtitle').replace('{n}', outfitCount)}</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="openRenameGroupModal('${id}')">
+          <i class="fa-solid fa-pen"></i> ${t('btn_rename')}
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="copyGroupConfig('${id}')">
+          <i class="fa-solid fa-code"></i> ${t('copy_outfit')}
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteGroup('${id}')">
+          <i class="fa-solid fa-trash"></i> ${t('btn_delete_group')}
+        </button>
+      </div>
+    </div>
+    <p class="editor-hint editor-hint-bare" style="margin-bottom:16px;">
+      <i class="fa-solid fa-circle-info"></i>&nbsp;${t('group_cascade_hint')}
+    </p>
+
+    ${renderSettingsSectionHTML(d, false)}
+
+    <!-- GROUP TAGS (independent category, not part of the override cascade) -->
+    <div class="section" id="sec_tags">
+      <div class="section-header" onclick="toggleSection('sec_tags')">
+        <i class="fa-solid fa-tags section-icon"></i>
+        <span class="section-label">${t('sec_group_tags')}</span>
+        <i class="fa-solid fa-chevron-down section-chevron"></i>
+      </div>
+      <div class="section-body">
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div style="flex:1;position:relative;">
+            <div class="tag-input-wrap" id="tagWrap_${id}">
+              <input type="text" class="tag-text-input" id="tagInput_${id}" autocomplete="off" spellcheck="false"/>
+            </div>
+            <input type="hidden" class="f-group-tags" id="tagHidden_${id}" value="${esc(g.groupTags||'')}"/>
+            <div class="tag-ac-dropdown" id="tagAc_${id}" style="display:none;"></div>
+          </div>
+          <button class="btn btn-ghost btn-sm tag-add-btn" id="tagAddBtn_${id}" type="button" title="Add existing tag"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="toggle-desc" style="margin-top:6px;">${t('group_tags_desc')}</div>
+      </div>
+    </div>
+
+    ${renderBodypartsSectionHTML(d)}
+    ${renderParticlesSectionHTML(d)}
+    ${renderTitleSectionHTML(d)}
+    ${renderBiographySectionHTML(d)}
+
+  </div>`;
+
+  initTagWidget(id, 'group');
 }
 
 function updatePartEnabled(part) {
@@ -524,12 +652,19 @@ function toggleColorEnable(cb, wrapperId) {
   w.style.pointerEvents = cb.checked ? '' : 'none';
 }
 
-function initTagWidget(outfitId) {
-  const wrap   = document.getElementById(`tagWrap_${outfitId}`);
-  const hidden = document.getElementById(`tagHidden_${outfitId}`);
-  const input  = document.getElementById(`tagInput_${outfitId}`);
-  const acEl   = document.getElementById(`tagAc_${outfitId}`);
-  const addBtn = document.getElementById(`tagAddBtn_${outfitId}`);
+/* ── TAG WIDGET ──
+   Shared by outfit tags (kind:'outfit', bound to an outfit's d.tags — part
+   of the cascade) and group tags (kind:'group', bound to a group's
+   top-level groupTags field — a separate, non-cascading category). Same
+   visual chips/drag/color-picker either way; only the backing data, the
+   gender auto-chip and the cross-item suggestion pool differ. */
+function initTagWidget(entityId, kind) {
+  kind = kind || 'outfit';
+  const wrap   = document.getElementById(`tagWrap_${entityId}`);
+  const hidden = document.getElementById(`tagHidden_${entityId}`);
+  const input  = document.getElementById(`tagInput_${entityId}`);
+  const acEl   = document.getElementById(`tagAc_${entityId}`);
+  const addBtn = document.getElementById(`tagAddBtn_${entityId}`);
   if (!wrap || !hidden || !input || !acEl) return;
 
   const TAG_PALETTE = ['#e8197a','#e86019','#e8c819','#6de819','#19d4e8','#1965e8','#8c19e8','#e819c8','#19e888','#e84040','#8899cc',''];
@@ -537,7 +672,13 @@ function initTagWidget(outfitId) {
   let acHighlighted = -1;
   let chipDragSrc   = null;
 
-  function getOutfit() { return outfits.find(x => x.id === outfitId); }
+  function getEntity() { return kind === 'group' ? groups.find(x => x.id === entityId) : outfits.find(x => x.id === entityId); }
+
+  function tagsPool() {
+    return kind === 'group'
+      ? groups.filter(x => x.id !== entityId).map(x => x.groupTags || '')
+      : outfits.map(x => x.data.tags || '');
+  }
 
   function getTags() {
     const v = hidden.value.trim();
@@ -555,16 +696,18 @@ function initTagWidget(outfitId) {
     const tags = getTags();
     const frag = document.createDocumentFragment();
 
-    // Auto chip for gender — read from DOM for real-time updates
-    const gSel = document.querySelector('.f-gender');
-    const o = getOutfit();
-    const g = (gSel ? gSel.value : null) || (o && o.data.gender);
-    if (g && g !== 'Auto') {
-      const gChip = document.createElement('span');
-      gChip.className = 'tag-chip tag-chip-auto';
-      gChip.title = 'Auto-tag from gender setting';
-      gChip.innerHTML = `<span class="tag-chip-label">${esc(g.toLowerCase())}</span>`;
-      frag.appendChild(gChip);
+    if (kind === 'outfit') {
+      // Auto chip for gender — read from DOM for real-time updates
+      const gSel = document.querySelector('.f-gender');
+      const o = getEntity();
+      const g = (gSel ? gSel.value : null) || (o && o.data.gender);
+      if (g && g !== 'Auto') {
+        const gChip = document.createElement('span');
+        gChip.className = 'tag-chip tag-chip-auto';
+        gChip.title = 'Auto-tag from gender setting';
+        gChip.innerHTML = `<span class="tag-chip-label">${esc(g.toLowerCase())}</span>`;
+        frag.appendChild(gChip);
+      }
     }
 
     tags.forEach(tag => {
@@ -650,8 +793,8 @@ function initTagWidget(outfitId) {
     }
     const current = new Set(getTags());
     const counts  = new Map();
-    outfits.forEach(o => {
-      (o.data.tags || '').trim().split(/\s+/).filter(Boolean).forEach(tag => {
+    tagsPool().forEach(tagsStr => {
+      tagsStr.trim().split(/\s+/).filter(Boolean).forEach(tag => {
         if (!current.has(tag)) counts.set(tag, (counts.get(tag) || 0) + 1);
       });
     });
@@ -709,8 +852,8 @@ function initTagWidget(outfitId) {
     const q = query.toLowerCase();
     const current = new Set(getTags());
     const all = new Set();
-    outfits.forEach(o => {
-      (o.data.tags || '').trim().split(/\s+/).filter(Boolean).forEach(tag => {
+    tagsPool().forEach(tagsStr => {
+      tagsStr.trim().split(/\s+/).filter(Boolean).forEach(tag => {
         if (!current.has(tag) && tag.startsWith(q)) all.add(tag);
       });
     });
@@ -804,9 +947,11 @@ function initTagWidget(outfitId) {
 
   if (addBtn) addBtn.addEventListener('click', e => { e.stopPropagation(); openAllTagsMenu(addBtn); });
 
-  // Re-render chips when gender changes
-  const genderSel = document.querySelector('.f-gender');
-  if (genderSel) genderSel.addEventListener('change', renderChips);
+  if (kind === 'outfit') {
+    // Re-render chips when gender changes
+    const genderSel = document.querySelector('.f-gender');
+    if (genderSel) genderSel.addEventListener('change', renderChips);
+  }
 
   renderChips();
 }
@@ -814,9 +959,9 @@ function initTagWidget(outfitId) {
 function saveActiveEditor() {
   if (importing) return;
   if (!activeId) return;
-  const o = outfits.find(x => x.id === activeId);
-  if (!o) return;
-  const d = o.data;
+  const entity = activeMode === 'group' ? groups.find(x => x.id === activeId) : outfits.find(x => x.id === activeId);
+  if (!entity) return;
+  const d = entity.data;
   const get = sel => document.querySelector(sel);
   if (!get('.f-gender')) return;
 
@@ -868,10 +1013,18 @@ function saveActiveEditor() {
   d.particles_size_end     = _nf('.f-part-size-end');
   d.title_enabled           = getTs('f-title-en');
   d.title_text              = get('.f-title-txt').value.replace(/\n/g, '\\n');
+  d.title_mode              = get('.f-title-mode-seq') && get('.f-title-mode-seq').checked ? 'sequential'
+                             : get('.f-title-mode-scroll') && get('.f-title-mode-scroll').checked ? 'scroll' : null;
+  d.title_scroll_size       = get('.f-title-scroll-size') ? (parseInt(get('.f-title-scroll-size').value) || 5) : 5;
   d.title_color_enabled     = get('.f-title-col-en') ? get('.f-title-col-en').checked : false;
   d.title_color             = colorInputValue(get('.f-title-col'));
   if (get('.f-bio')  !== null) d.biography = get('.f-bio').value.replace(/\n/g, '\\n');
-  if (get('.f-tags') !== null) d.tags = get('.f-tags').value.trim();
+
+  if (activeMode === 'outfit') {
+    if (get('.f-tags') !== null) d.tags = get('.f-tags').value.trim();
+  } else {
+    if (get('.f-group-tags') !== null) entity.groupTags = get('.f-group-tags').value.trim();
+  }
 }
 
 /* ── BIO COUNTER ── */

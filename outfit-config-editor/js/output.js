@@ -1,30 +1,31 @@
 function buildTagsIndex() {
-  // index[tag][avatar] = ["Outfit1", "Outfit2", ...]
+  // index[tag][groupName] = ["Outfit1", "Outfit2", ...]
   const index = {};
   outfits.forEach(o => {
     const tags = (o.data.tags || '').trim().split(/\s+/).filter(Boolean);
+    const gn = groupName(o);
     tags.forEach(tag => {
       if (!index[tag]) index[tag] = {};
-      if (!index[tag][o.avatar]) index[tag][o.avatar] = [];
-      index[tag][o.avatar].push(o.name);
+      if (!index[tag][gn]) index[tag][gn] = [];
+      index[tag][gn].push(o.name);
     });
   });
   if (!Object.keys(index).length) return '';
   // One self-contained escaped JSON object per line, one tag per line
   const tags = Object.keys(index).sort();
   const lines = tags.map(tag => {
-    const avatarObj = {};
-    Object.keys(index[tag]).sort().forEach(avatar => {
-      avatarObj[avatar] = index[tag][avatar].join('··');
+    const groupObj = {};
+    Object.keys(index[tag]).sort().forEach(gn => {
+      groupObj[gn] = index[tag][gn].join('··');
     });
-    return JSON.stringify({ [tag]: avatarObj });
+    return JSON.stringify({ [tag]: groupObj });
   });
   return lines.join('\n');
 }
 
 function generateAll() {
   saveActiveEditor();
-  if (!outfits.length) { notify(t('no_outfits')); return; }
+  if (!outfits.length && !groups.length) { notify(t('no_outfits')); return; }
 
   const header =
 `// ══════════════════════════════════════════════════════════════════════════════
@@ -36,29 +37,53 @@ function generateAll() {
   const colorSuffix = colorKeys.length ? '\n\n// SUBBI_OCE_COLORS: ' + JSON.stringify(tagColors) : '';
   const tagsIndex = buildTagsIndex();
   const tagsSuffix = tagsIndex ? '\n\n// === TAGS INDEX ===\n' + tagsIndex : '';
-  const tagsByAvatar = {};
+
+  const tagsByGroup = {};
   outfits.forEach(o => {
     const tags = (o.data.tags || '').trim().split(/\s+/).filter(Boolean);
     if (!tags.length) return;
-    if (!tagsByAvatar[o.avatar]) tagsByAvatar[o.avatar] = new Set();
-    tags.forEach(t => tagsByAvatar[o.avatar].add(t));
+    const gn = groupName(o);
+    if (!tagsByGroup[gn]) tagsByGroup[gn] = new Set();
+    tags.forEach(tag => tagsByGroup[gn].add(tag));
   });
-  const allTagsSuffix = Object.keys(tagsByAvatar).length
-    ? '\n\n' + Object.keys(tagsByAvatar).sort().map(av =>
-        JSON.stringify({ ['tags-' + av]: [...tagsByAvatar[av]].sort().join(',') })
+  const allTagsSuffix = Object.keys(tagsByGroup).length
+    ? '\n\n' + Object.keys(tagsByGroup).sort().map(gn =>
+        JSON.stringify({ ['tags-' + gn]: [...tagsByGroup[gn]].sort().join(',') })
       ).join('\n')
     : '';
-  document.getElementById('outputCode').value = header + outfits.map(outfitToString).join('\n\n') + colorSuffix + tagsSuffix + allTagsSuffix;
+
+  // Group Tags — an independent category for the HUD (not part of the
+  // Default/Group/Outfit settings cascade), so it's exported separately
+  // from the per-outfit tags aggregate above.
+  const groupTagLines = groups
+    .filter(g => g.groupTags && g.groupTags.trim())
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(g => JSON.stringify({ ['group-tags-' + g.name]: g.groupTags.trim().split(/\s+/).join(',') }));
+  const groupTagsSuffix = groupTagLines.length ? '\n\n' + groupTagLines.join('\n') : '';
+
+  // Each group's settings block, immediately followed by its outfits.
+  const sortedGroups = [...groups].sort((a, b) => a.name.localeCompare(b.name));
+  const blocks = [];
+  sortedGroups.forEach(g => {
+    blocks.push(groupToString(g));
+    outfits.filter(o => o.groupId === g.id).forEach(o => blocks.push(outfitToString(o)));
+  });
+  // Defensive: outfits whose group no longer exists shouldn't occur post-migration, but don't drop them silently.
+  outfits.filter(o => !groups.some(g => g.id === o.groupId)).forEach(o => blocks.push(outfitToString(o)));
+
+  document.getElementById('outputCode').value = header + blocks.join('\n\n') + colorSuffix + tagsSuffix + allTagsSuffix + groupTagsSuffix;
   document.getElementById('instrList').innerHTML = (INSTR[lang] || INSTR.en).map(fn => `<li>${fn()}</li>`).join('');
   openModal('outputModal');
 }
 
-function outfitToString(o) {
-  const d = o.data;
-  const key = `"${o.avatar}/${o.name}"`;
+// Shared serializer for both an outfit's settings block and a group's
+// settings block — same field set and cascade shape, only the export key
+// and whether the (outfit-only) tags line is included differ.
+function serializeSettingsBlock(key, d, opts) {
+  opts = opts || {};
   const lines = [];
   const pushBool = (k, v) => { if (v !== null && v !== undefined) lines.push(`    "${k}": ${v},`); };
-  lines.push(`${key}: {`);
+  lines.push(`"${key}": {`);
   if (d.gender && d.gender !== 'Auto') lines.push(`    "gender": "${d.gender}",`);
   pushBool('animations_enabled',   d.animations_enabled);
   pushBool('skelfix_change',       d.skelfix_change);
@@ -68,7 +93,7 @@ function outfitToString(o) {
   pushBool('clothes_permission',   d.clothes_permission);
   pushBool('lock_ankles',          d.lock_ankles);
   if (d.pg_safe_mode) lines.push(`    "pg_safe_mode": "${d.pg_safe_mode}",`);
-  if (d.tags && d.tags.trim()) lines.push(`    "tags": "${d.tags.trim().replace(/"/g, '')}",`);
+  if (opts.tags && d.tags && d.tags.trim()) lines.push(`    "tags": "${d.tags.trim().replace(/"/g, '')}",`);
   lines.push('');
 
   const enabled = BODY_PARTS.filter(p => d.bodyparts[p] && d.bodyparts[p].enabled);
@@ -106,7 +131,7 @@ function outfitToString(o) {
   if (d.particles_size_end    != null) lines.push(`    "particles_size_end": ${Number(d.particles_size_end).toFixed(2)},`);
   lines.push('');
   pushBool('title_enabled', d.title_enabled);
-  if (d.title_text) lines.push(`    "title_text": "${d.title_text.replace(/\n/g, '\\n')}",`);
+  if (d.title_text) lines.push(`    "title_text": "${encodeTitleText(d.title_text, d.title_mode, d.title_scroll_size).replace(/\n/g, '\\n')}",`);
   if (d.title_color_enabled) lines.push(`    "title_color": "${encodeColorForOutput(d.title_color)}",`);
   if (d.biography) lines.push(`    "biography": "${d.biography.replace(/\n/g, '\\n')}",`);
   lines.push('');
@@ -114,11 +139,27 @@ function outfitToString(o) {
   return lines.join('\n');
 }
 
+function outfitToString(o) {
+  return serializeSettingsBlock(`${groupName(o)}/${o.name}`, o.data, { tags: true });
+}
+
+function groupToString(g) {
+  return serializeSettingsBlock(`${g.name}/*`, g.data, { tags: false });
+}
+
 function copyOutfitConfig(id) {
   saveActiveEditor();
   const o = outfits.find(x => x.id === id);
   if (!o) return;
   navigator.clipboard.writeText(outfitToString(o))
+    .then(() => notify(t('outfit_copied')));
+}
+
+function copyGroupConfig(id) {
+  saveActiveEditor();
+  const g = groups.find(x => x.id === id);
+  if (!g) return;
+  navigator.clipboard.writeText(groupToString(g))
     .then(() => notify(t('outfit_copied')));
 }
 

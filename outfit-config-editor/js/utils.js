@@ -11,8 +11,40 @@ function decodeColorFromInput(v) {
   });
 }
 
+function encodeTitleText(text, mode, scrollSize) {
+  if (!text) return text;
+  if (mode === 'sequential') return '#SEQ#' + text;
+  if (mode === 'scroll') return `#SCROLL:${scrollSize || 5}#` + text;
+  return text;
+}
+
+function decodeTitleText(raw) {
+  if (!raw) return { text: raw, mode: null, scrollSize: null };
+  const seqMatch = /^#SEQ#([\s\S]*)$/.exec(raw);
+  if (seqMatch) return { text: seqMatch[1], mode: 'sequential', scrollSize: null };
+  const scrollMatch = /^#SCROLL:(\d+)#([\s\S]*)$/.exec(raw);
+  if (scrollMatch) return { text: scrollMatch[2], mode: 'scroll', scrollSize: parseInt(scrollMatch[1]) };
+  return { text: raw, mode: null, scrollSize: null };
+}
+
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── GROUPS ── */
+function groupName(o) {
+  const g = groups.find(x => x.id === o.groupId);
+  return g ? g.name : '';
+}
+
+function findOrCreateGroupByName(name) {
+  name = String(name).trim();
+  let g = groups.find(x => x.name === name);
+  if (!g) {
+    g = { id: 'g_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), name, data: DEFAULT_OUTFIT(), groupTags: '' };
+    groups.push(g);
+  }
+  return g;
 }
 
 function notify(msg) {
@@ -25,6 +57,17 @@ function notify(msg) {
 function setTristate(btn) {
   btn.closest('.tristate').querySelectorAll('.ts-btn').forEach(b => b.classList.remove('ts-active'));
   btn.classList.add('ts-active');
+}
+
+function setTitleMode(cb, mode) {
+  const seqCb    = document.querySelector('.f-title-mode-seq');
+  const scrollCb = document.querySelector('.f-title-mode-scroll');
+  if (cb.checked) {
+    if (mode === 'sequential' && scrollCb) scrollCb.checked = false;
+    if (mode === 'scroll' && seqCb) seqCb.checked = false;
+  }
+  const row = document.getElementById('titleScrollSizeRow');
+  if (row) row.style.display = scrollCb && scrollCb.checked ? '' : 'none';
 }
 
 function presetSwatchBg(value) {

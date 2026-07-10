@@ -218,6 +218,8 @@ const DEFAULT_OUTFIT = () => ({
   particles_size_end: null,
   title_enabled: null,
   title_text: '',
+  title_mode: null,
+  title_scroll_size: 5,
   title_color_enabled: false,
   title_color: '<1.0, 1.0, 1.0>',
   biography: '',

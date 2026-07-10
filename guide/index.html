@@ -57,21 +57,33 @@
       padding: 64px 16px 80px;
     }
     .eyebrow {
+      width: 100%; max-width: 640px;
       font-size: var(--fs-label);
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 10px;
+      text-align: left;
+      margin-bottom: 8px;
     }
     h1 {
+      width: 100%; max-width: 640px;
+      display: flex; align-items: center; justify-content: flex-start; gap: 10px;
       font-family: 'Orbitron', monospace;
       font-size: 22px; font-weight: 700;
       letter-spacing: 2px;
       color: var(--text);
-      margin-bottom: 36px;
-      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+      text-align: left;
     }
-    h1 span { color: var(--pink); }
+    h1 i { color: var(--pink); font-size: 20px; }
+    .guide-desc {
+      width: 100%; max-width: 640px;
+      font-size: var(--fs-body); color: var(--text-muted); line-height: 1.6;
+      text-align: left;
+      margin-bottom: 36px;
+    }
     .cards {
       display: flex; gap: 28px;
       flex-wrap: wrap; justify-content: center;
@@ -125,7 +137,11 @@
 
   <main>
     <p class="eyebrow"><span data-lc="en">Documentation</span><span data-lc="es">Documentación</span></p>
-    <h1><span data-lc="en">Choose a <span>guide version</span></span><span data-lc="es">Elige una <span>versión de la guía</span></span></h1>
+    <h1><i class="fa-solid fa-book-open"></i> <span data-lc="en">Choose a <span>guide version</span></span><span data-lc="es">Elige una <span>versión de la guía</span></span></h1>
+    <p class="guide-desc">
+      <span data-lc="en">The Subbi Clothes guide is written and hosted on Google Docs — pick the version that matches what you're currently running.</span>
+      <span data-lc="es">La guía de Subbi Clothes está escrita y alojada en Google Docs — elige la versión que corresponda a lo que tienes instalado.</span>
+    </p>
 
     <div class="cards">
       <a href="https://docs.google.com/document/d/1NDiYi7shHj9DzMIr35uasNOvS0vTzGvx8MglADWJNeI" target="_blank" rel="noopener" class="card">

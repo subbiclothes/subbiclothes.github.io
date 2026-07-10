@@ -71,9 +71,14 @@
           </button>
         </div>
       </div>
-      <button class="btn btn-ghost" style="width:100%; justify-content:center;" onclick="openAddModal()">
-        <i class="fa-solid fa-plus"></i> <span data-t="add_outfit">Add outfit</span>
-      </button>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-ghost" style="flex:1; justify-content:center;" onclick="openAddModal()">
+          <i class="fa-solid fa-plus"></i> <span data-t="add_outfit">Add outfit</span>
+        </button>
+        <button class="btn btn-ghost" style="flex:1; justify-content:center;" onclick="openAddGroupModal()">
+          <i class="fa-solid fa-users"></i> <span data-t="add_group">Add group</span>
+        </button>
+      </div>
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input type="text" id="searchInput" placeholder="Search name…" oninput="renderSidebar()"/>
@@ -90,7 +95,7 @@
       </button>
       <div class="version-tag">
         <button class="duck-btn" onclick="duckClick()" tabindex="-1">🦆</button>
-        <span>v1.1.0.0</span>
+        <span>v1.2.0.0</span>
       </div>
     </div>
   </div>
@@ -112,7 +117,8 @@
     <h3 data-t="modal_title">NEW OUTFIT</h3>
     <div class="form-group">
       <label data-t="group_name">Group Name</label>
-      <input type="text" id="m_avatar" placeholder="&lt;Body name&gt;" autocomplete="off"/>
+      <select id="m_avatar_select" onchange="onGroupSelectChange(this,'m_avatar_new')"></select>
+      <input type="text" id="m_avatar_new" data-t-ph="group_name_new_ph" placeholder="&lt;New group name&gt;" autocomplete="off" style="display:none;margin-top:6px;"/>
     </div>
     <div class="form-group">
       <label style="display:flex;align-items:center;justify-content:space-between;">
@@ -137,7 +143,8 @@
     <h3 data-t="rename_title">RENAME OUTFIT</h3>
     <div class="form-group">
       <label data-t="group_name">Group Name</label>
-      <input type="text" id="r_avatar" autocomplete="off"/>
+      <select id="r_avatar_select" onchange="onGroupSelectChange(this,'r_avatar_new')"></select>
+      <input type="text" id="r_avatar_new" data-t-ph="group_name_new_ph" placeholder="&lt;New group name&gt;" autocomplete="off" style="display:none;margin-top:6px;"/>
     </div>
     <div class="form-group">
       <label data-t="outfit_name">Outfit Name</label>
@@ -158,6 +165,48 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('confirmDeleteModal')" data-t="cancel">Cancel</button>
       <button class="btn btn-danger" onclick="confirmDeleteNow()" data-t="btn_delete">Delete outfit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD GROUP MODAL -->
+<div class="modal-overlay" id="addGroupModal">
+  <div class="modal">
+    <h3 data-t="modal_title_group">NEW GROUP</h3>
+    <div class="form-group">
+      <label data-t="group_name">Group Name</label>
+      <input type="text" id="g_add_name" placeholder="&lt;Body name&gt;" autocomplete="off"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('addGroupModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmAddGroup()" data-t="create">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- RENAME GROUP MODAL -->
+<div class="modal-overlay" id="renameGroupModal">
+  <div class="modal">
+    <h3 data-t="rename_title_group">RENAME GROUP</h3>
+    <div class="form-group">
+      <label data-t="group_name">Group Name</label>
+      <input type="text" id="g_rename_name" autocomplete="off"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('renameGroupModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmRenameGroup()" data-t="save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE GROUP MODAL -->
+<div class="modal-overlay" id="confirmDeleteGroupModal">
+  <div class="modal" style="width:360px;">
+    <h3 data-t="confirm_del_title_group">DELETE GROUP</h3>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.5;" data-t="confirm_del_msg_group">Are you sure? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('confirmDeleteGroupModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDeleteGroupNow()" data-t="btn_delete_group">Delete group</button>
     </div>
   </div>
 </div>
@@ -262,6 +311,7 @@
 <script src="js/sidebar.js"></script>
 <script src="js/editor.js"></script>
 <script src="js/outfits.js"></script>
+<script src="js/groups.js"></script>
 <script src="js/parser.js"></script>
 <script src="js/output.js"></script>
 <script src="js/modals.js"></script>

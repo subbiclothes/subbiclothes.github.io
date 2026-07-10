@@ -5,7 +5,11 @@ function setLang(l) {
   document.getElementById('btn-en').classList.toggle('active', l === 'en');
   document.getElementById('btn-es').classList.toggle('active', l === 'es');
   applyTranslations();
-  if (activeId) { saveActiveEditor(); renderEditor(activeId); }
+  if (activeId) {
+    saveActiveEditor();
+    if (activeMode === 'group') renderGroupEditor(activeId);
+    else renderEditor(activeId);
+  }
   renderSidebar();
 }
 

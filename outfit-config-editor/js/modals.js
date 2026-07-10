@@ -15,7 +15,9 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape')
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
   if (e.key === 'Enter') {
-    if (document.getElementById('addModal').classList.contains('open'))    confirmAdd();
-    if (document.getElementById('renameModal').classList.contains('open')) confirmRename();
+    if (document.getElementById('addModal').classList.contains('open'))         confirmAdd();
+    if (document.getElementById('renameModal').classList.contains('open'))      confirmRename();
+    if (document.getElementById('addGroupModal').classList.contains('open'))    confirmAddGroup();
+    if (document.getElementById('renameGroupModal').classList.contains('open')) confirmRenameGroup();
   }
 });

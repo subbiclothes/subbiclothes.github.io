@@ -2,9 +2,9 @@ let dragSrcId = null;
 let searchByTag = false;
 let collapsedGroups = new Set();
 
-function toggleGroup(avatar) {
-  if (collapsedGroups.has(avatar)) collapsedGroups.delete(avatar);
-  else collapsedGroups.add(avatar);
+function toggleGroup(id) {
+  if (collapsedGroups.has(id)) collapsedGroups.delete(id);
+  else collapsedGroups.add(id);
   renderSidebar();
 }
 
@@ -18,7 +18,7 @@ function getFiltered() {
       return queryTags.every(qt => outfitTags.some(ot => ot.includes(qt)));
     });
   }
-  return outfits.filter(o => o.name.toLowerCase().includes(q) || o.avatar.toLowerCase().includes(q));
+  return outfits.filter(o => o.name.toLowerCase().includes(q) || groupName(o).toLowerCase().includes(q));
 }
 
 function toggleSearchMode() {
@@ -41,9 +41,9 @@ function outfitItemHTML(o) {
     const s = col ? ` style="border-color:${col};color:${col}"` : '';
     return `<span class="outfit-tag-mini"${s}>${tag}</span>`;
   }).join('');
-  return `<div class="outfit-item ${o.id === activeId ? 'active' : ''}"
+  return `<div class="outfit-item ${activeMode === 'outfit' && o.id === activeId ? 'active' : ''}"
     data-id="${o.id}"
-    data-avatar="${o.avatar.replace(/"/g,'&quot;')}"
+    data-group-id="${o.groupId}"
     draggable="true"
     onclick="selectOutfit('${o.id}')"
     ondragstart="dragStart(event,'${o.id}')"
@@ -54,9 +54,20 @@ function outfitItemHTML(o) {
     <i class="fa-solid fa-grip-vertical outfit-drag-handle"></i>
     <div class="outfit-item-info">
       <div class="outfit-item-name">${o.name}</div>
-      <div class="outfit-item-meta">${o.avatar} · <span class="gender-badge ${gc}">${g}</span>${searchByTag && tagsHTML ? `<span class="outfit-tags-row">${tagsHTML}</span>` : ''}</div>
+      <div class="outfit-item-meta">${esc(groupName(o))} · <span class="gender-badge ${gc}">${g}</span>${searchByTag && tagsHTML ? `<span class="outfit-tags-row">${tagsHTML}</span>` : ''}</div>
     </div>
   </div>`;
+}
+
+function groupHeaderHTML(g, itemsHTML, count) {
+  const collapsed = collapsedGroups.has(g.id);
+  const chevron = collapsed ? 'fa-chevron-right' : 'fa-chevron-down';
+  const active = activeMode === 'group' && activeId === g.id ? 'group-header-active' : '';
+  return `<div class="group-header ${active}" onclick="selectGroup('${g.id}')">` +
+    `<i class="fa-solid ${chevron} group-chevron" onclick="event.stopPropagation();toggleGroup('${g.id}')"></i>` +
+    `<i class="fa-solid fa-users" style="margin-right:5px;opacity:.6;"></i>${esc(g.name)}` +
+    `<span class="group-count">${count}</span></div>` +
+    (collapsed ? '' : itemsHTML);
 }
 
 function renderSidebar() {
@@ -64,29 +75,28 @@ function renderSidebar() {
   list.classList.toggle('compact', compactSidebar);
   const filtered = getFiltered();
 
-  if (!outfits.length) {
+  if (!outfits.length && !groups.length) {
     list.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:12px;letter-spacing:1px;">${t('empty_hint')}</div>`;
-    return;
-  }
-  if (!filtered.length) {
-    list.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:12px;">No results</div>`;
     return;
   }
 
   if (groupByGroup) {
-    const groups = {};
-    filtered.forEach(o => { if (!groups[o.avatar]) groups[o.avatar] = []; groups[o.avatar].push(o); });
-    list.innerHTML = Object.keys(groups).sort().map(avatar => {
-      const collapsed = collapsedGroups.has(avatar);
-      const chevron = collapsed ? 'fa-chevron-right' : 'fa-chevron-down';
-      const safeAv = avatar.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      return `<div class="group-header group-header-toggle" onclick="toggleGroup('${safeAv}')">` +
-        `<i class="fa-solid ${chevron} group-chevron"></i>` +
-        `<i class="fa-solid fa-users" style="margin-right:5px;opacity:.6;"></i>${avatar}` +
-        `<span class="group-count">${groups[avatar].length}</span></div>` +
-        (collapsed ? '' : groups[avatar].map(outfitItemHTML).join(''));
+    const byGroup = {};
+    filtered.forEach(o => { (byGroup[o.groupId] = byGroup[o.groupId] || []).push(o); });
+    const sortedGroups = [...groups].sort((a, b) => a.name.localeCompare(b.name));
+    if (!sortedGroups.length) {
+      list.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:12px;">No results</div>`;
+      return;
+    }
+    list.innerHTML = sortedGroups.map(g => {
+      const items = byGroup[g.id] || [];
+      return groupHeaderHTML(g, items.map(outfitItemHTML).join(''), items.length);
     }).join('');
   } else {
+    if (!filtered.length) {
+      list.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:12px;">No results</div>`;
+      return;
+    }
     list.innerHTML = filtered.map(outfitItemHTML).join('');
   }
 }
@@ -118,7 +128,7 @@ function sortOutfits() {
     // Save current order then sort
     preSortOrder = outfits.map(o => o.id);
     outfits.sort((a, b) =>
-      (a.avatar + '/' + a.name).toLowerCase().localeCompare((b.avatar + '/' + b.name).toLowerCase())
+      (groupName(a) + '/' + a.name).toLowerCase().localeCompare((groupName(b) + '/' + b.name).toLowerCase())
     );
     btn && btn.classList.add('btn-group-active');
   }
@@ -160,7 +170,7 @@ function dragDrop(e, targetId) {
   if (srcIdx === -1 || tgtIdx === -1) return;
 
   // In grouped mode: only allow reorder within the same group
-  if (groupByGroup && outfits[srcIdx].avatar !== outfits[tgtIdx].avatar) return;
+  if (groupByGroup && outfits[srcIdx].groupId !== outfits[tgtIdx].groupId) return;
 
   saveActiveEditor();
   const [item] = outfits.splice(srcIdx, 1);

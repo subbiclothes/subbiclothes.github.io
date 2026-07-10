@@ -8,21 +8,55 @@ function toggleAddMany() {
   document.getElementById('m_many_hint').style.display = addManyMode ? '' : 'none';
 }
 
+/* ── GROUP SELECT (shared by Add/Rename Outfit modals) ──
+   A dropdown of existing groups plus a trailing "+ New group…" option that
+   reveals an inline text field, so an outfit can be assigned to a brand
+   new group without leaving the modal. */
+function populateGroupSelect(sel, selectedId) {
+  const sorted = [...groups].sort((a, b) => a.name.localeCompare(b.name));
+  sel.innerHTML = sorted.map(g =>
+    `<option value="${esc(g.id)}" ${g.id === selectedId ? 'selected' : ''}>${esc(g.name)}</option>`
+  ).join('') + `<option value="__new__">${t('new_group_option')}</option>`;
+  if (!selectedId) sel.value = sorted.length ? sorted[0].id : '__new__';
+}
+
+function onGroupSelectChange(sel, newInputId) {
+  const newInput = document.getElementById(newInputId);
+  const isNew = sel.value === '__new__';
+  newInput.style.display = isNew ? '' : 'none';
+  if (isNew) {
+    newInput.value = '';
+    setTimeout(() => newInput.focus(), 50);
+  }
+}
+
+function resolveGroupSelection(selectId, newInputId) {
+  const sel = document.getElementById(selectId);
+  if (sel.value === '__new__') {
+    const name = document.getElementById(newInputId).value.trim();
+    if (!name) return null;
+    return findOrCreateGroupByName(name).id;
+  }
+  return sel.value || null;
+}
+
 function openAddModal() {
   addManyMode = false;
-  document.getElementById('m_avatar').value = '';
+  const sel = document.getElementById('m_avatar_select');
+  populateGroupSelect(sel, null);
+  onGroupSelectChange(sel, 'm_avatar_new');
   document.getElementById('m_outfit').value = '';
   document.getElementById('m_outfit').placeholder = '<Outfit name>';
   document.getElementById('m_many_hint').style.display = 'none';
   document.getElementById('addManyToggle').classList.remove('active');
   openModal('addModal');
-  setTimeout(() => document.getElementById('m_avatar').focus(), 100);
+  setTimeout(() => document.getElementById('m_outfit').focus(), 100);
 }
 
 function confirmAdd() {
-  const avatar = document.getElementById('m_avatar').value.trim();
-  const raw    = document.getElementById('m_outfit').value;
-  if (!avatar || !raw.trim()) return;
+  const groupId = resolveGroupSelection('m_avatar_select', 'm_avatar_new');
+  const raw     = document.getElementById('m_outfit').value;
+  if (!groupId || !raw.trim()) return;
 
   if (addManyMode) {
     const names = raw.split(',').map(s => s.trim()).filter(Boolean);
@@ -30,7 +64,7 @@ function confirmAdd() {
     let lastId;
     names.forEach(name => {
       lastId = 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-      outfits.push({ id: lastId, avatar, name, data: DEFAULT_OUTFIT() });
+      outfits.push({ id: lastId, groupId, name, data: DEFAULT_OUTFIT() });
     });
     closeModal('addModal');
     renderSidebar();
@@ -41,7 +75,7 @@ function confirmAdd() {
     const name = raw.trim();
     if (!name) return;
     const id = 'o_' + Date.now();
-    outfits.push({ id, avatar, name, data: DEFAULT_OUTFIT() });
+    outfits.push({ id, groupId, name, data: DEFAULT_OUTFIT() });
     closeModal('addModal');
     renderSidebar();
     selectOutfit(id);
@@ -54,24 +88,26 @@ function openRenameModal(id) {
   const o = outfits.find(x => x.id === id);
   if (!o) return;
   renameTargetId = id;
-  document.getElementById('r_avatar').value = o.avatar;
+  const sel = document.getElementById('r_avatar_select');
+  populateGroupSelect(sel, o.groupId);
+  onGroupSelectChange(sel, 'r_avatar_new');
   document.getElementById('r_outfit').value = o.name;
   openModal('renameModal');
   setTimeout(() => document.getElementById('r_outfit').focus(), 100);
 }
 
 function confirmRename() {
-  const avatar = document.getElementById('r_avatar').value.trim();
-  const name   = document.getElementById('r_outfit').value.trim();
-  if (!avatar || !name || !renameTargetId) return;
+  const groupId = resolveGroupSelection('r_avatar_select', 'r_avatar_new');
+  const name    = document.getElementById('r_outfit').value.trim();
+  if (!groupId || !name || !renameTargetId) return;
   const o = outfits.find(x => x.id === renameTargetId);
   if (!o) return;
-  o.avatar = avatar;
+  o.groupId = groupId;
   o.name = name;
   closeModal('renameModal');
   renameTargetId = null;
   renderSidebar();
-  if (activeId === o.id) renderEditor(o.id);
+  if (activeMode === 'outfit' && activeId === o.id) renderEditor(o.id);
   notify(t('outfit_renamed'));
   saveToStorage();
 }
@@ -90,7 +126,7 @@ function confirmDeleteNow() {
 
 function deleteOutfit(id) {
   outfits = outfits.filter(o => o.id !== id);
-  if (activeId === id) {
+  if (activeMode === 'outfit' && activeId === id) {
     activeId = null;
     document.getElementById('editorContainer').style.display = 'none';
     document.getElementById('emptyState').style.display = '';
@@ -102,6 +138,7 @@ function deleteOutfit(id) {
 
 function selectOutfit(id) {
   saveActiveEditor();
+  activeMode = 'outfit';
   activeId = id;
   renderSidebar();
   renderEditor(id);
@@ -112,7 +149,7 @@ function duplicateOutfit(id) {
   const o = outfits.find(x => x.id === id);
   if (!o) return;
   const newId = 'o_' + Date.now();
-  outfits.push({ id: newId, avatar: o.avatar, name: o.name + ' (copy)', data: JSON.parse(JSON.stringify(o.data)) });
+  outfits.push({ id: newId, groupId: o.groupId, name: o.name + ' (copy)', data: JSON.parse(JSON.stringify(o.data)) });
   renderSidebar();
   selectOutfit(newId);
   saveToStorage();

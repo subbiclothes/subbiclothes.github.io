@@ -60,15 +60,16 @@
     main {
       flex: 1;
       padding: 56px 24px 80px;
-      max-width: 820px;
+      max-width: 1100px;
       margin: 0 auto;
       width: 100%;
     }
 
     /* ── Page header ── */
     .page-eyebrow { font-size: var(--fs-label); letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-    .page-title   { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--text); margin-bottom: 8px; }
+    .page-title   { display: flex; align-items: center; gap: 10px; font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--text); padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
     .page-title span { color: #00c4d4; }
+    .page-title i { color: var(--pink); font-size: 20px; }
     .page-desc    { font-size: var(--fs-lead); color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; max-width: 560px; }
     .raw-data-link {
       display: inline-flex; align-items: center; gap: 6px;
@@ -401,7 +402,7 @@
 
   <main>
     <p class="page-eyebrow"><span data-lc="en">Release history</span><span data-lc="es">Historial de versiones</span></p>
-    <h1 class="page-title">Subbi Clothes — <span>Changelog</span></h1>
+    <h1 class="page-title"><i class="fa-solid fa-clock-rotate-left"></i> Subbi Clothes — <span>Changelog</span></h1>
     <p class="page-desc"><span data-lc="en">All changes across every release — stable builds and public DEV versions. Most recent first.</span><span data-lc="es">Todos los cambios de cada versión — builds estables y versiones DEV públicas. Más recientes primero.</span></p>
     <p class="page-desc"><span data-lc="en">Want the short version? See our <a href="/stable-vs-dev/">Stable vs DEV comparison</a> for what's actually different between the two branches.</span><span data-lc="es">¿Quieres la versión corta? Consulta nuestra <a href="/stable-vs-dev/">comparativa Stable vs DEV</a> para ver qué cambia realmente entre ambas ramas.</span></p>
 
@@ -604,7 +605,10 @@
       .then(data => { allEntries = data.entries || []; renderTimeline(); })
       .catch(() => {
         document.getElementById('timeline').innerHTML =
-          `<div class="cl-empty"><i class="fa-solid fa-triangle-exclamation"></i>${lc('Could not load changelog.', 'No se pudo cargar el changelog.')}</div>`;
+          `<div class="cl-empty"><i class="fa-solid fa-triangle-exclamation"></i>${lc(
+            'Could not load changelog. <a href="https://subbiclothes.com/changelog/data.json">View the raw data.json file directly</a>.',
+            'No se pudo cargar el changelog. <a href="https://subbiclothes.com/changelog/data.json">Ver el archivo data.json directamente</a>.'
+          )}</div>`;
       });
 
     function renderTimeline() {

@@ -30,11 +30,13 @@
     }
 
     main { flex: 1; }
-    .cmp-wrap { max-width: 1040px; margin: 0 auto; padding: 48px 24px 80px; }
+    .cmp-wrap { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .page-eyebrow { font-size: var(--fs-label); letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
 
     .section-header { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
     .section-header i { color: var(--pink); font-size: 20px; }
-    .section-header h1 { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--pink); }
+    .section-header h1 { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--text); }
     .section-intro { color: var(--text-muted); font-size: var(--fs-body); margin-bottom: 24px; max-width: 760px; }
 
     .cmp-card { background: var(--bg-card); border: 1px solid var(--border-dim); border-left: 3px solid var(--pink); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 28px; max-width: 100%; overflow-x: auto; }
@@ -72,6 +74,7 @@
   <main>
     <div class="cmp-wrap">
 
+      <p class="page-eyebrow">Help center</p>
       <div class="section-header">
         <i class="fa-solid fa-code-compare"></i>
         <h1>Stable vs DEV — Which One Should You Use?</h1>
@@ -107,7 +110,7 @@
             <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>HUD resizing</strong></td><td>Fixed size</td><td>Resizable via menu (<code>Settings → HUD → Resize HUD</code>) or command</td><td><code>/55 hud size=[-50..+50]</code>, added DEV-4.0.</td></tr>
             <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>SkeletonFix</strong></td><td>Not available</td><td>Toggleable fix for broken skeletons on Replace/Refresh</td><td>WIP since DEV-1.1, formalized with its own toggle in DEV-4.0.</td></tr>
             <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Extended admin controls</strong></td><td>Not available</td><td>Requestable admin access, including running commands on another user's HUD (use with caution)</td><td>See Admin vs. Master Access in the main guide.</td></tr>
-            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Command syntax</strong></td><td>Classic flat <code>/55 command</code></td><td>Reworked, more consistent namespaced syntax — see <a href="/official-guide/commands-guide/">Chat Commands</a></td><td>Reworked DEV-4.0.</td></tr>
+            <tr><td class="tag-col"><span class="badge badge-yellow">IMPROVED</span></td><td><strong>Command syntax</strong></td><td>Classic flat <code>/55 command</code></td><td>Reworked, more consistent namespaced syntax — see <a href="/commands-guide/">Chat Commands</a></td><td>Reworked DEV-4.0.</td></tr>
             <tr><td class="tag-col"><span class="badge badge-blue">FIXED</span></td><td><strong>Commands toggle</strong></td><td>Experimental — on/off indicator not clearly defined</td><td>Reworked in DEV-4.0 into a direct, clear enable/disable toggle</td><td>—</td></tr>
             <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>External automation</strong></td><td>Not available</td><td>HUD accepts commands sent by objects owned by the HUD owner — lets you script your own automation</td><td>Added DEV-1.0.</td></tr>
             <tr><td class="tag-col"><span class="badge badge-green">NEW</span></td><td><strong>Body parts</strong></td><td>Fewer dedicated slots</td><td>5 additional dedicated slots: Face, Upper, Hands, Waist, Legs</td><td>"Upper" was previously named "TChest".</td></tr>

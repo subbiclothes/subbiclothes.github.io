@@ -230,10 +230,14 @@ body::before {
 .hud-card h4 { font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 6px; text-transform: none; letter-spacing: 0; }
 .hud-card p { font-size: 14px; margin: 0; line-height: 1.4; }
 
-/* ── TABLE ── */
-.guide-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 16px; }
+/* ── TABLE ──
+   table-layout: fixed + word-break on cells forces long content (code
+   snippets, run-on descriptions) to wrap within the column instead of
+   pushing the table wider than its container — that's what used to cause
+   text to get cut off at the card edge and require horizontal scrolling. */
+.guide-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 16px; table-layout: fixed; }
 .guide-table th { text-align: left; padding: 11px 16px; background: var(--bg-panel); color: var(--text-dim); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border-dim); }
-.guide-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-dim); color: var(--text-muted); vertical-align: top; }
+.guide-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-dim); color: var(--text-muted); vertical-align: top; word-wrap: break-word; overflow-wrap: anywhere; }
 .guide-table td strong { color: var(--text); }
 .guide-table tr:last-child td { border-bottom: none; }
 .guide-table tr:hover td { background: var(--bg-hover); }
