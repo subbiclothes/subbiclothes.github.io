@@ -40,21 +40,31 @@
       "summary": "WIP",
 
       "new": [
-        "WIP"
-        
+        "Added support for **GCE**, the **Group** version of OCE.",
+        "Added experimental **Lock Clothes** functionality.",
+        "Added experimental **Lock Avatar** functionality.",
+        "Added new **Titler** modes:",
+        "- **Sequential Mode**",
+        "- **Scroll Mode**",
+        "- **Say Mode**",
+        "Added the new **Invite** feature.",
+        "Added a command to restore the previously worn avatar.",
+        "Added multiple new utility commands. [note:See the Commands Guide at https://subbiclothes.com/commands-guide/]"
       ],
-
       "changed": [
-        "WIP"
-        
+        "Completely rebuilt the command system from the ground up, improving interoperability, consistency, and overall user experience.",
+        "Completely overhauled the update system (transparent to users).",
+        "Improved **AlphaFix** with active support for objects attached to body parts."
       ],
-
       "fixed": [
-        "WIP"
+        "Fixed an issue where **STOP!** did not trigger visual effects when executed through a command.",
+        "Fixed an issue where **Min.Range** and **Public.Distance** were not synchronized. _Yes, they're the same setting._",
+        "Fixed a potential storage issue affecting the **Whitelist** and **Blacklist**.",
+        "Fixed an issue with HUD texture switching. [note:Currently disabled]",
+        "Fixed an issue that could prevent accessories from being removed correctly."
       ],
-
       "bugs": [
-        "WIP"
+        "None currently known."
       ]
     },
     {
