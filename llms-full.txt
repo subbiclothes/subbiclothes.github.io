@@ -102,17 +102,14 @@ Feet, Bodysuit. Alongside them, system folders: `+Avatar`, `Accessories`, `HairS
   Hairstyles). `@` = normal submenu. `$` = "auto-detach" submenu — only one item inside can be
   active at a time, for mutually exclusive options. `*` = "Auto-Load" — attaches automatically on
   avatar replace, Refresh, or Quick Dress; applies to Accessories, HUDs, and Hairstyle (only one
-  hair should be marked at a time, and no loose hair should sit in +Avatar/-Avatar- while a
-  forced one is in use).
+  hair should be marked at a time, and no loose hair should sit in `+Avatar` while a forced one
+  is in use).
 - **Scope system**: folders at the global level (`~Subbi_Clothes/`) apply to every outfit; at
   group level (`~Subbi_Clothes/Group/`) apply to every outfit in that group; at outfit level
   (`~Subbi_Clothes/Group/Outfit/`) apply only to that outfit. Applies to Accessories, HUDs,
-  Hairstyle, BOM, and +Avatar. Groups/Outfits themselves have no scope or subcarpetas — fixed
-  structure.
-- **+Avatar vs -Avatar-**: `-Avatar-` is deprecated. Current recommendation: use `+Avatar` for
-  everything, including body parts shared across multiple outfits (previously documented as
-  "shared body per Group" via `-Avatar-` — no longer the recommended practice, though it may
-  still work technically).
+  Hairstyle, BOM, and `+Avatar` (this replaced the old `-Avatar-` folder, fully removed in
+  DEV-3.1 — not merely deprecated, it no longer exists). Groups/Outfits themselves have no
+  scope or subfolders — fixed structure.
 - **HUDs (folder type)**: private by default, support scope and `@`/`$` subfolders, but no
   documented `*` auto-load behavior specific to HUDs — access is shared via explicit permissions
   instead.
@@ -139,7 +136,9 @@ Feet, Bodysuit. Alongside them, system folders: `+Avatar`, `Accessories`, `HairS
   actions like a PG-Safe+ trigger, Accessories, a Stop button that cancels someone else's current
   interaction with your HUD). The full menu adds per-category permissions and options like
   **Lock Avatar** — keeps your current avatar from being replaced when switching outfits/groups,
-  handy for trying clothes on a different avatar.
+  handy for trying clothes on a different avatar. (DEV-4.1, WIP, is developing an expanded,
+  experimental Lock Avatar system alongside a new Lock Clothes option — not yet shipped, don't
+  present those as more than roadmap.)
 - **Replace Clothes**: as of DEV-4.0, fully redesigned and integrated organically into the
   system — no longer experimental (older documentation describing it as experimental is
   outdated).

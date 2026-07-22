@@ -642,12 +642,30 @@
       return own + sub;
     }
 
+    /* An empty string, or the "no known bugs" placeholder, doesn't count as a bug */
+    function isEmptyBugEntry(item) {
+      const t = String(item == null ? '' : item).trim().toLowerCase().replace(/\.$/, '');
+      return t === '' || t === 'none currently known';
+    }
+
+    function countBugs(arr) {
+      if (!arr || !arr.length) return 0;
+      return arr.filter(item => !isEmptyBugEntry(item)).length;
+    }
+
+    /* Same as sumField, but excludes empty/placeholder bug entries from the count */
+    function sumBugs(e) {
+      const own = countBugs(e.bugs);
+      const sub = (e.sub_versions || []).reduce((acc, sv) => acc + sumBugs(sv), 0);
+      return own + sub;
+    }
+
     function buildEntry(e, expandedByDefault) {
       const n = sumField(e, 'new');
       const c = sumField(e, 'changed');
       const f = sumField(e, 'fixed');
       const h = sumField(e, 'hud');
-      const b = sumField(e, 'bugs');
+      const b = sumBugs(e);
       const total = n + c + f + h + b;
       const open  = expandedByDefault ? ' open' : '';
       const vtype = e.version_type || 'major';
@@ -714,7 +732,7 @@
       const c = (sv.changed || []).length;
       const f = (sv.fixed   || []).length;
       const h = (sv.hud     || []).length;
-      const b = (sv.bugs    || []).length;
+      const b = countBugs(sv.bugs);
       const total = n + c + f + h + b;
 
       const stats = [

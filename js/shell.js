@@ -18,6 +18,7 @@
       changelog: 'Changelog',
       compare:   'Stable vs DEV',
       discord:   'Discord',
+      privacy:   'Privacy',
 
       footer_contact: 'Questions? Message <strong>Souwind</strong> or <strong>Aratx</strong> in Second Life, or join the <a href="/r/discord">Discord</a>.',
       footer_version: 'Latest release: <strong>v3.3D</strong> &nbsp;·&nbsp; 4.0 DEV: Early access',
@@ -31,6 +32,7 @@
       changelog: 'Changelog',
       compare:   'Stable vs DEV',
       discord:   'Discord',
+      privacy:   'Privacidad',
       footer_contact: '¿Preguntas? Escribe a <strong>Souwind</strong> o <strong>Aratx</strong> en Second Life, o únete al <a href="/r/discord">Discord</a>.',
       footer_version: 'Última versión: <strong>v3.3D</strong> &nbsp;·&nbsp; 4.0 DEV: acceso anticipado',
     }
@@ -109,6 +111,7 @@
       <a href="/changelog/"          data-si="changelog">Changelog</a>
       <a href="/stable-vs-dev/"      data-si="compare">Stable vs DEV</a>
       <a href="/r/discord"           data-si="discord">Discord</a>
+      <a href="/privacy/"            data-si="privacy">Privacy</a>
     </nav>
   </div>
 </footer>`;

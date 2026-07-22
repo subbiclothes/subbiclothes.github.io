@@ -37,24 +37,36 @@
       "version_type": "middle",
       "badge": "DEV · SC4",
 
-      "summary": "WIP",
+      "summary": "Medium SC4 DEV update introducing group-level configuration through GCE, experimental Lock Clothes and Lock Avatar systems, new Titler modes, and expanded permission controls — including public access to MixOutfit — alongside a fully rebuilt command system, an overhauled update pipeline, and improvements to Particles, AlphaFix, and administrative access handling.",
 
       "new": [
-        "Added support for **GCE**, the **Group** version of OCE.",
-        "Added experimental **Lock Clothes** functionality.",
-        "Added experimental **Lock Avatar** functionality.",
+        "[WIP] Added support for **GCE**, the **Group**-level counterpart of OCE, extending per-outfit configuration to entire groups.",
+        "Added _experimental_ **Lock Clothes** functionality.",
+        "Added _experimental_ **Lock Avatar** functionality.",
         "Added new **Titler** modes:",
         "- **Sequential Mode**",
         "- **Scroll Mode**",
-        "- **Say Mode**",
-        "Added the new **Invite** feature.",
+        "Added Say function.",
+        "Added new **Invite** feature.",
         "Added a command to restore the previously worn avatar.",
+        "Added a command to protect lists (Whitelist, Blacklist, Masters, Regions) from script resets.",
+        "Added a new experimental function to transfer lists, permissions, and options to new HUDs.",
         "Added multiple new utility commands. [note:See the Commands Guide at https://subbiclothes.com/commands-guide/]"
       ],
       "changed": [
         "Completely rebuilt the command system from the ground up, improving interoperability, consistency, and overall user experience.",
         "Completely overhauled the update system (transparent to users).",
-        "Improved **AlphaFix** with active support for objects attached to body parts."
+        "Improved Particles system with the following new options:",
+        "- Radius",
+        "- Alpha start - alpha end",
+        "- Glow start - glow end",
+        "- Size start - size end",
+        "Improved **AlphaFix** with active support for objects attached to body parts.",
+        "Masters now have full access to all options and can no longer be disabled.",
+        "Authorized admins will retain access even if they appear on the blacklist.",
+        "Bio now works behind a permission. Public allowed by default.",
+        "[WIP] Added support for **MixOutfit** being accessible to the public through a permission (previously limited to the owner).",
+        "Now supports multiple commands in one line, separated by a semicolon. Example: ``/55 command1; command2; command3``"
       ],
       "fixed": [
         "Fixed an issue where **STOP!** did not trigger visual effects when executed through a command.",
@@ -68,7 +80,7 @@
       ]
     },
     {
-      "version": "DEV-4.0",
+      "version": "DEV-4.0a",
       "date": "2026-07-09",
       "type": "dev",
       "version_type": "major",
@@ -124,9 +136,20 @@
       "bugs": [
         "Some older command aliases may still behave inconsistently with the revised syntax system.",
         "OCE migration may require manual cleanup for legacy avatar configurations in certain setups."
+      ],
+
+      "sub_versions": [
+        {
+          "version": "DEV-4.0a",
+          "date": "2026-07-15",
+          "version_type": "hotfix",
+          "summary": "Fix for the HUD becoming unresponsive after changing regions.",
+          "fixed": [
+            "Fixed a bug where the **HUD stopped responding when changing regions**."
+          ]
+        }
       ]
     },
-
     {
       "version": "DEV-3.1",
       "date": "2026-05-12",
