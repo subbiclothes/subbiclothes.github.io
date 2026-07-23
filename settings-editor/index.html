@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Subbi Clothes — Settings Online Editor</title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <meta name="description" content="Edit your Subbi Clothes settings and permissions online, then export the line to import them back into your HUD. Everything runs in your browser.">
+  <link rel="canonical" href="https://subbiclothes.com/settings-editor/">
+  <!-- Personal-config editor reached via a HUD-generated link — keep it out of search indexes. -->
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://subbiclothes.com/settings-editor/">
+  <meta property="og:site_name" content="Subbi Clothes">
+  <meta property="og:title" content="Subbi Clothes — Settings Online Editor">
+  <meta property="og:description" content="Edit your Subbi Clothes settings and permissions online, then export the line to import them back into your HUD.">
+  <meta property="og:image" content="https://subbiclothes.com/img/store-thumnail.png">
+  <meta name="shell-logo-sub-en" content="Settings Editor">
+  <meta name="shell-logo-sub-es" content="Editor de Ajustes">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/shell.css">
+  <style>
+    /* ── Page-specific styles for the settings editor.
+       Reuses shell.css tokens so it matches the rest of the site; the only
+       new colors are the green "on" / dim "off" status accents. ── */
+    main { flex: 1; padding: 56px 24px 90px; max-width: 1000px; margin: 0 auto; width: 100%; }
+
+    .page-eyebrow { font-size: var(--fs-label); letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .page-title   { display: flex; align-items: center; gap: 10px; font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--text); padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .page-title i { color: var(--pink); font-size: 20px; }
+    .page-desc    { font-size: var(--fs-lead); color: var(--text-muted); line-height: 1.6; margin-bottom: 26px; max-width: 720px; }
+    .page-desc .priv { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; font-size: var(--fs-meta); color: #1de68a; }
+
+    /* Cards */
+    .dx-card {
+      background: var(--bg-card); border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg); padding: 22px 24px; margin-bottom: 22px;
+    }
+    .dx-card.accent { border-color: var(--border); border-left: 3px solid var(--pink); }
+    .dx-h {
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: var(--fs-subtitle-1);
+      letter-spacing: 1px; text-transform: uppercase; color: var(--pink); margin-bottom: 6px;
+    }
+    .dx-h i { font-size: 16px; }
+    .dx-sub { font-size: var(--fs-meta); color: var(--text-muted); line-height: 1.55; margin-bottom: 16px; }
+    .dx-sub:last-child { margin-bottom: 0; }
+
+    /* Input row */
+    .dx-input-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+    .dx-input {
+      flex: 1; min-width: 260px;
+      background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius);
+      color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 13px; padding: 11px 13px;
+    }
+    .dx-input:focus { outline: none; border-color: var(--border); }
+    .dx-example-link { margin-top: 12px; font-size: var(--fs-meta); }
+    .dx-example-link a { cursor: pointer; }
+
+    /* Import output */
+    .dx-code {
+      background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: var(--radius);
+      padding: 13px 15px; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text);
+      line-height: 1.55; word-break: break-all; white-space: pre-wrap; user-select: all;
+    }
+    .dx-btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .btn-sm { padding: 9px 16px; font-size: 14px; }
+    .dx-import-methods { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 620px) { .dx-import-methods { grid-template-columns: 1fr; } }
+    .dx-method {
+      background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius);
+      padding: 13px 15px; font-size: var(--fs-meta); color: var(--text-muted); line-height: 1.55;
+    }
+    .dx-method b { color: var(--text); display: block; margin-bottom: 4px; font-weight: 600; }
+    .dx-method code {
+      font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--pink);
+      background: var(--pink-soft); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px;
+    }
+
+    /* Backups list (1 auto + 2 manual) */
+    .dx-arch-list { display: flex; flex-direction: column; gap: 8px; }
+    .dx-arch-row {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 9px 12px; background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius);
+    }
+    .dx-arch-tag {
+      flex-shrink: 0; min-width: 30px; text-align: center;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 5px; background: var(--bg-hover); color: var(--text-muted); border: 1px solid var(--border-dim);
+    }
+    .dx-arch-tag.auto { color: var(--pink); border-color: var(--border); background: var(--pink-soft); }
+    .dx-arch-name { font-weight: 600; color: var(--text); font-size: 15px; }
+    .dx-arch-name.empty { color: var(--text-dim); font-weight: 500; font-style: italic; }
+    .dx-arch-when { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-dim); }
+    .dx-arch-actions { display: flex; gap: 6px; margin-left: auto; }
+    .dx-arch-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: none; border: 1px solid var(--border-dim); border-radius: 6px; color: var(--text-muted);
+      cursor: pointer; padding: 5px 9px; font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 13px; transition: all .12s;
+    }
+    .dx-arch-btn:hover { color: var(--text); border-color: var(--border); background: var(--bg-hover); }
+    .dx-arch-btn.primary { color: var(--pink); border-color: var(--border); }
+    .dx-arch-btn[disabled] { opacity: .4; cursor: default; }
+    .dx-arch-btn[disabled]:hover { color: var(--text-muted); border-color: var(--border-dim); background: none; }
+    .dx-arch-rename {
+      background: var(--bg-deep); border: 1px solid var(--border); border-radius: 5px; color: var(--text);
+      font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 15px; padding: 3px 8px;
+    }
+    .dx-arch-rename:focus { outline: none; }
+
+    /* Options grid */
+    .dx-opt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+    .dx-opt {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 12px; border: 1px solid var(--border-dim); border-radius: var(--radius);
+      background: var(--bg-panel); font-size: 15px;
+    }
+    .dx-ic { width: 15px; text-align: center; flex-shrink: 0; font-size: 13px; }
+    .dx-on  .dx-ic { color: #1de68a; }
+    .dx-off .dx-ic { color: var(--text-dim); }
+    .dx-on  .dx-name { color: var(--text); }
+    .dx-off .dx-name { color: var(--text-dim); }
+
+    /* Numerics */
+    .dx-num-list { display: flex; flex-direction: column; gap: 2px; }
+    .dx-num-row {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 10px 2px; border-bottom: 1px solid var(--border-dim);
+    }
+    .dx-num-row:last-child { border-bottom: none; }
+    .dx-num-label { min-width: 150px; font-weight: 600; color: var(--text); font-size: 15px; }
+    .dx-num-val { color: var(--pink); font-weight: 700; font-size: 15px; }
+
+    /* Settings categories (mirror the HUD's Settings submenus) */
+    .dx-cats { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 22px; }
+    .dx-cat-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+    @media (max-width: 760px) { .dx-cats { flex-direction: column; } }
+    .dx-cat { margin-bottom: 0; }
+    .dx-cat .dx-h { margin-bottom: 12px; }
+    .dx-cat .dx-num-list { margin-bottom: 10px; }
+    .dx-subhead { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin: 14px 0 8px; }
+
+    /* Permissions matrix */
+    .dx-table-wrap { overflow-x: auto; }
+    .dx-perm-table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 520px; }
+    .dx-perm-table th, .dx-perm-table td { padding: 9px 12px; border-bottom: 1px solid var(--border-dim); text-align: center; }
+    .dx-perm-table thead th {
+      font-family: 'Rajdhani', sans-serif; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-dim); background: var(--bg-panel);
+    }
+    .dx-perm-table tbody th {
+      text-align: left; font-weight: 600; color: var(--text); font-size: 15px; white-space: nowrap;
+    }
+    .dx-perm-table tbody tr:last-child th, .dx-perm-table tbody tr:last-child td { border-bottom: none; }
+    .dx-perm-table tbody tr:hover td, .dx-perm-table tbody tr:hover th { background: var(--bg-hover); }
+    .dx-perm-table .yes { color: #1de68a; }
+    .dx-perm-table .no  { color: var(--text-dim); }
+    .dx-perm-table .reserved { font-size: 11px; color: var(--text-dim); font-weight: 400; margin-left: 5px; letter-spacing: 0; text-transform: none; }
+
+    /* Editable affordances (click any option / value / permission to change it) */
+    .dx-opt { cursor: pointer; transition: border-color .12s, background .12s; }
+    .dx-opt:hover { border-color: var(--border); background: var(--bg-hover); }
+    .dx-opt:focus-visible { outline: 2px solid var(--pink); outline-offset: 1px; }
+    td.dx-perm-cell { cursor: pointer; }
+    td.dx-perm-cell:hover { background: var(--bg-hover); }
+    td.dx-perm-cell:focus-visible { outline: 2px solid var(--pink); outline-offset: -2px; }
+
+    /* Numeric value renders as an editable field: boxed, with a type cue
+       (✎ = free input, ▾ = pick from a list). */
+    .dx-num-edit {
+      cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+      padding: 3px 10px; border-radius: 7px;
+      border: 1px solid var(--border-dim); background: var(--bg-panel);
+      transition: border-color .12s, background .12s;
+    }
+    .dx-num-edit:hover { border-color: var(--border); background: var(--bg-hover); }
+    .dx-num-edit:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+    .dx-num-text { color: var(--pink); font-weight: 700; }
+    .dx-edit-cue { font-size: 10px; color: var(--text-dim); }
+    .dx-num-edit:hover .dx-edit-cue { color: var(--pink); }
+    .dx-inline-input {
+      border: none; background: transparent; color: var(--pink);
+      font-weight: 700; padding: 0;
+      width: 78px; font-family: 'Share Tech Mono', monospace; font-size: 14px;
+    }
+    .dx-inline-input:focus { outline: none; }
+
+    /* Always-on dropdown for enum settings (dark, not the browser default white) */
+    .dx-num-select {
+      background: var(--bg-panel); color: var(--pink);
+      border: 1px solid var(--border-dim); border-radius: 7px;
+      padding: 4px 10px; cursor: pointer;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px;
+      transition: border-color .12s;
+    }
+    .dx-num-select:hover { border-color: var(--border); }
+    .dx-num-select:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+    .dx-num-select option { background: var(--bg-card); color: var(--text); }
+
+    /* (?) help tooltips */
+    .dx-help { cursor: help; color: var(--text-dim); font-size: 12px; transition: color .12s; }
+    .dx-help:hover, .dx-help:focus-visible { color: var(--pink); outline: none; }
+    .dx-opt .dx-help { margin-left: auto; padding-left: 8px; }
+    .dx-num-label .dx-help { margin-left: 6px; }
+    .dx-tip {
+      position: fixed; z-index: 9500; display: none; max-width: 260px;
+      padding: 9px 12px; background: var(--bg-panel); border: 1px solid var(--border);
+      border-radius: var(--radius); font-family: 'Rajdhani', sans-serif; font-size: 13.5px;
+      color: var(--text-muted); line-height: 1.5; box-shadow: 0 10px 30px rgba(0,0,0,.55);
+      pointer-events: none;
+    }
+
+    /* Export section (bottom) */
+    .dx-export-lead {
+      margin-top: 8px; padding-top: 24px; border-top: 1px solid var(--border-dim);
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: var(--fs-subtitle-1);
+      letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted);
+      display: flex; align-items: center; gap: 9px; margin-bottom: 18px;
+    }
+    .dx-export-lead i { color: var(--pink); font-size: 16px; }
+
+    /* Warning / empty banners */
+    .dx-warn {
+      display: flex; gap: 11px; align-items: flex-start;
+      background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.25);
+      border-radius: var(--radius); padding: 13px 16px; margin-bottom: 22px;
+      font-size: var(--fs-meta); color: var(--warning); line-height: 1.55;
+    }
+    .dx-warn i { margin-top: 2px; flex-shrink: 0; }
+    .dx-empty {
+      text-align: center; padding: 40px 20px; color: var(--text-dim);
+      border: 1px dashed var(--border-dim); border-radius: var(--radius-lg); margin-bottom: 22px;
+    }
+    .dx-empty i { font-size: 30px; display: block; margin-bottom: 14px; opacity: .5; }
+    .dx-empty p { font-size: var(--fs-body); color: var(--text-muted); max-width: 460px; margin: 0 auto; line-height: 1.6; }
+
+    .dx-raw { margin-top: 4px; }
+    .dx-raw summary { cursor: pointer; font-size: var(--fs-meta); color: var(--text-dim); }
+    .dx-raw summary:hover { color: var(--text-muted); }
+    .dx-raw-grid { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .dx-raw-grid div { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-muted); word-break: break-all; }
+    .dx-raw-grid b { color: var(--pink); }
+  </style>
+</head>
+<body>
+
+  <main>
+    <p class="page-eyebrow"><span data-lc="en">Online tool</span><span data-lc="es">Herramienta online</span></p>
+    <h1 class="page-title"><i class="fa-solid fa-sliders"></i> <span data-lc="en">Settings Online Editor</span><span data-lc="es">Editor de Ajustes Online</span></h1>
+    <p class="page-desc">
+      <span data-lc="en">Edit your Subbi Clothes <strong>configuration and permissions</strong> right here, then copy the line to import them back into your HUD. Open your HUD's link and it loads automatically.</span>
+      <span data-lc="es">Edita aquí tu <strong>configuración y permisos</strong> de Subbi Clothes y luego copia la línea para reimportarlos en tu HUD. Abre el enlace de tu HUD y se carga automáticamente.</span>
+      <span class="priv"><i class="fa-solid fa-lock"></i><span data-lc="en">Everything runs in your browser — nothing is uploaded anywhere.</span><span data-lc="es">Todo funciona en tu navegador — no se envía nada a ningún sitio.</span></span>
+    </p>
+
+    <!-- LOAD -->
+    <div class="dx-card">
+      <div class="dx-h"><i class="fa-solid fa-link"></i> <span data-lc="en">Load</span><span data-lc="es">Cargar</span></div>
+      <p class="dx-sub"><span data-lc="en">Paste a backup URL or an <code>SC1|&hellip;</code> line and load it.</span><span data-lc="es">Pega una URL de copia o una línea <code>SC1|&hellip;</code> y cárgala.</span></p>
+      <div class="dx-input-row">
+        <input type="text" id="dx-url-input" class="dx-input" spellcheck="false" autocomplete="off"
+               placeholder="https://subbiclothes.com/settings-editor/?v=1&o=…   ·   or   ·   SC1|0,1,…|…|…">
+        <button class="btn-primary" id="dx-decode-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-lc="en">Load</span><span data-lc="es">Cargar</span></button>
+      </div>
+      <p class="dx-example-link"><a id="dx-example"><span data-lc="en">Load a sample</span><span data-lc="es">Cargar un ejemplo</span></a></p>
+    </div>
+
+    <!-- BACKUPS -->
+    <div id="dx-archive-slot"></div>
+
+    <!-- WARNINGS + EDITOR -->
+    <div id="dx-warn-slot"></div>
+    <div id="dx-editor"></div>
+
+    <!-- EXPORT (bottom) -->
+    <div id="dx-export-slot"></div>
+  </main>
+
+  <script src="/js/shell.js"></script>
+  <script>
+  (function () {
+    /* ── Bilingual helper: emit both languages, CSS toggles which shows (same
+       pattern as the rest of the site — see css/shell.css). ── */
+    function lc(en, es) { return `<span data-lc="en">${en}</span><span data-lc="es">${es}</span>`; }
+    function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function isES() { return document.documentElement.lang === 'es'; }
+
+    /* ── Schema (must mirror the HUD's OPT_NAMES / perms.lsl order) ── */
+    const OPT_NAMES = [
+      'Public Access','PG Safe','Safe Away','Min.Range','Outfit Prm','Accessories Prm',
+      'Group Access','Friends Access','Clothes Prm','Hair Prm','RandOutfit Prm','Nudity Prm',
+      'Lock Avatar','Notifications','Keep Undies','Safe Undress','Sounds','Animations',
+      'Local BP','Short Names','R.Notifs','Anims onsit','Lock Ankles','SkelFix (C)',
+      'SkelFix (R)','Reload Avatar','Rem Accessories','Block Access','cmdWarning',
+      '(G)eneral','(M)ature','(A)dult'
+    ]; // 32
+
+    const NUM_FIELDS = [
+      { label: lc('Gender', 'Género'),                     map: ['Neutral','Male','Female'] },
+      { label: lc('Display messages', 'Mensajes'),         map: ['OverHead','Priv Chat','Public Chat','Mute'] },
+      { label: lc('PG-Safe mode', 'Modo PG-Safe'),         map: ['Dress me','Replace Avatar','Back Home','Block Nudity'] },
+      { label: lc('Min. range', 'Rango mínimo'),           unit: 'm', min: 1 },
+      { label: lc('Range notif cooldown', 'Cooldown notif. de rango'), unit: 's', min: 0 },
+    ]; // 5
+
+    const PERM_NAMES = [
+      'Clothes','Outfits','Accessories','Hairstyle','Nudity','Remote','Random',
+      'Distance','Huds','Adv.Commands','Hid.Folders','Tags','Biography','MixOutfit'
+    ]; // 14 (offset 11 = Tags is reserved/inert)
+    const PERM_CATS = [ lc('Public','Público'), 'Whitelist', lc('Friends','Amigos'), lc('Group','Grupo') ]; // Public, Whitelist, Friends, Group
+
+    /* HUD Settings-menu grouping (mirrors the submenus in Settings.lsl) so the
+       editor matches how the HUD itself organizes these. `opts`/`ratings` index
+       OPT_NAMES; `nums` index NUM_FIELDS. All 32 options appear in one group. */
+    const CATEGORIES = [
+      { label: lc('Access', 'Acceso'),                icon: 'fa-key',              opts: [0, 6, 7] },
+      { label: 'PG-Safe',                             icon: 'fa-shield-halved',    nums: [2], opts: [1, 2, 26, 27], ratings: [29, 30, 31] },
+      { label: lc('Range', 'Rango'),                  icon: 'fa-ruler-horizontal', nums: [3, 4], opts: [3, 20] },
+      { label: lc('Clothes', 'Ropa'),                 icon: 'fa-shirt',            opts: [14, 15, 18] },
+      { label: lc('Messages', 'Mensajes'),            icon: 'fa-comment',          nums: [1, 0], opts: [13, 19] },
+      { label: lc('Animations', 'Animaciones'),       icon: 'fa-film',             opts: [17, 21, 22, 23, 24] },
+      { label: lc('Others', 'Otros'),                 icon: 'fa-gears',            opts: [12, 25, 16, 28] },
+    ];
+
+    // The 6 legacy "*Prm" option bits in the o-block duplicate their Public
+    // permission. They're not shown on their own, so keep each in sync with the
+    // matching Public permission so an edited export stays consistent whichever
+    // block the HUD reads. Key = Public perm offset (0–13), value = OPT_NAMES index.
+    const PUBLIC_PERM_SYNC = { 0: 8, 1: 4, 2: 5, 3: 9, 4: 11, 6: 10 };
+    //   Clothes→Clothes Prm · Outfits→Outfit Prm · Accessories→Accessories Prm
+    //   Hairstyle→Hair Prm · Nudity→Nudity Prm · Random→RandOutfit Prm
+
+    /* Per-option help text [EN, ES] (keyed by OPT_NAMES index), from Settings.lsl. */
+    const OPT_HELP = {
+      0:  ['Allow anyone to use your HUD.', 'Permite que cualquiera use tu HUD.'],
+      1:  ['Enable PG-Safe automatic protection.', 'Activa la protección automática PG-Safe.'],
+      2:  ["Trigger PG-Safe automatically when you're marked Away.", 'Dispara PG-Safe automáticamente cuando estás como Away (ausente).'],
+      3:  ['Require a minimum distance for others to interact with you.', 'Exige una distancia mínima para que otros puedan interactuar.'],
+      6:  ['Allow members of your active Second Life group to use your HUD.', 'Permite usar tu HUD a los miembros de tu grupo activo de Second Life.'],
+      7:  ['Allow your Second Life friends to use your HUD.', 'Permite usar tu HUD a tus amigos de Second Life.'],
+      12: ['Prevent your avatar body from being replaced when switching outfit or group.', 'Evita que tu cuerpo/avatar se reemplace al cambiar de outfit o grupo.'],
+      13: ['Show a message when someone interacts (required for the Stop button).', 'Muestra un mensaje cuando alguien interactúa (necesario para el botón Stop).'],
+      14: ['Keep underwear on when you get dressed.', 'Mantiene la ropa interior puesta al vestirte.'],
+      15: ['Prevent unwanted attachments while undressing.', 'Evita adjuntos no deseados al desvestirte.'],
+      16: ['Enable the HUD sound effects.', 'Activa los efectos de sonido del HUD.'],
+      17: ['Play animations when changing clothes.', 'Reproduce animaciones al cambiar de ropa.'],
+      18: ['Body-part extensions open their own body-part menus.', 'Las extensiones de partes del cuerpo abren sus propios menús de esa parte.'],
+      19: ["Remove the 'Resident' suffix from names.", "Quita el sufijo 'Resident' de los nombres."],
+      20: ['Show a message to users who are out of range.', 'Muestra un mensaje a quienes están fuera de rango.'],
+      21: ['Allow change animations to play while you are seated.', 'Permite que las animaciones de cambio se reproduzcan mientras estás sentado.'],
+      22: ['Prevent heel / ankle animation errors.', 'Evita errores de animación de tobillos/tacones.'],
+      23: ['Fix a broken skeleton when changing avatars.', 'Corrige el esqueleto roto al cambiar de avatar.'],
+      24: ['Fix a broken skeleton when reloading the outfit.', 'Corrige el esqueleto roto al recargar el outfit.'],
+      25: ['Auto-restore your avatar when the HUD starts.', 'Restaura tu avatar automáticamente al iniciar el HUD.'],
+      26: ['When PG-Safe triggers, also remove accessories / items.', 'Cuando se dispara PG-Safe, también quita accesorios/objetos.'],
+      27: ['When PG-Safe triggers, lock the HUD to the owner only.', 'Cuando se dispara PG-Safe, bloquea el HUD solo para el dueño.'],
+      28: ['Notify you when an unknown command is sent.', 'Te avisa cuando se envía un comando desconocido.'],
+      29: ['Trigger PG-Safe in General-rated regions.', 'Dispara PG-Safe en regiones con rating General.'],
+      30: ['Trigger PG-Safe in Mature-rated regions.', 'Dispara PG-Safe en regiones con rating Mature.'],
+      31: ['Trigger PG-Safe in Adult-rated regions.', 'Dispara PG-Safe en regiones con rating Adult.'],
+    };
+
+    /* Per-numeric help text [EN, ES] (keyed by NUM_FIELDS index). */
+    const NUM_HELP = {
+      0: ['Pronouns used in interaction messages.', 'Pronombres usados en los mensajes de interacción.'],
+      1: ['Where interaction messages are shown.', 'Dónde se muestran los mensajes de interacción.'],
+      2: ['How PG-Safe responds when it triggers.', 'Cómo responde PG-Safe cuando se dispara.'],
+      3: ['Minimum distance (metres) required to interact.', 'Distancia mínima (metros) para poder interactuar.'],
+      4: ['Cooldown (seconds) between out-of-range notifications.', 'Cooldown (segundos) entre notificaciones de fuera de rango.'],
+    };
+
+    const OPT_LEN = 32, PERM_LEN = 56, NUM_LEN = 5;
+
+    /* ── Helpers ── */
+    function onlyBits(s) { return String(s || '').replace(/[^01]/g, ''); }
+    function fixLen(bits, len) { // pad-right / truncate; returns {bits, changed}
+      const clean = onlyBits(bits);
+      let out = clean;
+      if (out.length < len) out = out.padEnd(len, '0');
+      else if (out.length > len) out = out.slice(0, len);
+      return { bits: out, changed: clean.length !== len };
+    }
+    function icon(on) {
+      return on ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>';
+    }
+    function cleanFloat(v) {
+      const n = parseFloat(v);
+      return isNaN(n) ? esc(v) : String(+n.toFixed(3));
+    }
+
+    function getParams(str) {
+      str = String(str || '').trim();
+      let query = str;
+      const q = str.indexOf('?');
+      if (q !== -1) query = str.slice(q + 1);
+      query = query.split('#')[0];
+      // If they pasted a bare URL with no query, there's nothing to read.
+      if (/^https?:\/\//i.test(str) && q === -1) query = '';
+      return new URLSearchParams(query);
+    }
+
+    /* ── Renderers ── */
+    function renderImport(csv) {
+      return `
+        <div class="dx-card accent">
+          <div class="dx-h"><i class="fa-solid fa-file-import"></i> ${lc('Importable line', 'Línea para importar')}</div>
+          <p class="dx-sub">${lc(
+            'Edit any option, value or permission above — this line updates instantly. Copy it, then import it into your HUD.',
+            'Edita arriba cualquier opción, valor o permiso — esta línea se actualiza al instante. Cópiala e impórtala en tu HUD.'
+          )}</p>
+          <div class="dx-code" id="dx-csv">${esc(csv)}</div>
+          <div class="dx-btn-row">
+            <button class="btn-primary btn-sm" id="dx-copy-csv"><i class="fa-solid fa-copy"></i> ${lc('Copy line', 'Copiar línea')}</button>
+            <button class="btn-ghost btn-sm" id="dx-copy-cmd"><i class="fa-solid fa-terminal"></i> ${lc('Copy chat command', 'Copiar comando de chat')}</button>
+          </div>
+          <div class="dx-import-methods">
+            <div class="dx-method">
+              <b>${lc('Via chat', 'Por chat')}</b>
+              ${lc('Say in chat: ', 'Escribe en el chat: ')}<code>import SC1|&hellip;</code>
+            </div>
+            <div class="dx-method">
+              <b>${lc('Via notecard', 'Por notecard')}</b>
+              ${lc('Paste the line into a notecard named ', 'Pega la línea en una notecard llamada ')}<code>!sc_import</code>${lc(' inside your HUD.', ' dentro de tu HUD.')}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function helpIcon(help) {
+      if (!help) return '';
+      return `<span class="dx-help" tabindex="0" role="button" aria-label="help" data-tip-en="${esc(help[0])}" data-tip-es="${esc(help[1])}"><i class="fa-solid fa-circle-question"></i></span>`;
+    }
+
+    // Click a chip to toggle the option bit (see the delegated handler).
+    function optChip(i) {
+      const on = oBits[i] === '1';
+      return `<div class="dx-opt ${on ? 'dx-on' : 'dx-off'}" data-oi="${i}" role="button" tabindex="0"><span class="dx-ic">${icon(on)}</span><span class="dx-name">${esc(OPT_NAMES[i])}</span>${helpIcon(OPT_HELP[i])}</div>`;
+    }
+
+    function numValueText(ni) {
+      const f = NUM_FIELDS[ni];
+      const raw = nParts[ni] !== undefined ? nParts[ni] : '';
+      if (f.map) { const idx = parseInt(raw, 10); return (f.map[idx] !== undefined) ? f.map[idx] : (raw || '—'); }
+      return cleanFloat(raw) + (f.unit ? ' ' + f.unit : '');
+    }
+    // Float value shown as an editable field (value + ✎ cue).
+    function numSpanInner(ni) {
+      return `<span class="dx-num-text">${esc(numValueText(ni))}</span><i class="fa-solid fa-pen dx-edit-cue"></i>`;
+    }
+
+    // Enum settings are a permanent inline <select>; float settings are a boxed,
+    // click-to-edit field.
+    function numRow(ni) {
+      const f = NUM_FIELDS[ni];
+      const help = helpIcon(NUM_HELP[ni]);
+      let field;
+      if (f.map) {
+        const cur = parseInt(nParts[ni], 10);
+        const opts = f.map.map((label, idx) => `<option value="${idx}"${idx === cur ? ' selected' : ''}>${esc(label)}</option>`).join('');
+        field = `<select class="dx-num-select" data-ni="${ni}">${opts}</select>`;
+      } else {
+        field = `<span class="dx-num-val dx-num-edit" data-ni="${ni}" role="button" tabindex="0">${numSpanInner(ni)}</span>`;
+      }
+      return `<div class="dx-num-row"><span class="dx-num-label">${f.label}${help}</span>${field}</div>`;
+    }
+
+    // One card per HUD Settings submenu: numeric settings first, then toggles,
+    // then any region-rating triggers (PG-Safe only).
+    function renderCategories() {
+      const cardHTML = (cat, idx) => {
+        let body = '';
+        if (cat.nums && cat.nums.length)  body += `<div class="dx-num-list">${cat.nums.map(ni => numRow(ni)).join('')}</div>`;
+        if (cat.opts && cat.opts.length)  body += `<div class="dx-opt-grid">${cat.opts.map(i => optChip(i)).join('')}</div>`;
+        if (cat.ratings && cat.ratings.length) {
+          body += `<div class="dx-subhead">${lc('Region rating triggers', 'Ratings de región que disparan')}</div>`;
+          body += `<div class="dx-opt-grid">${cat.ratings.map(i => optChip(i)).join('')}</div>`;
+        }
+        return `<div class="dx-card dx-cat" data-ci="${idx}"><div class="dx-h"><i class="fa-solid ${cat.icon}"></i> ${cat.label}</div>${body}</div>`;
+      };
+      // All cards start in column 1; balanceColumns() splits them across the two
+      // columns by measured pixel height (true masonry — no big empty gaps).
+      const cards = CATEGORIES.map((cat, idx) => cardHTML(cat, idx)).join('');
+      return `<div class="dx-cats"><div class="dx-cat-col">${cards}</div><div class="dx-cat-col"></div></div>`;
+    }
+
+    // Greedily fill the shorter column by real pixel height so both columns end
+    // at roughly the same place. Cards keep their original order per column.
+    function balanceColumns() {
+      const wrap = document.querySelector('.dx-cats');
+      if (!wrap) return;
+      const colEls = wrap.querySelectorAll('.dx-cat-col');
+      if (colEls.length < 2) return;
+      const cards = Array.from(wrap.querySelectorAll('.dx-cat')).sort((a, b) => (+a.dataset.ci) - (+b.dataset.ci));
+      if (!cards.length) return;
+
+      if (window.innerWidth <= 760) {          // stacked layout: keep everything in order in one column
+        cards.forEach(c => colEls[0].appendChild(c));
+        colEls[1].innerHTML = '';
+        return;
+      }
+      const heights = cards.map(c => c.offsetHeight);   // measured at half-column width
+      colEls[0].innerHTML = ''; colEls[1].innerHTML = '';
+      const h = [0, 0];
+      cards.forEach((card, i) => {
+        const c = h[0] <= h[1] ? 0 : 1;
+        colEls[c].appendChild(card);
+        h[c] += heights[i];
+      });
+    }
+
+    function renderPermissions() {
+      const head = `<tr><th style="text-align:left;">${lc('Permission', 'Permiso')}</th>${PERM_CATS.map(c => `<th>${c}</th>`).join('')}</tr>`;
+      const rows = PERM_NAMES.map((name, k) => {
+        const reserved = (k === 11) ? `<span class="reserved">${lc('reserved', 'reservado')}</span>` : '';
+        const cells = PERM_CATS.map((_, c) => {
+          const pi = c * 14 + k;
+          const on = pBits[pi] === '1';
+          return `<td class="dx-perm-cell ${on ? 'yes' : 'no'}" data-pi="${pi}" role="button" tabindex="0">${icon(on)}</td>`;
+        }).join('');
+        return `<tr><th>${esc(name)}${reserved}</th>${cells}</tr>`;
+      }).join('');
+      return `
+        <div class="dx-card">
+          <div class="dx-h"><i class="fa-solid fa-shield-halved"></i> ${lc('Permissions', 'Permisos')} <span style="color:var(--text-dim);font-weight:400;font-size:13px;">(56)</span></div>
+          <p class="dx-sub">${lc(
+            'What each access category is allowed to do, per feature.',
+            'Qué puede hacer cada categoría de acceso, por función.'
+          )}</p>
+          <div class="dx-table-wrap">
+            <table class="dx-perm-table"><thead>${head}</thead><tbody>${rows}</tbody></table>
+          </div>
+        </div>`;
+    }
+
+    function rawGridInner(v, o, n, p, csv) {
+      return `<div><b>v</b> = ${esc(v)}</div>`
+        + `<div><b>o</b> = ${esc(o)}</div>`
+        + `<div><b>n</b> = ${esc(n)}</div>`
+        + `<div><b>p</b> = ${esc(p)}</div>`
+        + `<div><b>SC1</b> = ${esc(csv)}</div>`;
+    }
+    function renderRaw(v, o, n, p, csv) {
+      return `
+        <details class="dx-raw dx-card">
+          <summary>${lc('Raw parameters', 'Parámetros en bruto')}</summary>
+          <div class="dx-raw-grid" id="dx-raw-grid">${rawGridInner(v, o, n, p, csv)}</div>
+        </details>`;
+    }
+
+    function renderEmpty() {
+      return `
+        <div class="dx-empty">
+          <i class="fa-solid fa-inbox"></i>
+          <p>${lc(
+            'Nothing loaded. Open the link your HUD gave you, or paste a link / SC1 line above and press Load.',
+            'Nada cargado. Abre el enlace que te dio tu HUD, o pega arriba un enlace / línea SC1 y pulsa Cargar.'
+          )}</p>
+        </div>`;
+    }
+
+    function warn(html) {
+      return `<div class="dx-warn"><i class="fa-solid fa-triangle-exclamation"></i><span>${html}</span></div>`;
+    }
+
+    /* ── Copy wiring ── */
+    function wireCopy(id, textOrFn) {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      const original = btn.innerHTML;
+      btn.onclick = () => {
+        const text = typeof textOrFn === 'function' ? textOrFn() : textOrFn;
+        navigator.clipboard.writeText(text).then(() => {
+          btn.innerHTML = `<i class="fa-solid fa-check"></i> ${isES() ? '¡Copiado!' : 'Copied!'}`;
+          setTimeout(() => { btn.innerHTML = original; }, 1600);
+        });
+      };
+    }
+
+    /* ── Working model ── */
+    let current = null;   // the {v,o,n,p} currently displayed (or null)
+    let oBits = '';       // 32-char options bitstring — editable working copy
+    let pBits = '';       // 56-char permissions bitstring — editable
+    let nParts = [];      // 5 numeric values — editable
+    let currentCsv = '';  // the SC1|… line for the current state
+
+    /* ── Backups: 1 auto slot + 2 named manual slots, in localStorage ── */
+    const AUTO_KEY = 'subbi_se_auto', MANUAL_KEY = 'subbi_se_manual';
+    function getAuto()  { try { return JSON.parse(localStorage.getItem(AUTO_KEY)); } catch (e) { return null; } }
+    function setAuto(r) { try { localStorage.setItem(AUTO_KEY, JSON.stringify(r)); } catch (e) {} }
+    function getManual() {
+      try { const a = JSON.parse(localStorage.getItem(MANUAL_KEY)); return [ (a && a[0]) || null, (a && a[1]) || null ]; }
+      catch (e) { return [null, null]; }
+    }
+    function setManual(a) { try { localStorage.setItem(MANUAL_KEY, JSON.stringify(a)); } catch (e) {} }
+    function sig(r) { return r ? [r.v, r.o, r.n, r.p].join('~') : ''; }
+    function stampCur(name) {
+      const r = { v: current.v, o: oBits, n: nParts.join('_'), p: pBits, savedAt: Date.now() };
+      if (name !== undefined) r.name = name;
+      return r;
+    }
+    // Auto slot always mirrors the current (last loaded / edited) state.
+    function touchAuto() {
+      if (!current) return;
+      const a = getAuto();
+      if (a && sig(a) === sig(current)) return;
+      setAuto(stampCur());
+    }
+
+    function buildUrl(r) {
+      const u = new URLSearchParams();
+      if (r.v != null) u.set('v', r.v);
+      if (r.o != null) u.set('o', r.o);
+      if (r.n != null) u.set('n', r.n);
+      if (r.p != null) u.set('p', r.p);
+      return location.origin + location.pathname + '?' + u.toString();
+    }
+
+    function saveManualSlot(i) {
+      if (!current) return;
+      const m = getManual();
+      m[i] = stampCur((m[i] && m[i].name) ? m[i].name : ('Backup ' + (i + 1)));
+      setManual(m);
+      renderArchiveCard();
+    }
+    function startRename(i) {
+      const nameEl = document.querySelector('.dx-arch-name[data-slot="' + i + '"]');
+      if (!nameEl || nameEl.querySelector('input')) return;
+      const m = getManual();
+      const input = document.createElement('input');
+      input.type = 'text'; input.className = 'dx-arch-rename'; input.maxLength = 32;
+      input.value = (m[i] && m[i].name) ? m[i].name : '';
+      const commit = () => {
+        const mm = getManual();
+        if (mm[i]) { const nv = input.value.trim(); if (nv) mm[i].name = nv; setManual(mm); }
+        renderArchiveCard();
+      };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); }
+        else if (ev.key === 'Escape') { ev.preventDefault(); renderArchiveCard(); }
+      });
+      nameEl.textContent = '';
+      nameEl.appendChild(input);
+      input.focus(); input.select();
+    }
+
+    function renderArchiveCard() {
+      const slot = document.getElementById('dx-archive-slot');
+      if (!slot) return;
+      const auto = getAuto();
+      const man = getManual();
+      const fmt = t => new Date(t).toLocaleString();
+
+      const rows = [];
+      rows.push(`<div class="dx-arch-row">
+        <span class="dx-arch-tag auto">Auto</span>
+        ${auto
+          ? `<span class="dx-arch-name">${lc('Last state', 'Último estado')}</span><span class="dx-arch-when">${esc(fmt(auto.savedAt))}</span>
+             <span class="dx-arch-actions"><button class="dx-arch-btn primary" data-act="load" data-slot="auto" title="${isES() ? 'Cargar' : 'Load'}"><i class="fa-solid fa-folder-open"></i></button></span>`
+          : `<span class="dx-arch-name empty">${lc('nothing saved yet', 'nada guardado aún')}</span>`}
+      </div>`);
+      for (let i = 0; i < 2; i++) {
+        const s = man[i];
+        rows.push(`<div class="dx-arch-row">
+          <span class="dx-arch-tag">${i + 1}</span>
+          ${s
+            ? `<span class="dx-arch-name" data-slot="${i}">${esc(s.name || ('Backup ' + (i + 1)))}</span><span class="dx-arch-when">${esc(fmt(s.savedAt))}</span>
+               <span class="dx-arch-actions">
+                 <button class="dx-arch-btn primary" data-act="load" data-slot="${i}" title="${isES() ? 'Cargar' : 'Load'}"><i class="fa-solid fa-folder-open"></i></button>
+                 <button class="dx-arch-btn" data-act="rename" data-slot="${i}" title="${isES() ? 'Renombrar' : 'Rename'}"><i class="fa-solid fa-pen"></i></button>
+                 <button class="dx-arch-btn" data-act="remove" data-slot="${i}" title="${isES() ? 'Eliminar' : 'Remove'}"><i class="fa-solid fa-trash"></i></button>
+               </span>`
+            : `<span class="dx-arch-name empty" data-slot="${i}">${lc('empty slot', 'ranura vacía')}</span>
+               <span class="dx-arch-actions"><button class="dx-arch-btn" data-act="save" data-slot="${i}"${current ? '' : ' disabled'}><i class="fa-solid fa-floppy-disk"></i> ${lc('Save current', 'Guardar actual')}</button></span>`}
+        </div>`);
+      }
+
+      slot.innerHTML = `<div class="dx-card">
+        <div class="dx-h"><i class="fa-solid fa-box-archive"></i> ${lc('Backups', 'Copias')}</div>
+        <p class="dx-sub">${lc(
+          'Stored in this browser. <b>Auto</b> keeps your last loaded/edited state; the two numbered slots you save and name yourself.',
+          'Guardadas en este navegador. <b>Auto</b> conserva tu último estado cargado/editado; las dos ranuras numeradas las guardas y nombras tú.'
+        )}</p>
+        <div class="dx-arch-list">${rows.join('')}</div>
+      </div>`;
+    }
+
+    /* ── Main decode ── */
+    // Parse a "SC1|o1,o2,…|n1,n2,…|p1,p2,…" line (also accepts a leading
+    // "import " prefix, handled by the caller slicing from "SC1|").
+    function recFromSC1(text) {
+      const parts = text.split('|');
+      if ((parts[0] || '').trim().toUpperCase() !== 'SC1') return null;
+      return {
+        v: '1',
+        o: (parts[1] || '').split(',').map(s => s.trim()).join(''),
+        n: (parts[2] || '').split(',').map(s => s.trim()).join('_'),
+        p: (parts[3] || '').split(',').map(s => s.trim()).join(''),
+      };
+    }
+
+    function decode(searchLike) {
+      const text = String(searchLike || '').trim();
+      // Accept a pasted SC1 line (or "import SC1|…") directly.
+      const sc1i = text.toUpperCase().indexOf('SC1|');
+      if (sc1i !== -1) {
+        const rec = recFromSC1(text.slice(sc1i));
+        if (rec && (rec.o || rec.n || rec.p)) { decodeRecord(rec); return; }
+      }
+      const params = getParams(text);
+      const rec = { v: params.get('v'), o: params.get('o'), n: params.get('n'), p: params.get('p') };
+      if (rec.o === null && rec.n === null && rec.p === null) {
+        current = null;
+        document.getElementById('dx-warn-slot').innerHTML = '';
+        document.getElementById('dx-editor').innerHTML = renderEmpty();
+        document.getElementById('dx-export-slot').innerHTML = '';
+        renderArchiveCard();
+        return;
+      }
+      decodeRecord(rec);
+    }
+
+    function decodeRecord(rec) {
+      current = rec;
+      const v = rec.v, o = rec.o, n = rec.n, p = rec.p;
+      const warnSlot = document.getElementById('dx-warn-slot');
+      warnSlot.innerHTML = '';
+
+      // Warnings (non-fatal)
+      const warns = [];
+      if (v !== null && v !== '1') {
+        warns.push(lc(
+          `This link uses schema version <strong>${esc(v)}</strong>. This page decodes version 1 — some fields may be off.`,
+          `Este enlace usa la versión de esquema <strong>${esc(v)}</strong>. Esta página decodifica la versión 1 — algunos campos pueden no coincidir.`
+        ));
+      }
+
+      const oFix = fixLen(o, OPT_LEN);
+      const pFix = fixLen(p, PERM_LEN);
+      const nSplit = String(n || '').split('_');
+
+      if (oFix.changed) warns.push(lc(
+        `The options block should be ${OPT_LEN} bits — it was adjusted to fit.`,
+        `El bloque de opciones debería tener ${OPT_LEN} bits — se ajustó para encajar.`));
+      if (pFix.changed) warns.push(lc(
+        `The permissions block should be ${PERM_LEN} bits — it was adjusted to fit.`,
+        `El bloque de permisos debería tener ${PERM_LEN} bits — se ajustó para encajar.`));
+      if (nSplit.length !== NUM_LEN) warns.push(lc(
+        `The numeric block should have ${NUM_LEN} values — found ${nSplit.length}.`,
+        `El bloque numérico debería tener ${NUM_LEN} valores — se encontraron ${nSplit.length}.`));
+
+      if (warns.length) warnSlot.innerHTML = warns.map(warn).join('');
+
+      // Editable working model — mutated in place by the edit widgets.
+      oBits  = oFix.bits;
+      pBits  = pFix.bits;
+      nParts = padNums(nSplit);
+      current = { v: v, o: oBits, n: nParts.join('_'), p: pBits };
+      currentCsv = buildCsv();
+
+      document.getElementById('dx-editor').innerHTML =
+        renderCategories() + renderPermissions();
+
+      document.getElementById('dx-export-slot').innerHTML =
+        `<div class="dx-export-lead"><i class="fa-solid fa-file-export"></i> ${lc('Export', 'Exportar')}</div>`
+        + renderImport(currentCsv)
+        + renderRaw(v === null ? '—' : v, oBits, current.n, pBits, currentCsv);
+
+      wireCopy('dx-copy-csv', () => currentCsv);
+      wireCopy('dx-copy-cmd', () => 'import ' + currentCsv);
+      balanceColumns();
+      touchAuto();
+      renderArchiveCard();
+    }
+
+    /* ── In-place editing — mutate the model, then refresh derived views ── */
+    function buildCsv() {
+      return 'SC1|' + oBits.split('').join(',') + '|' + nParts.join(',') + '|' + pBits.split('').join(',');
+    }
+    function padNums(arr) {
+      const out = arr.slice(0, NUM_LEN);
+      while (out.length < NUM_LEN) out.push('0');
+      return out;
+    }
+    function flipBit(str, i) {
+      return str.substring(0, i) + (str[i] === '1' ? '0' : '1') + str.substring(i + 1);
+    }
+    function refresh() {
+      current = { v: current ? current.v : null, o: oBits, n: nParts.join('_'), p: pBits };
+      currentCsv = buildCsv();
+      const csvEl = document.getElementById('dx-csv');
+      if (csvEl) csvEl.textContent = currentCsv;
+      const rawEl = document.getElementById('dx-raw-grid');
+      if (rawEl) rawEl.innerHTML = rawGridInner(current.v === null ? '—' : current.v, oBits, current.n, pBits, currentCsv);
+      touchAuto();
+      renderArchiveCard();
+    }
+    function toggleOpt(i, el) {
+      oBits = flipBit(oBits, i);
+      const on = oBits[i] === '1';
+      el.classList.toggle('dx-on', on);
+      el.classList.toggle('dx-off', !on);
+      const ic = el.querySelector('.dx-ic');
+      if (ic) ic.innerHTML = icon(on);
+      refresh();
+    }
+    function togglePerm(pi, el) {
+      pBits = flipBit(pBits, pi);
+      const on = pBits[pi] === '1';
+      el.classList.toggle('yes', on);
+      el.classList.toggle('no', !on);
+      el.innerHTML = icon(on);
+      // Public perms (category 0) also drive their duplicate legacy o-block bit.
+      const c = Math.floor(pi / 14), k = pi % 14;
+      if (c === 0 && PUBLIC_PERM_SYNC[k] !== undefined) {
+        const oi = PUBLIC_PERM_SYNC[k];
+        oBits = oBits.substring(0, oi) + (on ? '1' : '0') + oBits.substring(oi + 1);
+      }
+      refresh();
+    }
+    function startNumEdit(span) {
+      if (span.dataset.editing) return;
+      span.dataset.editing = '1';
+      const ni = +span.dataset.ni;
+      const f = NUM_FIELDS[ni];
+      const raw = nParts[ni] !== undefined ? nParts[ni] : '';
+      const editor = document.createElement('input');
+      editor.type = 'number'; editor.step = '0.1';
+      editor.min = (f.min != null ? f.min : 0);
+      editor.className = 'dx-inline-input';
+      const cur = parseFloat(raw);
+      editor.value = isNaN(cur) ? 0 : cur;
+      const commit = () => {
+        let val = parseFloat(editor.value);
+        if (isNaN(val)) val = 0;
+        if (f.min != null && val < f.min) val = f.min;
+        nParts[ni] = val.toFixed(6);
+        finishNumEdit(span, ni);
+      };
+      editor.addEventListener('blur', commit);
+      editor.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); editor.blur(); } });
+      span.textContent = '';
+      span.appendChild(editor);
+      editor.focus();
+      try { editor.select(); } catch (e) {}
+    }
+    function finishNumEdit(span, ni) {
+      if (!span.dataset.editing) return;
+      delete span.dataset.editing;
+      span.innerHTML = numSpanInner(ni);
+      refresh();
+    }
+
+    /* ── (?) tooltips ── */
+    function showTip(el) {
+      let tip = document.getElementById('dx-tip');
+      if (!tip) { tip = document.createElement('div'); tip.id = 'dx-tip'; tip.className = 'dx-tip'; document.body.appendChild(tip); }
+      tip.textContent = (isES() ? el.dataset.tipEs : el.dataset.tipEn) || el.dataset.tipEn || '';
+      tip.style.display = 'block';
+      tip.style.left = '0'; tip.style.top = '0';
+      const r = el.getBoundingClientRect();
+      const tr = tip.getBoundingClientRect();
+      let left = r.left + r.width / 2 - tr.width / 2;
+      left = Math.max(8, Math.min(left, window.innerWidth - tr.width - 8));
+      let top = r.bottom + 8;
+      if (top + tr.height > window.innerHeight - 8) top = r.top - tr.height - 8;
+      tip.style.left = left + 'px';
+      tip.style.top = top + 'px';
+    }
+    function hideTip() { const t = document.getElementById('dx-tip'); if (t) t.style.display = 'none'; }
+
+    function decodeFromInput() { decode(document.getElementById('dx-url-input').value); }
+
+    /* ── Sample link (matches the spec's worked example) ── */
+    const SAMPLE = 'https://subbiclothes.com/settings-editor/?v=1&o=01011100100101001101100111110100'
+      + '&n=0_0_0_5.000000_0.000000'
+      + '&p=11101100000110000000000000000000000000000000000000000000';
+
+    /* ── Wire up ── */
+    // One delegated handler on the (stable) editor container drives all in-place
+    // editing, so it keeps working across full re-renders.
+    (function () {
+      const root = document.getElementById('dx-editor');
+      root.addEventListener('click', e => {
+        const help = e.target.closest('.dx-help');
+        if (help) { showTip(help); return; }              // (?) never toggles the chip underneath
+        const opt = e.target.closest('.dx-opt[data-oi]');
+        if (opt) { toggleOpt(+opt.dataset.oi, opt); return; }
+        const cell = e.target.closest('.dx-perm-cell[data-pi]');
+        if (cell) { togglePerm(+cell.dataset.pi, cell); return; }
+        const num = e.target.closest('.dx-num-edit');
+        if (num) { startNumEdit(num); }
+      });
+      root.addEventListener('change', e => {
+        const sel = e.target.closest('.dx-num-select[data-ni]');
+        if (sel) { nParts[+sel.dataset.ni] = sel.value; refresh(); }
+      });
+      root.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const help = e.target.closest && e.target.closest('.dx-help');
+        if (help) { e.preventDefault(); showTip(help); return; }
+        const t = e.target;
+        if (t.classList && (t.classList.contains('dx-opt') || t.classList.contains('dx-perm-cell') || t.classList.contains('dx-num-edit'))) {
+          e.preventDefault(); t.click();
+        }
+      });
+      root.addEventListener('mouseover', e => { const h = e.target.closest('.dx-help'); if (h) showTip(h); });
+      root.addEventListener('mouseout',  e => { if (e.target.closest('.dx-help')) hideTip(); });
+      root.addEventListener('focusin',   e => { const h = e.target.closest('.dx-help'); if (h) showTip(h); });
+      root.addEventListener('focusout',  e => { if (e.target.closest('.dx-help')) hideTip(); });
+      document.addEventListener('click', e => { if (!e.target.closest('.dx-help')) hideTip(); });
+
+      // Backups actions (delegated on the stable slot).
+      document.getElementById('dx-archive-slot').addEventListener('click', e => {
+        const btn = e.target.closest('[data-act]');
+        if (!btn) return;
+        const act = btn.dataset.act, slot = btn.dataset.slot;
+        if (act === 'load') {
+          const r = slot === 'auto' ? getAuto() : getManual()[+slot];
+          if (r) { document.getElementById('dx-url-input').value = buildUrl(r); decodeRecord(r); }
+        } else if (act === 'save')   { saveManualSlot(+slot); }
+        else if (act === 'remove')   { const m = getManual(); m[+slot] = null; setManual(m); renderArchiveCard(); }
+        else if (act === 'rename')   { startRename(+slot); }
+      });
+    })();
+
+    document.getElementById('dx-decode-btn').addEventListener('click', decodeFromInput);
+    document.getElementById('dx-url-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); decodeFromInput(); }
+    });
+    document.getElementById('dx-example').addEventListener('click', () => {
+      document.getElementById('dx-url-input').value = SAMPLE;
+      decode(SAMPLE);
+    });
+
+    // Re-balance the two card columns when the width changes (chips rewrap).
+    let _balTimer;
+    window.addEventListener('resize', () => { clearTimeout(_balTimer); _balTimer = setTimeout(balanceColumns, 150); });
+
+    // Boot: prefer the link the HUD sent; otherwise fall back to the auto backup.
+    if (window.location.search && /[?&][onp]=/.test(window.location.search)) {
+      document.getElementById('dx-url-input').value = window.location.href;
+      decode(window.location.search);
+    } else {
+      const auto = getAuto();
+      if (auto) {
+        document.getElementById('dx-url-input').value = buildUrl(auto);
+        decodeRecord(auto);
+      } else {
+        current = null;
+        document.getElementById('dx-editor').innerHTML = renderEmpty();
+        renderArchiveCard();
+      }
+    }
+
+    // Re-balance once web fonts/icons have loaded (their metrics change card
+    // heights — measuring before that is what left one column short).
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(balanceColumns);
+    window.addEventListener('load', balanceColumns);
+    setTimeout(balanceColumns, 400);
+  })();
+  </script>
+</body>
+</html>
