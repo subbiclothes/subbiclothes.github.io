@@ -2,6 +2,14 @@ function applyBtn(field) {
   return `<button class="apply-all-btn" title="${t('apply_to_all')}" onclick="showApplyMenu(event,'${field}')"><i class="fa-solid fa-angles-right"></i></button>`;
 }
 
+// A "?" help icon for a section header. Because the header itself toggles the
+// section on click, this stops the click from also collapsing/expanding it and
+// shows the tooltip inline so touch/keyboard users get it too (mouse hover is
+// wired globally in init.js, same as the body-part column help icons).
+function sectionHelp(key) {
+  return `<span class="help-icon" tabindex="0" data-tip="${esc(t(key))}" onclick="event.stopPropagation();showHelpTip(this)"><i class="fa-solid fa-circle-question"></i></span>`;
+}
+
 let _applyField = null;
 
 function showApplyMenu(e, fieldKey) {
@@ -141,11 +149,11 @@ function renderSettingsSectionHTML(d, showApplyButtons) {
     <div class="section" id="sec_settings">
       <div class="section-header" onclick="toggleSection('sec_settings')">
         <i class="fa-solid fa-sliders section-icon"></i>
-        <span class="section-label">${t('sec_settings')}</span>
+        <span class="section-label">${t('sec_settings')}${sectionHelp('sec_settings_help')}</span>
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
       <div class="section-body">
-        <div class="form-grid" style="margin-bottom:16px;">
+        <div class="form-grid">
           <div class="form-group">
             <label>${t('gender')}</label>
             <div style="display:flex;gap:5px;align-items:center;">
@@ -170,6 +178,24 @@ function renderSettingsSectionHTML(d, showApplyButtons) {
             <div class="toggle-desc">${t('pg_safe_mode_desc')}</div>
           </div>
         </div>
+      </div>
+    </div>`;
+}
+
+// The behavior/permission tristate toggles — split out from the Settings
+// section (which keeps just gender + PG-Safe mode) so it can live at the
+// bottom of the editor while gender/PG-Safe stay up top.
+function renderTogglesSectionHTML(d, showApplyButtons) {
+  const wip = `<span class="wip-badge">${t('wip')}</span>`;
+  const ab = field => showApplyButtons ? applyBtn(field) : '';
+  return `
+    <div class="section" id="sec_toggles">
+      <div class="section-header" onclick="toggleSection('sec_toggles')">
+        <i class="fa-solid fa-toggle-on section-icon"></i>
+        <span class="section-label">${t('sec_toggles')}${sectionHelp('sec_toggles_help')}</span>
+        <i class="fa-solid fa-chevron-down section-chevron"></i>
+      </div>
+      <div class="section-body">
         <div class="toggle-row">
           <div><div class="toggle-label">${t('anim_enabled')}</div><div class="toggle-desc">${t('anim_enabled_desc')}</div></div>
           <div style="display:flex;align-items:center;gap:5px;">${ab('animations_enabled')}${tristateHTML('f-anim', d.animations_enabled)}</div>
@@ -217,36 +243,47 @@ function renderBodypartsSectionHTML(d) {
       </div></td>
       <td><input type="text" class="bp-normal"    data-part="${p}" value="${esc(bp.normal||'')}"      placeholder="${esc(def.normal||'')}"            oninput="updatePartEnabled('${p}')"/></td>
       <td><input type="text" class="bp-underwear" data-part="${p}" value="${esc(bp.underwear||'')}"   placeholder="${esc(def.underwear||'')}"         oninput="updatePartEnabled('${p}')"/></td>
-      <td><input type="text" class="bp-wear-anim" data-part="${p}" value="${esc(bp.wear_anim||'')}"   placeholder="${esc(def.wear_anim||'—')}"        oninput="updatePartEnabled('${p}')"/></td>
-      <td><input type="number" class="bp-wear-time" data-part="${p}" value="${bp.wear_time??''}"     placeholder="${def.wear_time??1.0}" step="0.1" min="0" oninput="updatePartEnabled('${p}')"/></td>
-      <td><input type="text" class="bp-rem-anim"  data-part="${p}" value="${esc(bp.remove_anim||'')}" placeholder="${esc(def.remove_anim||'—')}"      oninput="updatePartEnabled('${p}')"/></td>
-      <td><input type="number" class="bp-rem-time"  data-part="${p}" value="${bp.remove_time??''}"   placeholder="${def.remove_time??1.0}" step="0.1" min="0" oninput="updatePartEnabled('${p}')"/></td>
+      <td class="bp-col-anim"><input type="text" class="bp-wear-anim" data-part="${p}" value="${esc(bp.wear_anim||'')}"   placeholder="${esc(def.wear_anim||'—')}"        oninput="updatePartEnabled('${p}')"/></td>
+      <td class="bp-col-anim bp-col-time"><input type="number" class="bp-wear-time" data-part="${p}" value="${bp.wear_time??''}"     placeholder="${def.wear_time??1.0}" step="0.1" min="0" oninput="updatePartEnabled('${p}')"/></td>
+      <td class="bp-col-anim"><input type="text" class="bp-rem-anim"  data-part="${p}" value="${esc(bp.remove_anim||'')}" placeholder="${esc(def.remove_anim||'—')}"      oninput="updatePartEnabled('${p}')"/></td>
+      <td class="bp-col-anim bp-col-time"><input type="number" class="bp-rem-time"  data-part="${p}" value="${bp.remove_time??''}"   placeholder="${def.remove_time??1.0}" step="0.1" min="0" oninput="updatePartEnabled('${p}')"/></td>
     </tr>`;
   }).join('');
+
+  const helpIcon = key => `<span class="help-icon" tabindex="0" data-tip="${esc(t(key))}"><i class="fa-solid fa-circle-question"></i></span>`;
 
   return `
     <div class="section" id="sec_bodyparts">
       <div class="section-header" onclick="toggleSection('sec_bodyparts')">
         <i class="fa-solid fa-person section-icon"></i>
-        <span class="section-label">${t('sec_bodyparts')}</span>
+        <span class="section-label">${t('sec_bodyparts')}${sectionHelp('sec_bodyparts_help')}</span>
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
-      <div class="section-body" style="overflow-x:auto;">
-        <p class="editor-hint editor-hint-bare" style="margin-bottom:10px;">
-          <i class="fa-solid fa-circle-info"></i>&nbsp;${t('bodyparts_hint')}
-        </p>
-        <table class="bodypart-table">
-          <thead><tr>
-            <th>${t('enabled_parts')}</th>
-            <th>${t('col_normal')}</th>
-            <th>${t('col_underwear')}</th>
-            <th>${t('col_wear_anim')}</th>
-            <th>${t('col_wear_time')}</th>
-            <th>${t('col_rem_anim')}</th>
-            <th>${t('col_rem_time')}</th>
-          </tr></thead>
-          <tbody>${bpRows}</tbody>
-        </table>
+      <div class="section-body">
+        <div class="bp-toolbar">
+          <p class="editor-hint editor-hint-bare">
+            <i class="fa-solid fa-circle-info"></i>&nbsp;${t('bodyparts_hint')}
+          </p>
+          <button type="button" class="bp-anim-toggle${bpAnimColsVisible ? ' active' : ''}" id="bpAnimToggleBtn" onclick="toggleBpAnimCols()">
+            <i class="fa-solid fa-film"></i>
+            <span id="bpAnimToggleLabel">${t(bpAnimColsVisible ? 'bp_hide_anim' : 'bp_show_anim')}</span>
+            <i class="fa-solid fa-chevron-down bp-anim-chevron"></i>
+          </button>
+        </div>
+        <div class="bp-table-wrap">
+          <table class="bodypart-table${bpAnimColsVisible ? '' : ' bp-anim-collapsed'}">
+            <thead><tr>
+              <th class="bp-col-part">${t('enabled_parts')}</th>
+              <th>${t('col_normal')}${helpIcon('col_normal_help')}</th>
+              <th>${t('col_underwear')}${helpIcon('col_underwear_help')}</th>
+              <th class="bp-col-anim">${t('col_wear_anim')}${helpIcon('col_wear_anim_help')}</th>
+              <th class="bp-col-anim bp-col-time">${t('col_wear_time')}${helpIcon('col_wear_time_help')}</th>
+              <th class="bp-col-anim">${t('col_rem_anim')}${helpIcon('col_rem_anim_help')}</th>
+              <th class="bp-col-anim bp-col-time">${t('col_rem_time')}${helpIcon('col_rem_time_help')}</th>
+            </tr></thead>
+            <tbody>${bpRows}</tbody>
+          </table>
+        </div>
         <details class="tip-box" style="margin-top:12px;">
           <summary><i class="fa-solid fa-circle-info tip-icon"></i>${t('footer_hint_summary')}</summary>
           <div class="tip-content">${t('footer_hint')}</div>
@@ -255,13 +292,23 @@ function renderBodypartsSectionHTML(d) {
     </div>`;
 }
 
+function toggleBpAnimCols() {
+  bpAnimColsVisible = !bpAnimColsVisible;
+  const table = document.querySelector('.bodypart-table');
+  if (table) table.classList.toggle('bp-anim-collapsed', !bpAnimColsVisible);
+  const btn = document.getElementById('bpAnimToggleBtn');
+  if (btn) btn.classList.toggle('active', bpAnimColsVisible);
+  const label = document.getElementById('bpAnimToggleLabel');
+  if (label) label.textContent = t(bpAnimColsVisible ? 'bp_hide_anim' : 'bp_show_anim');
+}
+
 function renderParticlesSectionHTML(d) {
   const wip = `<span class="wip-badge">${t('wip')}</span>`;
   return `
     <div class="section" id="sec_particles">
       <div class="section-header" onclick="toggleSection('sec_particles')">
         <i class="fa-solid fa-wand-magic-sparkles section-icon"></i>
-        <span class="section-label">${t('sec_particles')}</span>
+        <span class="section-label">${t('sec_particles')}${sectionHelp('sec_particles_help')}</span>
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
       <div class="section-body">
@@ -369,7 +416,7 @@ function renderTitleSectionHTML(d) {
     <div class="section" id="sec_title">
       <div class="section-header" onclick="toggleSection('sec_title')">
         <i class="fa-solid fa-tag section-icon"></i>
-        <span class="section-label">${t('sec_title')}</span>
+        <span class="section-label">${t('sec_title')}${sectionHelp('sec_title_help')}</span>
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
       <div class="section-body">
@@ -441,7 +488,7 @@ function renderBiographySectionHTML(d) {
     <div class="section" id="sec_biography">
       <div class="section-header" onclick="toggleSection('sec_biography')">
         <i class="fa-solid fa-id-card section-icon"></i>
-        <span class="section-label">${t('sec_biography')}</span>
+        <span class="section-label">${t('sec_biography')}${sectionHelp('sec_biography_help')}</span>
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
       <div class="section-body">
@@ -504,7 +551,7 @@ function renderEditor(id) {
     <div class="section" id="sec_tags">
       <div class="section-header" onclick="toggleSection('sec_tags')">
         <i class="fa-solid fa-tags section-icon"></i>
-        <span class="section-label">${t('sec_tags')}</span>
+        <span class="section-label">${t('sec_tags')}${sectionHelp('sec_tags_help')}</span>
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
       <div class="section-body">
@@ -526,6 +573,7 @@ function renderEditor(id) {
     ${renderParticlesSectionHTML(d)}
     ${renderTitleSectionHTML(d)}
     ${renderBiographySectionHTML(d)}
+    ${renderTogglesSectionHTML(d, true)}
 
   </div>`;
 
@@ -579,7 +627,7 @@ function renderGroupEditor(id) {
     <div class="section" id="sec_tags">
       <div class="section-header" onclick="toggleSection('sec_tags')">
         <i class="fa-solid fa-tags section-icon"></i>
-        <span class="section-label">${t('sec_group_tags')}</span>
+        <span class="section-label">${t('sec_group_tags')}${sectionHelp('sec_group_tags_help')}</span>
         <i class="fa-solid fa-chevron-down section-chevron"></i>
       </div>
       <div class="section-body">
@@ -601,6 +649,7 @@ function renderGroupEditor(id) {
     ${renderParticlesSectionHTML(d)}
     ${renderTitleSectionHTML(d)}
     ${renderBiographySectionHTML(d)}
+    ${renderTogglesSectionHTML(d, false)}
 
   </div>`;
 
@@ -756,14 +805,36 @@ function initTagWidget(entityId, kind) {
       document.body.appendChild(picker);
     }
     const curColor = tagColors[tag] || '';
-    picker.innerHTML = TAG_PALETTE.map(c =>
-      `<button class="tcp-swatch${c === curColor ? ' tcp-active' : ''}${c ? '' : ' tcp-reset'}" data-color="${esc(c)}" style="${c ? 'background:' + c : ''}" title="${c || 'Remove color'}"></button>`
-    ).join('');
+    picker.innerHTML = `
+      <input type="text" class="tcp-rename-input" value="${esc(tag)}" maxlength="24" spellcheck="false" autocomplete="off">
+      ${TAG_PALETTE.map(c =>
+        `<button class="tcp-swatch${c === curColor ? ' tcp-active' : ''}${c ? '' : ' tcp-reset'}" data-color="${esc(c)}" style="${c ? 'background:' + c : ''}" title="${c || 'Remove color'}"></button>`
+      ).join('')}
+    `;
     const rect = chipEl.getBoundingClientRect();
     picker.style.top  = (rect.bottom + 4) + 'px';
     picker.style.left = Math.min(rect.left, window.innerWidth - 184) + 'px';
     picker.style.display = 'flex';
+
+    const renameInput = picker.querySelector('.tcp-rename-input');
+    function commitRename() {
+      const newTag = normalize(renameInput.value);
+      if (!newTag || newTag === tag) { renameInput.value = tag; return; }
+      renameTagGlobally(tag, newTag);
+      const entity = getEntity();
+      hidden.value = kind === 'group' ? (entity.groupTags || '') : (entity.data.tags || '');
+      renderChips();
+      renderSidebar();
+      notify(t('tag_renamed'));
+      picker.style.display = 'none';
+    }
+    renameInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); commitRename(); }
+      else if (e.key === 'Escape') { e.preventDefault(); renameInput.value = tag; renameInput.blur(); }
+    });
+
     picker.onmousedown = e => {
+      if (e.target.closest('.tcp-rename-input')) return;
       e.preventDefault();
       const btn = e.target.closest('.tcp-swatch');
       if (!btn) return;

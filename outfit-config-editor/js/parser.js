@@ -152,6 +152,17 @@ function parseSettingsBlock(obj, d) {
   if (obj.particles_color_start) { d.particles_color_start = decodeColorFromInput(obj.particles_color_start); d.particles_color_start_enabled = true; }
   if (obj.particles_color_end)   { d.particles_color_end   = decodeColorFromInput(obj.particles_color_end);   d.particles_color_end_enabled   = true; }
 
+  // Advanced particle fields — mirror serializeSettingsBlock so an
+  // export → import round-trip doesn't silently drop them. Glow is written
+  // to the file scaled by 0.01 (see output.js), so undo that on the way in.
+  if (obj.particles_radius      !== undefined) d.particles_radius      = parseFloat(obj.particles_radius);
+  if (obj.particles_alpha_start !== undefined) d.particles_alpha_start = parseFloat(obj.particles_alpha_start);
+  if (obj.particles_alpha_end   !== undefined) d.particles_alpha_end   = parseFloat(obj.particles_alpha_end);
+  if (obj.particles_glow_start  !== undefined) d.particles_glow_start  = parseFloat((parseFloat(obj.particles_glow_start) * 100).toFixed(2));
+  if (obj.particles_glow_end    !== undefined) d.particles_glow_end    = parseFloat((parseFloat(obj.particles_glow_end) * 100).toFixed(2));
+  if (obj.particles_size_start  !== undefined) d.particles_size_start  = parseFloat(obj.particles_size_start);
+  if (obj.particles_size_end    !== undefined) d.particles_size_end    = parseFloat(obj.particles_size_end);
+
   if (obj.title_enabled !== undefined) d.title_enabled = obj.title_enabled;
   if (obj.title_text !== undefined) {
     const decoded = decodeTitleText(obj.title_text);

@@ -37,6 +37,19 @@ function groupName(o) {
   return g ? g.name : '';
 }
 
+function renameTagGlobally(oldTag, newTag) {
+  const replaceIn = str => {
+    const tags = (str || '').trim().split(/\s+/).filter(Boolean).map(x => x === oldTag ? newTag : x);
+    return [...new Set(tags)].join(' ');
+  };
+  outfits.forEach(o => { o.data.tags = replaceIn(o.data.tags); });
+  groups.forEach(g => { g.groupTags = replaceIn(g.groupTags); });
+  if (tagColors[oldTag] !== undefined && tagColors[newTag] === undefined) tagColors[newTag] = tagColors[oldTag];
+  delete tagColors[oldTag];
+  saveTagColors();
+  saveToStorage();
+}
+
 function findOrCreateGroupByName(name) {
   name = String(name).trim();
   let g = groups.find(x => x.name === name);
@@ -47,11 +60,40 @@ function findOrCreateGroupByName(name) {
   return g;
 }
 
-function notify(msg) {
+function showHelpTip(iconEl) {
+  let tip = document.getElementById('_helpTip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.id = '_helpTip';
+    tip.className = 'help-tip';
+    document.body.appendChild(tip);
+  }
+  tip.textContent = iconEl.dataset.tip || '';
+  tip.style.display = 'block';
+  tip.style.left = '0px';
+  tip.style.top  = '0px';
+  const iconRect = iconEl.getBoundingClientRect();
+  const tipRect  = tip.getBoundingClientRect();
+  let left = iconRect.left + iconRect.width / 2 - tipRect.width / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tipRect.width - 8));
+  let top = iconRect.bottom + 6;
+  if (top + tipRect.height > window.innerHeight - 8) top = iconRect.top - tipRect.height - 6;
+  tip.style.left = left + 'px';
+  tip.style.top  = top + 'px';
+}
+
+function hideHelpTip() {
+  const tip = document.getElementById('_helpTip');
+  if (tip) tip.style.display = 'none';
+}
+
+function notify(msg, type, duration) {
   const el = document.getElementById('notif');
   el.textContent = msg;
+  el.classList.toggle('notif-warning', type === 'warning');
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2200);
+  clearTimeout(notifyTimer);
+  notifyTimer = setTimeout(() => el.classList.remove('show'), duration || 2200);
 }
 
 function setTristate(btn) {

@@ -396,21 +396,64 @@ textarea { resize: vertical; min-height: 60px; }
 }
 
 /* ── BODYPART TABLE ── */
-.bodypart-table { width: 100%; border-collapse: collapse; }
+.bp-table-wrap { overflow-x: auto; }
+.bodypart-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .bodypart-table th {
-  font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--text-dim); padding: 0 8px 8px; font-weight: 600;
+  font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-dim); padding: 0 6px 8px; font-weight: 600;
   border-bottom: 1px solid var(--border-dim); text-align: left;
+  white-space: normal; line-height: 1.35; vertical-align: bottom;
 }
 .bodypart-table td { padding: 5px 6px; vertical-align: middle; }
 .bodypart-table tr:not(:last-child) td { border-bottom: 1px solid rgba(255,255,255,0.03); }
+.bodypart-table.bp-anim-collapsed .bp-col-anim { display: none; }
+.bodypart-table .bp-col-part { width: 108px; }
+.bodypart-table .bp-col-time { width: 72px; }
+
+/* Toolbar row: hint on the left, animation toggle on the right */
+.bp-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.bp-toolbar .editor-hint { margin: 0; flex: 1 1 220px; }
+.bp-anim-toggle {
+  display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+  background: transparent; color: var(--text-muted);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  font-family: 'Rajdhani', sans-serif; font-weight: 600;
+  font-size: 13px; letter-spacing: .5px;
+  padding: 6px 12px; cursor: pointer; white-space: nowrap;
+  transition: all .15s;
+}
+.bp-anim-toggle:hover { color: var(--text-bright); border-color: rgba(255,255,255,0.25); background: var(--bg-hover); }
+.bp-anim-toggle.active { background: var(--pink-soft); color: var(--pink); border-color: var(--border); }
+.bp-anim-toggle .bp-anim-chevron { font-size: 10px; transition: transform .2s; }
+.bp-anim-toggle.active .bp-anim-chevron { transform: rotate(180deg); }
+
+.help-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 5px; color: var(--text-dim); cursor: help;
+  font-size: 12px; vertical-align: middle;
+  transition: color .12s;
+}
+.help-icon:hover { color: var(--pink); }
+.help-tip {
+  position: fixed; z-index: 9500; display: none;
+  max-width: 240px; padding: 8px 12px;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-bright); font-family: 'Rajdhani', sans-serif;
+  font-size: 13px; font-weight: 500; line-height: 1.4;
+  box-shadow: 0 8px 24px rgba(0,0,0,.6);
+  pointer-events: none;
+}
 .part-label {
   font-family: 'Share Tech Mono', monospace; font-size: 14px;
-  color: var(--pink); white-space: nowrap; padding-right: 8px;
-  min-width: 68px;
+  color: var(--pink); white-space: nowrap; padding-right: 4px;
+  overflow: hidden; text-overflow: ellipsis;
 }
-.bodypart-table input[type=text] { font-size: 16px; padding: 5px 8px; }
-.bodypart-table input[type=number] { font-size: 15px; padding: 5px 8px; width: 62px; -moz-appearance: textfield; }
+.bodypart-table input[type=text] { font-size: 16px; padding: 5px 8px; width: 100%; }
+.bodypart-table input[type=number] { font-size: 15px; padding: 5px 6px; width: 100%; -moz-appearance: textfield; }
 .bodypart-table input[type=number]::-webkit-inner-spin-button,
 .bodypart-table input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .adv-input { -moz-appearance: textfield; }
@@ -527,6 +570,7 @@ textarea { resize: vertical; min-height: 60px; }
   transition: all .3s; pointer-events: none;
 }
 .notif.show { transform: translateY(0); opacity: 1; }
+.notif-warning { border-color: var(--warning); color: var(--warning); }
 
 /* ── UPLOAD ZONE ── */
 .upload-zone {
@@ -917,6 +961,16 @@ input[type=color].color-swatch::-moz-color-swatch { border: none; border-radius:
   border-radius: var(--radius);
   box-shadow: 0 8px 28px rgba(0,0,0,.7);
 }
+.tcp-rename-input {
+  width: 100%; margin-bottom: 5px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  color: var(--text-bright);
+  font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 600;
+  padding: 5px 8px; outline: none;
+}
+.tcp-rename-input:focus { border-color: var(--pink); }
 .tcp-swatch {
   width: 24px; height: 24px; border-radius: 50%;
   border: 2px solid transparent; cursor: pointer;

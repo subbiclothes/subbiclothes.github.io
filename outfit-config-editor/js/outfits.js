@@ -137,6 +137,7 @@ function deleteOutfit(id) {
 }
 
 function selectOutfit(id) {
+  resetGroupDeleteClickState();
   saveActiveEditor();
   activeMode = 'outfit';
   activeId = id;
