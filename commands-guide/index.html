@@ -17,8 +17,13 @@
     /* ── Page-specific: command cards/tables. Reuses shell.css tokens
        (--pink, --bg-card, --border-dim, etc.) so this page matches
        Home/FAQ/Stable vs DEV exactly — same pattern as stable-vs-dev. ── */
+    :root {
+      /* Width experiment: widen nav/footer/content on this page only.
+         Roll out site-wide later by moving this value into shell.css. */
+      --content-width: min(1600px, 90vw);
+    }
     main { flex: 1; }
-    .cmd-wrap { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+    .cmd-wrap { max-width: var(--content-width); margin: 0 auto; padding: 48px 24px 80px; }
 
     .page-eyebrow { font-size: var(--fs-label); letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
 
@@ -37,16 +42,20 @@
        narrow columns (Category/Channel) from wasting space while forcing
        long descriptions to wrap within their column instead of overflowing
        the card and requiring horizontal scroll. */
-    .cmd-table { width: 100%; border-collapse: collapse; margin: 0 0 4px; font-size: var(--fs-meta); table-layout: fixed; }
-    .cmd-table th { text-align: left; padding: 11px 16px; background: var(--bg-panel); color: var(--text-dim); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border-dim); }
-    .cmd-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-dim); color: var(--text-muted); vertical-align: top; word-wrap: break-word; overflow-wrap: anywhere; }
+    /* Sizes match the FAQ's Q&A (.faq-answer / .faq-item summary), which
+       reads as the closer sibling to this page than stable-vs-dev's denser
+       5-column comparison table — fs-body/fs-meta, not smaller. */
+    .cmd-table { width: 100%; border-collapse: collapse; margin: 0 0 4px; font-size: var(--fs-body); table-layout: fixed; }
+    .cmd-table th { text-align: left; padding: 11px 16px; background: var(--bg-panel); color: var(--text-dim); font-size: var(--fs-label); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border-dim); }
+    .cmd-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-dim); color: var(--text-muted); vertical-align: top; word-wrap: break-word; overflow-wrap: anywhere; line-height: 1.7; }
     .cmd-table tr:last-child td { border-bottom: none; }
     .cmd-table tr:hover td { background: var(--bg-hover); }
 
     /* Generic fallback so every <code> on the page gets the same pill look
        (table cells, info-cards, the standalone perm.<category> syntax line)
-       instead of only the ones inside .cmd-table. */
-    code { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--pink); background: var(--pink-soft); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; }
+       instead of only the ones inside .cmd-table. Same size as the FAQ's
+       inline <code>. */
+    code { font-family: 'Share Tech Mono', monospace; font-size: var(--fs-meta); color: var(--pink); background: var(--pink-soft); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
 
     .cmd-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
     .cmd-info-card { background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 14px 16px; font-size: var(--fs-body); }
@@ -56,7 +65,71 @@
     .cmd-info-card.blue i { color: rgba(59,130,246,0.9); }
     .cmd-info-card.pink { border-left: 3px solid var(--pink); background: var(--pink-soft); }
 
+    /* ── Command Reference: collapsible per-category groups.
+       Native <details>/<summary> — no JS, and collapsed content stays in
+       the DOM so the browser's own Ctrl+F still finds and auto-expands it
+       (a JS tab/show-hide approach would hide it from page search). ── */
+    .cmd-groups { display: flex; flex-direction: column; gap: 10px; }
+    .cmd-group { background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius); overflow: hidden; }
+    .cmd-group[open] { border-color: var(--border); }
+    .cmd-group summary {
+      list-style: none; cursor: pointer;
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; font-size: var(--fs-body); color: var(--text);
+      transition: background .15s;
+    }
+    .cmd-group summary::-webkit-details-marker { display: none; }
+    .cmd-group summary:hover { background: var(--bg-hover); }
+    .cmd-group-chevron { color: var(--pink); font-size: 14px; flex-shrink: 0; transition: transform .15s; }
+    .cmd-group[open] .cmd-group-chevron { transform: rotate(90deg); }
+    .cmd-group-name { flex: 1; }
+    .cmd-group-count {
+      font-family: 'Share Tech Mono', monospace; font-weight: 400; letter-spacing: 0; text-transform: none;
+      font-size: var(--fs-label); color: var(--text-muted);
+      background: var(--bg-card); border: 1px solid var(--border-dim);
+      border-radius: 999px; padding: 2px 11px;
+    }
+    .cmd-group-body { padding: 0 8px 8px; }
+    .cmd-group .cmd-table { margin: 0; }
+    .cmd-group .cmd-table th { background: transparent; }
+
+    /* Secondary forms of the same command — true aliases ("alias:", a
+       renamed equivalent) or a different-shaped fast-path ("special:", e.g.
+       a symbol shortcut for the same action) — demoted below the primary
+       form instead of piling up as equal-weight code pills in the same
+       line. The label text says which; both share this block/size
+       treatment. Neutral background+border (not pink) like the FAQ's
+       inline <code>, but still var(--text) for the value so it stays
+       legible — only the label word is dimmed. */
+    .cmd-aka { display: block; margin-top: 4px; font-size: var(--fs-meta); color: var(--text-dim); }
+    .cmd-aka code { font-size: var(--fs-meta); padding: 0 5px; color: var(--text); background: var(--bg-hover); border-color: var(--border-dim); }
+
+    .cmd-group-note { color: var(--text-muted); font-size: var(--fs-meta); line-height: 1.7; margin: 0 8px 10px; }
+
+    /* ── Toolbar: search + expand/collapse-all. Both are convenience-only —
+       every row already exists in the HTML regardless of JS, see the
+       .cmd-groups comment above. ── */
+    .cmd-toolbar { display: flex; align-items: center; gap: 12px; margin: 4px 0 18px; flex-wrap: wrap; }
+    .cmd-search { position: relative; flex: 1; min-width: 220px; }
+    .cmd-search i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 14px; pointer-events: none; }
+    .cmd-search input {
+      width: 100%; background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: var(--radius);
+      color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: var(--fs-body);
+      padding: 10px 14px 10px 38px; transition: border-color .15s;
+    }
+    .cmd-search input:focus { outline: none; border-color: var(--border); }
+    .cmd-search input::placeholder { color: var(--text-dim); }
+    .cmd-toggle-all { white-space: nowrap; font-size: 14px; padding: 10px 16px; }
+    .cmd-toggle-label-collapse { display: none; }
+    .cmd-toggle-all.is-all-open .cmd-toggle-label-expand { display: none; }
+    .cmd-toggle-all.is-all-open .cmd-toggle-label-collapse { display: inline; }
+    .cmd-group.cmd-group--hidden { display: none; }
+    .cmd-table tr.cmd-row--hidden { display: none; }
+
     @media (max-width: 600px) {
+      .cmd-toolbar { flex-direction: column; align-items: stretch; }
       .cmd-wrap { padding: 40px 16px 60px; }
       .cmd-info-grid { grid-template-columns: 1fr; }
     }
@@ -73,13 +146,16 @@
         <h1><span data-lc="en">Chat Commands</span><span data-lc="es">Comandos de Chat</span></h1>
       </div>
       <p class="cmd-lead">
-        <span data-lc="en">Power-user shortcuts and text commands — useful for gestures or fast execution without opening menus. Every command has a menu equivalent; nothing here is required to use the HUD.</span>
-        <span data-lc="es">Atajos y comandos de texto para usuarios avanzados — útiles para gestos o ejecución rápida sin abrir menús. Todo comando tiene un equivalente en el menú; nada de esto es obligatorio para usar el HUD.</span>
+        <span data-lc="en">Power-user shortcuts and text commands — useful for gestures or fast execution without opening menus.<br><br>Not every command has a menu equivalent: some command-only settings (especially newer or experimental ones) don't appear in the Settings menu until they're sufficiently tested and integrated, and a few commands unlock special functions that can't be used any other way.</span>
+        <span data-lc="es">Atajos y comandos de texto para usuarios avanzados — útiles para gestos o ejecución rápida sin abrir menús.<br><br>No todos los comandos tienen contraparte en el menú: algunos ajustes solo disponibles por comando (especialmente los más nuevos o experimentales) no aparecen en el menú de Settings hasta estar lo suficientemente probados e integrados, y algunos comandos tienen funciones especiales que no pueden usarse de otra forma.</span>
       </p>
 
       <div class="cmd-card">
         <h2><i class="fa-solid fa-satellite-dish"></i> <span data-lc="en">Channels</span><span data-lc="es">Canales</span></h2>
-        <p><span data-lc="en">Which channel you can use depends on your privilege level:</span><span data-lc="es">El canal que puedes usar depende de tu nivel de privilegio:</span></p>
+        <p>
+          <span data-lc="en">Which channel you can use depends on your permissions and your situation relative to the HUD — some are gated by access category, others by your relationship to the owner (admin, master, external). A couple of rules apply across all of them: names are always legacy names (the "Resident" surname is optional), and messages coming from someone else — another avatar, or an object — usually need the <code>sc:</code> prefix at the start.</span>
+          <span data-lc="es">El canal que puedes usar depende de tus permisos y de tu situación respecto al HUD — algunos dependen de la categoría de acceso, otros de tu relación con el dueño (admin, master, externo). Un par de normas se aplican a todos ellos: los nombres siempre son legacy names (el apellido "Resident" es opcional), y los mensajes que vienen de otra persona — otro avatar, o un objeto — normalmente necesitan el prefijo <code>sc:</code> al principio.</span>
+        </p>
         <table class="cmd-table">
           <colgroup><col style="width:12%"><col style="width:20%"><col style="width:68%"></colgroup>
           <thead><tr><th><span data-lc="en">Channel</span><span data-lc="es">Canal</span></th><th><span data-lc="en">Who</span><span data-lc="es">Quién</span></th><th><span data-lc="en">Notes</span><span data-lc="es">Notas</span></th></tr></thead>
@@ -96,21 +172,21 @@
               <td><code>/65</code></td>
               <td>VIP / Masters</td>
               <td>
-                <span data-lc="en">The owner, an actively-granted admin, anyone on the Masterlist, or anyone whose access category has <code>Adv.Commands</code> enabled. Broadly equivalent in power to <code>/55</code>. Optional targeting: <code>/65 &lt;name&gt; &lt;command&gt;</code> only runs on that person's HUD; without a name it runs on every HUD you qualify on — useful if you're a master on more than one.</span>
-                <span data-lc="es">El dueño, un admin con acceso concedido activamente, cualquiera en la Masterlist, o cualquiera cuya categoría de acceso tenga <code>Adv.Commands</code> activado. Su poder es, a grandes rasgos, equivalente a <code>/55</code>. Dirigido opcional: <code>/65 &lt;nombre&gt; &lt;comando&gt;</code> solo se ejecuta en el HUD de esa persona; sin nombre se ejecuta en todos los HUDs donde tengas acceso — útil si eres master en más de uno.</span>
+                <span data-lc="en">An actively-granted admin, anyone on the Masterlist, or anyone whose access category has <code>Adv.Commands</code> enabled. Broadly equivalent in power to <code>/55</code>.<br><br>Optional targeting: <code>/65 &lt;name&gt; &lt;command&gt;</code> only runs on that person's HUD; without a name it runs on every HUD you qualify on — useful if you're a master on more than one.</span>
+                <span data-lc="es">Un admin con acceso concedido activamente, cualquiera en la Masterlist, o cualquiera cuya categoría de acceso tenga <code>Adv.Commands</code> activado. Su poder es, a grandes rasgos, equivalente a <code>/55</code>.<br><br>Dirigido opcional: <code>/65 &lt;nombre&gt; &lt;comando&gt;</code> solo se ejecuta en el HUD de esa persona; sin nombre se ejecuta en todos los HUDs donde tengas acceso — útil si eres master en más de uno.</span>
               </td>
             </tr>
             <tr>
               <td><code>/45</code></td>
               <td><span data-lc="en">External / remote</span><span data-lc="es">Externo / remoto</span></td>
               <td>
-                <span data-lc="en">Anyone, only if "Remote Access" is enabled and their category has the <code>Remote</code> permission. Message must be prefixed with the owner's legacy name, e.g. <code>Jane Doe wear.outfit MyLook</code>.</span>
-                <span data-lc="es">Cualquiera, solo si "Remote Access" está activado y su categoría tiene el permiso <code>Remote</code>. El mensaje debe llevar el legacy name del dueño como prefijo, p. ej. <code>Jane Doe wear.outfit MyLook</code>.</span>
+                <span data-lc="en">Anyone whose access category (Public, Whitelist, Friends, or Group) has the <code>Remote</code> permission enabled, and has permission for whatever command they're running within that same category.<br><br>Commands must be prefixed with <code>sc:</code> followed by the owner's legacy name, e.g. <code>/45 sc:Jane Softpaw menu</code>.</span>
+                <span data-lc="es">Cualquiera cuya categoría de acceso (Public, Whitelist, Friends o Group) tenga el permiso <code>Remote</code> activado, y que además tenga permiso para el comando que esté ejecutando dentro de esa misma categoría.<br><br>Los comandos deben llevar el prefijo <code>sc:</code> seguido del legacy name del dueño, p. ej. <code>/45 sc:Jane Softpaw menu</code>.</span>
               </td>
             </tr>
             <tr>
               <td><code>/75</code></td>
-              <td><span data-lc="en">Creator only</span><span data-lc="es">Solo el creador</span></td>
+              <td><span data-lc="en">Admins only</span><span data-lc="es">Solo admins</span></td>
               <td>
                 <span data-lc="en">Administration channel, reserved for the creator and hardcoded admin UUIDs. Maintenance/support tooling — not relevant to end users, not documented here.</span>
                 <span data-lc="es">Canal de administración, reservado para el creador y UUIDs de admin fijados en el código. Herramientas de mantenimiento/soporte — no relevante para usuarios finales, no documentado aquí.</span>
@@ -121,8 +197,27 @@
       </div>
 
       <div class="cmd-card">
-        <h2><i class="fa-solid fa-key"></i> <span data-lc="en">Permission Command Syntax</span><span data-lc="es">Sintaxis de Comandos de Permisos</span></h2>
-        <p><code>perm.&lt;category&gt;.&lt;name&gt;[=&lt;value&gt;]</code></p>
+        <h2><i class="fa-solid fa-code"></i> <span data-lc="en">Commands Syntax</span><span data-lc="es">Sintaxis de Comandos</span></h2>
+        <p>
+          <span data-lc="en">Most commands follow one of three shapes: configuration, assignment, and execution (menu-opening commands are just a special case of execution).</span>
+          <span data-lc="es">La mayoría de comandos siguen una de tres formas: configuración, asignación y ejecución (los comandos que abren un menú son solo un caso particular de ejecución).</span>
+        </p>
+        <p>
+          <span data-lc="en"><strong>Configuration</strong> — <code>&lt;command&gt;.&lt;category&gt;[.&lt;subcategory&gt;]=&lt;bool&gt;</code>. Turns something on/off, e.g. <code>perm.public=true</code>.</span>
+          <span data-lc="es"><strong>Configuración</strong> — <code>&lt;comando&gt;.&lt;categoría&gt;[.&lt;subcategoría&gt;]=&lt;bool&gt;</code>. Activa/desactiva algo, p. ej. <code>perm.public=true</code>.</span>
+        </p>
+        <p>
+          <span data-lc="en"><strong>Assignment</strong> — <code>&lt;command&gt;.&lt;option&gt; &lt;value&gt;</code>. Sets an arbitrary value, e.g. <code>title.color &lt;value&gt;</code>.</span>
+          <span data-lc="es"><strong>Asignación</strong> — <code>&lt;comando&gt;.&lt;opción&gt; &lt;valor&gt;</code>. Establece un valor arbitrario, p. ej. <code>title.color &lt;value&gt;</code>.</span>
+        </p>
+        <p>
+          <span data-lc="en"><strong>Execution</strong> — <code>&lt;command&gt;</code> / <code>&lt;prefix&gt;.&lt;command&gt;</code>. Runs an action directly, no value involved, e.g. <code>refresh</code>, <code>outfit.refresh</code>. Commands ending in <code>.menu</code> (e.g. <code>outfit.menu</code>) follow this same shape, but open a UI panel instead of running the action directly.</span>
+          <span data-lc="es"><strong>Ejecución</strong> — <code>&lt;comando&gt;</code> / <code>&lt;prefijo&gt;.&lt;comando&gt;</code>. Ejecuta una acción directamente, sin valor de por medio, p. ej. <code>refresh</code>, <code>outfit.refresh</code>. Los comandos que terminan en <code>.menu</code> (p. ej. <code>outfit.menu</code>) siguen esta misma forma, pero abren un panel de interfaz en vez de ejecutar la acción directamente.</span>
+        </p>
+        <p>
+          <span data-lc="en">The permission system (<code>perm.*</code>) is a concrete example of the configuration shape:</span>
+          <span data-lc="es">El sistema de permisos (<code>perm.*</code>) es un ejemplo concreto de la forma de configuración:</span>
+        </p>
         <div class="cmd-info-grid">
           <div class="cmd-info-card blue"><strong><i class="fa-solid fa-users"></i> <span data-lc="en">Categories</span><span data-lc="es">Categorías</span></strong><code>pub</code>/<code>public</code>, <code>wl</code>/<code>whitelist</code>, <code>fr</code>/<code>friends</code>, <code>gr</code>/<code>group</code></div>
           <div class="cmd-info-card pink"><strong><i class="fa-solid fa-list-check"></i> <span data-lc="en">Names</span><span data-lc="es">Nombres</span></strong><code>clothes</code>, <code>outfits</code>, <code>accessories</code>, <code>hairstyle</code>, <code>nudity</code>, <code>remote</code>, <code>random</code>, <code>distance</code>, <code>huds</code>, <code>adv.commands</code>/<code>advcmd</code>, <code>hid.folders</code>/<code>hidfld</code></div>
@@ -139,93 +234,367 @@
           <span data-lc="en">From the most current DEV-4.1 command tables — still <strong>work in progress</strong>, not fully complete.</span>
           <span data-lc="es">De las tablas de comandos más recientes de DEV-4.1 — <strong>aún en desarrollo</strong>, no está completa del todo.</span>
         </p>
-        <table class="cmd-table">
-          <colgroup><col style="width:15%"><col style="width:37%"><col style="width:48%"></colgroup>
-          <thead><tr><th><span data-lc="en">Category</span><span data-lc="es">Categoría</span></th><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
-          <tbody>
-            <tr><td>Outfit</td><td><code>@@&lt;path&gt;</code></td><td><span data-lc="en">Shortcut: replace avatar/outfit</span><span data-lc="es">Atajo: reemplaza avatar/outfit</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.wear &lt;path&gt;</code> / <code>.replace</code> / <code>.change</code></td><td><span data-lc="en">Replace outfit (no argument opens the menu)</span><span data-lc="es">Reemplaza el outfit (sin argumento abre el menú)</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.menu</code></td><td><span data-lc="en">Open the outfits menu</span><span data-lc="es">Abre el menú de outfits</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.random</code></td><td><span data-lc="en">Random outfit</span><span data-lc="es">Outfit aleatorio</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.back</code> / <code>.prev</code> / <code>.undo</code></td><td><span data-lc="en">Return to the previous outfit</span><span data-lc="es">Vuelve al outfit anterior</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.refresh</code> / <code>.reload</code> / <code>.rebuild</code> / <code>refresh</code></td><td><span data-lc="en">Reload the current outfit</span><span data-lc="es">Recarga el outfit actual</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.qdress</code> / <code>qdress</code></td><td><span data-lc="en">Quick dress</span><span data-lc="es">Vestido rápido</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.qundress</code> / <code>qundress</code></td><td><span data-lc="en">Quick undress</span><span data-lc="es">Desvestido rápido</span></td></tr>
-            <tr><td>Outfit</td><td><code>outfit.safe</code> / <code>.pg+</code></td><td><span data-lc="en">Trigger safe mode</span><span data-lc="es">Activa el modo seguro</span></td></tr>
-            <tr><td>Outfit</td><td><code>avatar.lock</code> / <code>.hardlock</code></td><td><span data-lc="en">Lock the whole avatar — hides "Avatars" from every menu and blocks avatar/outfit-change commands; see note below</span><span data-lc="es">Bloquea el avatar completo — oculta "Avatars" de todos los menús y bloquea los comandos de cambio de avatar/outfit; ver nota más abajo</span></td></tr>
-            <tr><td>Outfit</td><td><code>avatar.unlock</code></td><td><span data-lc="en">Remove the avatar lock</span><span data-lc="es">Quita el bloqueo de avatar</span></td></tr>
-            <tr><td><span data-lc="en">Accessories</span><span data-lc="es">Accesorios</span></td><td><code>++&lt;item&gt;</code> / <code>acc.add &lt;item|all&gt;</code></td><td><span data-lc="en">Add accessory</span><span data-lc="es">Añade un accesorio</span></td></tr>
-            <tr><td><span data-lc="en">Accessories</span><span data-lc="es">Accesorios</span></td><td><code>--&lt;item&gt;</code> / <code>acc.remove &lt;item|all&gt;</code></td><td><span data-lc="en">Remove accessory</span><span data-lc="es">Quita un accesorio</span></td></tr>
-            <tr><td><span data-lc="en">Accessories</span><span data-lc="es">Accesorios</span></td><td><code>acc.menu</code></td><td><span data-lc="en">Accessories menu. The whole <code>acc.*</code> namespace also works as <code>accessory.*</code> / <code>accessories.*</code></span><span data-lc="es">Menú de accesorios. Todo el namespace <code>acc.*</code> también funciona como <code>accessory.*</code> / <code>accessories.*</code></span></td></tr>
-            <tr><td>HUDs</td><td><code>h++&lt;item&gt;</code> / <code>huds.add</code></td><td><span data-lc="en">Add HUD</span><span data-lc="es">Añade un HUD</span></td></tr>
-            <tr><td>HUDs</td><td><code>h--&lt;item&gt;</code> / <code>huds.remove</code></td><td><span data-lc="en">Remove HUD</span><span data-lc="es">Quita un HUD</span></td></tr>
-            <tr><td>HUDs</td><td><code>huds.menu</code></td><td><span data-lc="en">HUDs menu</span><span data-lc="es">Menú de HUDs</span></td></tr>
-            <tr><td><span data-lc="en">HUD (self)</span><span data-lc="es">HUD (propio)</span></td><td><code>hud.swap</code></td><td><span data-lc="en">Swap HUD position</span><span data-lc="es">Intercambia la posición del HUD</span></td></tr>
-            <tr><td><span data-lc="en">HUD (self)</span><span data-lc="es">HUD (propio)</span></td><td><code>hud.size ±N</code> / <code>.show</code> / <code>.reset</code></td><td><span data-lc="en">Scale the HUD</span><span data-lc="es">Escala el HUD</span></td></tr>
-            <tr><td><span data-lc="en">HUD (self)</span><span data-lc="es">HUD (propio)</span></td><td><code>hud.texture.&lt;part&gt;=&lt;skin&gt;</code></td><td><span data-lc="en">Change a HUD part's texture</span><span data-lc="es">Cambia la textura de una parte del HUD</span></td></tr>
-            <tr><td><span data-lc="en">Hair</span><span data-lc="es">Cabello</span></td><td><code>hair.set &lt;style&gt;</code></td><td><span data-lc="en">Set hairstyle directly</span><span data-lc="es">Establece el peinado directamente</span></td></tr>
-            <tr><td><span data-lc="en">Hair</span><span data-lc="es">Cabello</span></td><td><code>hair.menu</code></td><td><span data-lc="en">Open hairstyle menu</span><span data-lc="es">Abre el menú de peinados</span></td></tr>
-            <tr><td><span data-lc="en">Clothing</span><span data-lc="es">Ropa</span></td><td><code>&lt;part&gt;++</code> / <code>&lt;part&gt;--</code></td><td><span data-lc="en">Cycle state (dressed → underwear → undressed)</span><span data-lc="es">Cicla el estado (vestido → ropa interior → desnudo)</span></td></tr>
-            <tr><td><span data-lc="en">Clothing</span><span data-lc="es">Ropa</span></td><td><code>&lt;part&gt;.set &lt;state&gt;</code></td><td><span data-lc="en">Set state directly (head/face/upper/torso/arms/hands/waist/crotch/legs/feet/bodysuit)</span><span data-lc="es">Establece el estado directamente (head/face/upper/torso/arms/hands/waist/crotch/legs/feet/bodysuit)</span></td></tr>
-            <tr><td><span data-lc="en">Clothing</span><span data-lc="es">Ropa</span></td><td><code>clothes.lock</code> / <code>.hardlock</code> / <code>.unlock [part]</code></td><td><span data-lc="en">Lock/unlock clothing — see note below</span><span data-lc="es">Bloquea/desbloquea la ropa — ver nota más abajo</span></td></tr>
-            <tr><td><span data-lc="en">Lists</span><span data-lc="es">Listas</span></td><td><code>+&lt;list&gt; &lt;name&gt;</code> / <code>-&lt;list&gt; &lt;name&gt;</code> / <code>=&lt;list&gt;</code></td><td><span data-lc="en">Add/remove/view a list (wl/whitelist/wlist, bl/blacklist/blist, twl, tbl, sreg, dreg, m/masters/master)</span><span data-lc="es">Añade/quita/muestra una lista (wl/whitelist/wlist, bl/blacklist/blist, twl, tbl, sreg, dreg, m/masters/master)</span></td></tr>
-            <tr><td><span data-lc="en">Lists</span><span data-lc="es">Listas</span></td><td><code>whitelist.add/.remove/.list/.clear</code> <span data-lc="en">(same for</span><span data-lc="es">(igual para</span> <code>blacklist.</code>, <code>masters.</code>)</td><td><span data-lc="en">Long form of the shorthand above, plus <code>.clear</code> to wipe the whole list</span><span data-lc="es">Forma larga del atajo de arriba, más <code>.clear</code> para vaciar la lista entera</span></td></tr>
-            <tr><td><span data-lc="en">Config</span><span data-lc="es">Ajustes</span></td><td><code>settings.&lt;opt&gt;=&lt;val&gt;</code> / <code>stg.</code> / <code>set.</code></td><td><span data-lc="en">General settings — omit <code>=&lt;val&gt;</code> to toggle the current state instead</span><span data-lc="es">Ajustes generales — omite <code>=&lt;val&gt;</code> para invertir el estado actual</span></td></tr>
-            <tr><td><span data-lc="en">Config</span><span data-lc="es">Ajustes</span></td><td><code>access.&lt;opt&gt;</code> / <code>perm.&lt;opt&gt;</code></td><td><span data-lc="en">Permissions and access — omit <code>=&lt;val&gt;</code> to toggle the current state instead</span><span data-lc="es">Permisos y acceso — omite <code>=&lt;val&gt;</code> para invertir el estado actual</span></td></tr>
-            <tr><td><span data-lc="en">Config</span><span data-lc="es">Ajustes</span></td><td><code>pgsafe</code> / <code>.on</code> / <code>.off</code> / <code>.mode=&lt;mode&gt;</code></td><td><span data-lc="en">PG-Safe mode control</span><span data-lc="es">Control del modo PG-Safe</span></td></tr>
-            <tr><td><span data-lc="en">Title</span><span data-lc="es">Título</span></td><td><code>title.set &lt;text&gt;</code></td><td><span data-lc="en">Set title text</span><span data-lc="es">Establece el texto del título</span></td></tr>
-            <tr><td><span data-lc="en">Title</span><span data-lc="es">Título</span></td><td><code>title.say &lt;text&gt;</code></td><td><span data-lc="en">Show a temporary message</span><span data-lc="es">Muestra un mensaje temporal</span></td></tr>
-            <tr><td><span data-lc="en">Title</span><span data-lc="es">Título</span></td><td><code>title.show &lt;bool&gt;</code> / <code>title=&lt;bool&gt;</code></td><td><span data-lc="en">Show/hide title</span><span data-lc="es">Muestra/oculta el título</span></td></tr>
-            <tr><td><span data-lc="en">Title</span><span data-lc="es">Título</span></td><td><code>title.color=&lt;value&gt;</code> / <code>title.color &lt;value&gt;</code></td><td><span data-lc="en">Set title color — vector, hex, a name from the color list, or <code>random</code>/<code>rainbow</code>/<code>rgb[:range]</code></span><span data-lc="es">Establece el color del título — vector, hex, nombre de la lista de colores, o <code>random</code>/<code>rainbow</code>/<code>rgb[:rango]</code></span></td></tr>
-            <tr><td><span data-lc="en">Title</span><span data-lc="es">Título</span></td><td><code>title.set #SEQ#a|b|c</code> / <code>#SCROLL#text</code></td><td><span data-lc="en">Dynamic title — rotating phrases or a scrolling ticker instead of static text; see note below</span><span data-lc="es">Título dinámico — frases rotativas o una cinta desplazante en vez de texto fijo; ver nota más abajo</span></td></tr>
-            <tr><td><span data-lc="en">Particles</span><span data-lc="es">Partículas</span></td><td><code>particles.&lt;bool&gt;</code> / <code>particles=&lt;bool&gt;</code></td><td><span data-lc="en">Enable/disable</span><span data-lc="es">Activa/desactiva</span></td></tr>
-            <tr><td><span data-lc="en">Particles</span><span data-lc="es">Partículas</span></td><td><code>particles.color=&lt;value&gt;</code></td><td><span data-lc="en">Change color</span><span data-lc="es">Cambia el color</span></td></tr>
-            <tr><td><span data-lc="en">Particles</span><span data-lc="es">Partículas</span></td><td><code>particles.time=&lt;n&gt;</code></td><td><span data-lc="en">Change duration</span><span data-lc="es">Cambia la duración</span></td></tr>
-            <tr><td><span data-lc="en">Particles</span><span data-lc="es">Partículas</span></td><td><code>particles.texture=&lt;uuid&gt;</code></td><td><span data-lc="en">Change texture</span><span data-lc="es">Cambia la textura</span></td></tr>
-            <tr><td>Clicker</td><td><code>clicker.menu</code></td><td><span data-lc="en">Open the Clicker menu</span><span data-lc="es">Abre el menú del Clicker</span></td></tr>
-            <tr><td>Clicker</td><td><code>clicker.say &lt;text&gt;</code></td><td><span data-lc="en">Temporary message via Clicker</span><span data-lc="es">Mensaje temporal vía Clicker</span></td></tr>
-            <tr><td>Clicker</td><td><code>clicker.title.set</code> / <code>.say</code> / <code>clicker.title set</code> / <code>say</code></td><td><span data-lc="en">Same as <code>title.*</code> but via Clicker</span><span data-lc="es">Igual que <code>title.*</code> pero vía Clicker</span></td></tr>
-            <tr><td>Clicker</td><td><code>clicker.particles.*</code></td><td><span data-lc="en">Same as <code>particles.*</code> but via Clicker</span><span data-lc="es">Igual que <code>particles.*</code> pero vía Clicker</span></td></tr>
-            <tr><td>Info</td><td><code>show.status</code> / <code>.bio</code> (<code>bio</code>) / <code>.version</code> / <code>.owners</code> / <code>.access</code> / <code>.memory [-e]</code> / <code>.perms (_sprm)</code></td><td><span data-lc="en">Query HUD info. <code>show.*</code> also works as <code>display.*</code></span><span data-lc="es">Consulta información del HUD. <code>show.*</code> también funciona como <code>display.*</code></span></td></tr>
-            <tr><td>Info</td><td><code>get.discord</code> / <code>.web</code> / <code>.support</code> / <code>.group</code> / <code>.beta</code> / <code>.redelivery</code></td><td><span data-lc="en">Informational links and redelivery (chat). <code>get.*</code> also works as <code>info.*</code></span><span data-lc="es">Enlaces informativos y reenvío (chat). <code>get.*</code> también funciona como <code>info.*</code></span></td></tr>
-            <tr><td>Info</td><td><code>open.oce</code> / <code>.web</code> / <code>.guide</code> / <code>.changelog</code> / <code>.discord</code></td><td><span data-lc="en">Open links (browser). <code>open.*</code> also works as <code>web.*</code> / <code>link.*</code> / <code>url.*</code></span><span data-lc="es">Abre enlaces (navegador). <code>open.*</code> también funciona como <code>web.*</code> / <code>link.*</code> / <code>url.*</code></span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>getinv [path] [-i]</code></td><td><span data-lc="en">List RLV folders (supports <code>../</code>, <code>./</code> navigation)</span><span data-lc="es">Lista carpetas RLV (soporta navegación con <code>../</code> y <code>./</code>)</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>rem.all [-s]</code> / <code>rem.&lt;path&gt;</code></td><td><span data-lc="en">Detach everything, or a specific path. <code>rem.*</code> also works as <code>remove.*</code> / <code>detach.*</code></span><span data-lc="es">Quita todo, o una ruta específica. <code>rem.*</code> también funciona como <code>remove.*</code> / <code>detach.*</code></span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>sc.stop</code> / <code>sc stop</code></td><td><span data-lc="en">Stop active interactions — same effect as physically touching the push-away button</span><span data-lc="es">Detiene interacciones activas — mismo efecto que tocar físicamente el botón de apartar</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>sc.unlock &lt;path&gt;</code></td><td><span data-lc="en">Force-unlock a specific folder path under <code>Subbi_Clothes/</code> (raw RLV unlock, for stuck folders)</span><span data-lc="es">Fuerza el desbloqueo de una ruta concreta dentro de <code>Subbi_Clothes/</code> (desbloqueo RLV directo, para carpetas atascadas)</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>invite &lt;name&gt;</code></td><td><span data-lc="en">Send a nearby avatar a clickable link that opens your menu for them (subject to your normal access permissions)</span><span data-lc="es">Envía a un avatar cercano un link pulsable que les abre tu menú (sujeto a tus permisos de acceso normales)</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>menu</code></td><td><span data-lc="en">Open the outfit menu for yourself — same as touching the HUD/Clicker</span><span data-lc="es">Abre el menú de outfits para ti mismo — igual que tocar el HUD/Clicker</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>help</code></td><td><span data-lc="en">Link to this guide, in chat</span><span data-lc="es">Enlace a esta guía, en el chat</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>cls</code> / <code>clear</code> / <code>scls [-s|-m]</code></td><td><span data-lc="en">Clear chat</span><span data-lc="es">Limpia el chat</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>alpha</code></td><td><span data-lc="en">Toggle alpha view</span><span data-lc="es">Alterna la vista alpha</span></td></tr>
-            <tr><td><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></td><td><code>scfind [-v]</code></td><td><span data-lc="en">Broadcast search — see note below</span><span data-lc="es">Búsqueda por difusión — ver nota más abajo</span></td></tr>
-            <tr><td>Admin</td><td><code>admin.eject</code></td><td><span data-lc="en">Revoke an active admin's control</span><span data-lc="es">Revoca el control de un admin activo</span></td></tr>
-            <tr><td>Admin</td><td><code>sc.reset &lt;script&gt;</code></td><td><span data-lc="en">Reset a single HUD script by name — recovery tool, see note below</span><span data-lc="es">Reinicia un único script del HUD por nombre — herramienta de recuperación, ver nota más abajo</span></td></tr>
-          </tbody>
-        </table>
+
+        <div class="cmd-toolbar">
+          <div class="cmd-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="cmd-search-input" placeholder="Search commands…" autocomplete="off" spellcheck="false">
+          </div>
+          <button type="button" class="btn-ghost cmd-toggle-all" id="cmd-toggle-all">
+            <i class="fa-solid fa-arrows-up-down"></i>
+            <span class="cmd-toggle-label-expand"><span data-lc="en">Expand all</span><span data-lc="es">Desplegar todo</span></span>
+            <span class="cmd-toggle-label-collapse"><span data-lc="en">Collapse all</span><span data-lc="es">Colapsar todo</span></span>
+          </button>
+        </div>
+
+        <div class="cmd-groups">
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name">Outfit</span>
+              <span class="cmd-group-count">10</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>outfit.replace &lt;path&gt;</code><span class="cmd-aka">alias: <code>outfit.wear &lt;path&gt;</code>, <code>.change</code></span><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>@@&lt;path&gt;</code></span></td><td><span data-lc="en">Replace outfit (no argument opens the menu)</span><span data-lc="es">Reemplaza el outfit (sin argumento abre el menú)</span></td></tr>
+                  <tr><td><code>outfit.menu</code></td><td><span data-lc="en">Open the outfits menu</span><span data-lc="es">Abre el menú de outfits</span></td></tr>
+                  <tr><td><code>outfit.random</code></td><td><span data-lc="en">Random outfit</span><span data-lc="es">Outfit aleatorio</span></td></tr>
+                  <tr><td><code>outfit.back</code><span class="cmd-aka">alias: <code>.prev</code>, <code>.undo</code></span></td><td><span data-lc="en">Return to the previous outfit</span><span data-lc="es">Vuelve al outfit anterior</span></td></tr>
+                  <tr><td><code>outfit.refresh</code><span class="cmd-aka">alias: <code>.reload</code>, <code>.rebuild</code></span><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>refresh</code></span></td><td><span data-lc="en">Reload the current outfit</span><span data-lc="es">Recarga el outfit actual</span></td></tr>
+                  <tr><td><code>outfit.qdress</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>qdress</code></span></td><td><span data-lc="en">Quick dress</span><span data-lc="es">Vestido rápido</span></td></tr>
+                  <tr><td><code>outfit.qundress</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>qundress</code></span></td><td><span data-lc="en">Quick undress</span><span data-lc="es">Desvestido rápido</span></td></tr>
+                  <tr><td><code>outfit.safe</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>pg+</code></span></td><td><span data-lc="en">Trigger safe mode</span><span data-lc="es">Activa el modo seguro</span></td></tr>
+                  <tr><td><code>avatar.lock</code> / <code>.hardlock</code></td><td><span data-lc="en">Lock the whole avatar — hides "Avatars" from every menu and blocks avatar/outfit-change commands</span><span data-lc="es">Bloquea el avatar completo — oculta "Avatars" de todos los menús y bloquea los comandos de cambio de avatar/outfit</span></td></tr>
+                  <tr><td><code>avatar.unlock</code></td><td><span data-lc="en">Remove the avatar lock</span><span data-lc="es">Quita el bloqueo de avatar</span></td></tr>
+                </tbody>
+              </table>
+              <p class="cmd-group-note">
+                <span data-lc="en"><code>avatar.lock</code>/<code>.hardlock</code> is a separate, whole-avatar lock — independent from the per-bodypart locks in the Clothing section. While active, "Avatars" disappears from every menu and every avatar/outfit-change command is blocked with a warning. It persists through script resets and has no menu button by design — command-only, so it can't be toggled by accident.</span>
+                <span data-lc="es"><code>avatar.lock</code>/<code>.hardlock</code> es un bloqueo distinto, de avatar completo — independiente de los bloqueos por parte del cuerpo de la sección Clothing. Mientras está activo, "Avatars" desaparece de todos los menús y todo comando de cambio de avatar/outfit queda bloqueado con un aviso. Persiste tras reinicios de script y no tiene botón de menú propio, a propósito — es solo por comando, para que no se pueda activar/desactivar por accidente.</span>
+              </p>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Accessories</span><span data-lc="es">Accesorios</span></span>
+              <span class="cmd-group-count">3</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>acc.add &lt;item|all&gt;</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>++&lt;item&gt;</code></span></td><td><span data-lc="en">Add accessory — <code>all</code> adds every accessory at once</span><span data-lc="es">Añade un accesorio — <code>all</code> añade todos los accesorios a la vez</span></td></tr>
+                  <tr><td><code>acc.remove &lt;item|all&gt;</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>--&lt;item&gt;</code></span></td><td><span data-lc="en">Remove accessory — <code>all</code> removes every accessory at once</span><span data-lc="es">Quita un accesorio — <code>all</code> quita todos los accesorios a la vez</span></td></tr>
+                  <tr><td><code>acc.menu</code></td><td><span data-lc="en">Accessories menu. The whole <code>acc.*</code> namespace also works as <code>accessory.*</code> / <code>accessories.*</code></span><span data-lc="es">Menú de accesorios. Todo el namespace <code>acc.*</code> también funciona como <code>accessory.*</code> / <code>accessories.*</code></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name">HUDs</span>
+              <span class="cmd-group-count">3</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>huds.add &lt;item|all&gt;</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>h++&lt;item&gt;</code></span></td><td><span data-lc="en">Add HUD — <code>all</code> adds every HUD at once</span><span data-lc="es">Añade un HUD — <code>all</code> añade todos los HUDs a la vez</span></td></tr>
+                  <tr><td><code>huds.remove &lt;item|all&gt;</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>h--&lt;item&gt;</code></span></td><td><span data-lc="en">Remove HUD — <code>all</code> removes every HUD at once</span><span data-lc="es">Quita un HUD — <code>all</code> quita todos los HUDs a la vez</span></td></tr>
+                  <tr><td><code>huds.menu</code></td><td><span data-lc="en">HUDs menu</span><span data-lc="es">Menú de HUDs</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">HUD (self)</span><span data-lc="es">HUD (propio)</span></span>
+              <span class="cmd-group-count">5</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>hud.swap</code></td><td><span data-lc="en">Swap HUD position</span><span data-lc="es">Intercambia la posición del HUD</span></td></tr>
+                  <tr><td><code>hud.size ±N</code></td><td><span data-lc="en">Scale the HUD by a relative amount</span><span data-lc="es">Escala el HUD una cantidad relativa</span></td></tr>
+                  <tr><td><code>hud.size.show</code></td><td><span data-lc="en">Show the HUD's current size</span><span data-lc="es">Muestra el tamaño actual del HUD</span></td></tr>
+                  <tr><td><code>hud.size.reset</code></td><td><span data-lc="en">Reset the HUD to its default size</span><span data-lc="es">Restablece el HUD a su tamaño por defecto</span></td></tr>
+                  <tr><td><code>hud.texture.&lt;part&gt;=&lt;skin&gt;</code></td><td><span data-lc="en">Change a HUD part's texture</span><span data-lc="es">Cambia la textura de una parte del HUD</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Hair</span><span data-lc="es">Cabello</span></span>
+              <span class="cmd-group-count">2</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>hair.set &lt;style&gt;</code></td><td><span data-lc="en">Set hairstyle directly</span><span data-lc="es">Establece el peinado directamente</span></td></tr>
+                  <tr><td><code>hair.menu</code></td><td><span data-lc="en">Open hairstyle menu</span><span data-lc="es">Abre el menú de peinados</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Clothing</span><span data-lc="es">Ropa</span></span>
+              <span class="cmd-group-count">5</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>&lt;part&gt;++</code> / <code>&lt;part&gt;--</code></td><td><span data-lc="en">Cycle state (dressed → underwear → undressed)</span><span data-lc="es">Cicla el estado (vestido → ropa interior → desnudo)</span></td></tr>
+                  <tr><td><code>&lt;part&gt;.set &lt;state&gt;</code></td><td><span data-lc="en">Set state directly (head/face/upper/torso/arms/hands/waist/crotch/legs/feet/bodysuit)</span><span data-lc="es">Establece el estado directamente (head/face/upper/torso/arms/hands/waist/crotch/legs/feet/bodysuit)</span></td></tr>
+                  <tr><td><code>clothes.lock [part]</code></td><td><span data-lc="en">Greys the part out for anyone who isn't the owner/master — cosmetic only, the owner can still change it normally</span><span data-lc="es">Pone la parte en gris para cualquiera que no sea el dueño/master — solo visual, el dueño puede seguir cambiándola con normalidad</span></td></tr>
+                  <tr><td><code>clothes.hardlock [part]</code></td><td><span data-lc="en">Same as <code>.lock</code>, but also blocks the owner via a real RLV restriction until unlocked again</span><span data-lc="es">Igual que <code>.lock</code>, pero también bloquea al dueño mediante una restricción RLV real hasta que se desbloquea de nuevo</span></td></tr>
+                  <tr><td><code>clothes.unlock [part]</code></td><td><span data-lc="en">Remove a lock or hardlock from a part (or all parts, if none given)</span><span data-lc="es">Quita un lock o hardlock de una parte (o de todas, si no se indica ninguna)</span></td></tr>
+                </tbody>
+              </table>
+              <p class="cmd-group-note">
+                <span data-lc="en">Locks are per-outfit: they reset automatically whenever you change avatar/outfit, so one never stays accidentally "stuck" on a new look.</span>
+                <span data-lc="es">Los bloqueos son por-outfit: se reinician automáticamente al cambiar de avatar/outfit, así que nunca se quedan "pegados" por accidente a un look nuevo.</span>
+              </p>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Lists</span><span data-lc="es">Listas</span></span>
+              <span class="cmd-group-count">4</span>
+            </summary>
+            <div class="cmd-group-body">
+              <p class="cmd-group-note">
+                <span data-lc="en">Affects one of 3 lists: <code>whitelist</code>, <code>blacklist</code>, or <code>masters</code>.</span>
+                <span data-lc="es">Afecta a una de 3 listas: <code>whitelist</code>, <code>blacklist</code> o <code>masters</code>.</span>
+              </p>
+              <p class="cmd-group-note">
+                <span data-lc="en">Shortcuts: <code>whitelist</code> / <code>wlist</code> / <code>wl</code>, <code>blacklist</code> / <code>blist</code> / <code>bl</code>, <code>masters</code> / <code>mtr</code>.</span>
+                <span data-lc="es">Atajos: <code>whitelist</code> / <code>wlist</code> / <code>wl</code>, <code>blacklist</code> / <code>blist</code> / <code>bl</code>, <code>masters</code> / <code>mtr</code>.</span>
+              </p>
+              <p class="cmd-group-note">
+                <span data-lc="en">Temporary lists take a <code>t</code> prefix: <code>twhitelist</code> / <code>twlist</code> / <code>twl</code>, <code>tblacklist</code> / <code>tblist</code> / <code>tbl</code>.</span>
+                <span data-lc="es">Las listas temporales llevan el prefijo <code>t</code>: <code>twhitelist</code> / <code>twlist</code> / <code>twl</code>, <code>tblacklist</code> / <code>tblist</code> / <code>tbl</code>.</span>
+              </p>
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><code>&lt;list&gt;.add &lt;name&gt;</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>+&lt;list&gt; &lt;name&gt;</code></span></td>
+                    <td><span data-lc="en">Add someone to a list</span><span data-lc="es">Añade a alguien a una lista</span></td>
+                  </tr>
+                  <tr>
+                    <td><code>&lt;list&gt;.remove &lt;name&gt;</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>-&lt;list&gt; &lt;name&gt;</code></span></td>
+                    <td><span data-lc="en">Remove someone from a list</span><span data-lc="es">Quita a alguien de una lista</span></td>
+                  </tr>
+                  <tr>
+                    <td><code>&lt;list&gt;.list</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>=&lt;list&gt;</code></span></td>
+                    <td><span data-lc="en">View a list's contents</span><span data-lc="es">Muestra el contenido de una lista</span></td>
+                  </tr>
+                  <tr>
+                    <td><code>&lt;list&gt;.clear</code></td>
+                    <td><span data-lc="en">Wipes a list completely — no shorthand for this one, long form only</span><span data-lc="es">Vacía una lista por completo — este no tiene atajo corto, solo forma larga</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Config</span><span data-lc="es">Ajustes</span></span>
+              <span class="cmd-group-count">3</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>settings.&lt;opt&gt;=&lt;val&gt;</code><span class="cmd-aka">alias: <code>stg.&lt;opt&gt;=&lt;val&gt;</code>, <code>set.&lt;opt&gt;=&lt;val&gt;</code></span></td><td><span data-lc="en">General settings — omit <code>=&lt;val&gt;</code> to toggle the current state instead</span><span data-lc="es">Ajustes generales — omite <code>=&lt;val&gt;</code> para invertir el estado actual</span></td></tr>
+                  <tr><td><code>access.&lt;opt&gt;</code><span class="cmd-aka">alias: <code>perm.&lt;opt&gt;</code></span></td><td><span data-lc="en">Permissions and access — omit <code>=&lt;val&gt;</code> to toggle the current state instead</span><span data-lc="es">Permisos y acceso — omite <code>=&lt;val&gt;</code> para invertir el estado actual</span></td></tr>
+                  <tr><td><code>pgsafe</code> / <code>.on</code> / <code>.off</code> / <code>.mode=&lt;mode&gt;</code></td><td><span data-lc="en">PG-Safe mode control</span><span data-lc="es">Control del modo PG-Safe</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Title</span><span data-lc="es">Título</span></span>
+              <span class="cmd-group-count">5</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>title.set &lt;text&gt;</code></td><td><span data-lc="en">Set title text</span><span data-lc="es">Establece el texto del título</span></td></tr>
+                  <tr><td><code>title.say &lt;text&gt;</code></td><td><span data-lc="en">Show a temporary message</span><span data-lc="es">Muestra un mensaje temporal</span></td></tr>
+                  <tr><td><code>title.show &lt;bool&gt;</code><span class="cmd-aka">alias: <code>title=&lt;bool&gt;</code></span></td><td><span data-lc="en">Show/hide title</span><span data-lc="es">Muestra/oculta el título</span></td></tr>
+                  <tr><td><code>title.color=&lt;value&gt;</code><span class="cmd-aka">alias: <code>title.color &lt;value&gt;</code></span></td><td><span data-lc="en">Set title color — vector, hex, a name from the color list, or <code>random</code>/<code>rainbow</code>/<code>rgb[:range]</code></span><span data-lc="es">Establece el color del título — vector, hex, nombre de la lista de colores, o <code>random</code>/<code>rainbow</code>/<code>rgb[:rango]</code></span></td></tr>
+                  <tr><td><code>title.set #SEQ#a|b|c</code> / <code>#SCROLL#text</code></td><td><span data-lc="en">Dynamic title — rotating phrases or a scrolling ticker instead of static text</span><span data-lc="es">Título dinámico — frases rotativas o una cinta desplazante en vez de texto fijo</span></td></tr>
+                </tbody>
+              </table>
+              <p class="cmd-group-note">
+                <span data-lc="en"><code>title.set</code> accepts two special formats instead of plain text. <code>#SEQ[:tN]#phrase1|phrase2|...</code> rotates through phrases one at a time; <code>#SCROLL[:tN][:lN]#text</code> scrolls the text sideways like a ticker. Optional parameters go between the mode name and the closing <code>#</code>, separated by <code>:</code>, in any order: <code>t&lt;N&gt;</code> sets the speed (ticks between advances — roughly 10 ticks per second), <code>l&lt;N&gt;</code> sets the visible window width, <code>#SCROLL</code> only. Example: <code>title.set #SCROLL:t3:l25#Welcome to my HUD!</code>. Both formats still support the <code>{outfit}</code>, <code>{avatar}</code>, <code>{me}</code> and <code>{range}</code> placeholders, same as a static title.</span>
+                <span data-lc="es"><code>title.set</code> acepta dos formatos especiales en vez de texto plano. <code>#SEQ[:tN]#frase1|frase2|...</code> rota entre frases una a una; <code>#SCROLL[:tN][:lN]#texto</code> desplaza el texto en horizontal como una cinta. Los parámetros opcionales van entre el nombre del modo y el <code>#</code> de cierre, separados por <code>:</code>, en cualquier orden: <code>t&lt;N&gt;</code> fija la velocidad (ticks entre avances — aproximadamente 10 ticks por segundo), <code>l&lt;N&gt;</code> fija el ancho de la ventana visible, solo para <code>#SCROLL</code>. Ejemplo: <code>title.set #SCROLL:t3:l25#¡Bienvenido a mi HUD!</code>. Ambos formatos siguen admitiendo los placeholders <code>{outfit}</code>, <code>{avatar}</code>, <code>{me}</code> y <code>{range}</code>, igual que un título estático.</span>
+              </p>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Particles</span><span data-lc="es">Partículas</span></span>
+              <span class="cmd-group-count">4</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>particles.&lt;bool&gt;</code><span class="cmd-aka">alias: <code>particles=&lt;bool&gt;</code></span></td><td><span data-lc="en">Enable/disable</span><span data-lc="es">Activa/desactiva</span></td></tr>
+                  <tr><td><code>particles.color=&lt;value&gt;</code></td><td><span data-lc="en">Change color</span><span data-lc="es">Cambia el color</span></td></tr>
+                  <tr><td><code>particles.time=&lt;n&gt;</code></td><td><span data-lc="en">Change duration</span><span data-lc="es">Cambia la duración</span></td></tr>
+                  <tr><td><code>particles.texture=&lt;uuid&gt;</code></td><td><span data-lc="en">Change texture</span><span data-lc="es">Cambia la textura</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name">Info</span>
+              <span class="cmd-group-count">18</span>
+            </summary>
+            <div class="cmd-group-body">
+              <p class="cmd-group-note">
+                <span data-lc="en"><code>get.*</code> replies in chat with a link; <code>open.*</code> opens the link directly in your browser.</span>
+                <span data-lc="es"><code>get.*</code> responde en el chat con un link; <code>open.*</code> abre el link directamente en tu navegador.</span>
+              </p>
+              <p class="cmd-group-note">
+                <span data-lc="en">Aliases: <code>get.*</code> also works as <code>info.*</code>; <code>open.*</code> also works as <code>web.*</code> / <code>link.*</code> / <code>url.*</code>; <code>show.*</code> also works as <code>display.*</code>.</span>
+                <span data-lc="es">Alias: <code>get.*</code> también funciona como <code>info.*</code>; <code>open.*</code> también funciona como <code>web.*</code> / <code>link.*</code> / <code>url.*</code>; <code>show.*</code> también funciona como <code>display.*</code>.</span>
+              </p>
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>show.status</code></td><td><span data-lc="en">Miscellaneous status info of interest to the user</span><span data-lc="es">Información variada de interés para el usuario</span></td></tr>
+                  <tr><td><code>show.bio</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>bio</code></span></td><td><span data-lc="en">Shows the outfit/user's bio</span><span data-lc="es">Muestra la biografía del outfit/usuario</span></td></tr>
+                  <tr><td><code>show.version</code></td><td><span data-lc="en">Shows the HUD's version number</span><span data-lc="es">Muestra el número de versión del HUD</span></td></tr>
+                  <tr><td><code>show.owners</code></td><td><span data-lc="en">Shows the Masters/owners list — same as <code>=masters</code> / <code>masters.list</code> in the Lists section above</span><span data-lc="es">Muestra la lista de Masters/owners — igual que <code>=masters</code> / <code>masters.list</code> en la sección Lists de arriba</span></td></tr>
+                  <tr><td><code>show.memory</code></td><td><span data-lc="en">Shows memory usage for a few key scripts</span><span data-lc="es">Muestra el uso de memoria de algunos scripts clave</span></td></tr>
+                  <tr><td><code>show.memory -e</code></td><td><span data-lc="en">Shows memory usage for every script (extended)</span><span data-lc="es">Muestra el uso de memoria de todos los scripts (extendido)</span></td></tr>
+                  <tr><td><code>show.perms</code><span class="cmd-aka"><span data-lc="en">special</span><span data-lc="es">especial</span>: <code>_sprm</code></span></td><td><span data-lc="en">Shows a full listing of every permission in every category</span><span data-lc="es">Muestra un listado completo de todos los permisos de todas las categorías</span></td></tr>
+                  <tr><td><code>get.discord</code></td><td><span data-lc="en">Discord invite link</span><span data-lc="es">Link de invitación a Discord</span></td></tr>
+                  <tr><td><code>get.web</code></td><td><span data-lc="en">Website link</span><span data-lc="es">Link de la web</span></td></tr>
+                  <tr><td><code>get.support</code></td><td><span data-lc="en">Support contact link</span><span data-lc="es">Link de contacto de soporte</span></td></tr>
+                  <tr><td><code>get.group</code></td><td><span data-lc="en">Second Life group join link</span><span data-lc="es">Link para unirte al grupo de Second Life</span></td></tr>
+                  <tr><td><code>get.beta</code></td><td><span data-lc="en">Info on joining the beta program</span><span data-lc="es">Información para unirte al programa beta</span></td></tr>
+                  <tr><td><code>get.redelivery</code></td><td><span data-lc="en">Request redelivery of your purchase</span><span data-lc="es">Solicita el reenvío de tu compra</span></td></tr>
+                  <tr><td><code>open.oce</code></td><td><span data-lc="en">Opens the Outfit Config Editor</span><span data-lc="es">Abre el Outfit Config Editor</span></td></tr>
+                  <tr><td><code>open.web</code></td><td><span data-lc="en">Opens the website</span><span data-lc="es">Abre la web</span></td></tr>
+                  <tr><td><code>open.guide</code></td><td><span data-lc="en">Opens this guide</span><span data-lc="es">Abre esta guía</span></td></tr>
+                  <tr><td><code>open.changelog</code></td><td><span data-lc="en">Opens the changelog</span><span data-lc="es">Abre el changelog</span></td></tr>
+                  <tr><td><code>open.discord</code></td><td><span data-lc="en">Opens the Discord server</span><span data-lc="es">Abre el servidor de Discord</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name"><span data-lc="en">Utility</span><span data-lc="es">Utilidad</span></span>
+              <span class="cmd-group-count">10</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>getinv [-i] &lt;path&gt;</code></td><td><span data-lc="en">List RLV folders inside <code>Subbi_Clothes/</code></span><span data-lc="es">Lista carpetas RLV dentro de <code>Subbi_Clothes/</code></span></td></tr>
+                  <tr><td><code>rem.all [-s]</code> / <code>rem.&lt;path&gt;</code></td><td><span data-lc="en">Detach everything, or a specific path. <code>rem.*</code> also works as <code>remove.*</code> / <code>detach.*</code></span><span data-lc="es">Quita todo, o una ruta específica. <code>rem.*</code> también funciona como <code>remove.*</code> / <code>detach.*</code></span></td></tr>
+                  <tr><td><code>sc.stop</code><span class="cmd-aka">alias: <code>sc stop</code></span></td><td><span data-lc="en">Stop active interactions — same effect as physically touching the push-away button</span><span data-lc="es">Detiene interacciones activas — mismo efecto que tocar físicamente el botón de apartar</span></td></tr>
+                  <tr><td><code>sc.unlock &lt;path&gt;</code></td><td><span data-lc="en">Force-unlock a specific folder path under <code>Subbi_Clothes/</code> (raw RLV unlock, for stuck folders)</span><span data-lc="es">Fuerza el desbloqueo de una ruta concreta dentro de <code>Subbi_Clothes/</code> (desbloqueo RLV directo, para carpetas atascadas)</span></td></tr>
+                  <tr><td><code>invite &lt;name&gt;</code></td><td><span data-lc="en">Send a nearby avatar a clickable link that opens your menu for them (subject to your normal access permissions)</span><span data-lc="es">Envía a un avatar cercano un link pulsable que les abre tu menú (sujeto a tus permisos de acceso normales)</span></td></tr>
+                  <tr><td><code>menu</code></td><td><span data-lc="en">Open the outfit menu for yourself — same as touching the HUD/Clicker</span><span data-lc="es">Abre el menú de outfits para ti mismo — igual que tocar el HUD/Clicker</span></td></tr>
+                  <tr><td><code>help</code></td><td><span data-lc="en">Link to this guide, in chat</span><span data-lc="es">Enlace a esta guía, en el chat</span></td></tr>
+                  <tr><td><code>cls</code><span class="cmd-aka">alias: <code>clear</code>, <code>scls [-s|-m]</code></span></td><td><span data-lc="en">Clear chat</span><span data-lc="es">Limpia el chat</span></td></tr>
+                  <tr><td><code>alpha</code></td><td><span data-lc="en">Toggle alpha view</span><span data-lc="es">Alterna la vista alpha</span></td></tr>
+                  <tr><td><code>scfind [-v]</code></td><td><span data-lc="en">Broadcast search</span><span data-lc="es">Búsqueda por difusión</span></td></tr>
+                </tbody>
+              </table>
+              <p class="cmd-group-note">
+                <span data-lc="en"><strong>invite</strong> — the name must match someone physically present in the same region (legacy or display name); the HUD sends them a clickable link on the <code>/45</code> external channel, same as if they'd touched your HUD/Clicker directly.</span>
+                <span data-lc="es"><strong>invite</strong> — el nombre debe coincidir con alguien físicamente presente en la misma región (legacy o display name); el HUD le manda un link pulsable por el canal externo <code>/45</code>, igual que si hubieran tocado tu HUD/Clicker directamente.</span>
+              </p>
+              <p class="cmd-group-note">
+                <span data-lc="en"><strong>scfind</strong> — WIP, in active development for the DEV-4.1 line. Broadcasts a message to the whole region/parcel; other Subbi Clothes HUDs with the option enabled respond with <code>&lt;username&gt; - {gender} - {bio} - {custom message}</code> (gender, bio, and message are optional; bio only shows if set). Intended for finding people to interact/roleplay with in the region.</span>
+                <span data-lc="es"><strong>scfind</strong> — WIP, en desarrollo activo para la línea DEV-4.1. Difunde un mensaje a toda la región/parcela; otros HUDs de Subbi Clothes con la opción activada responden con <code>&lt;username&gt; - {gender} - {bio} - {custom message}</code> (género, bio y mensaje son opcionales; la bio solo se muestra si está configurada). Pensado para encontrar gente con quien interactuar/rolear en la región.</span>
+              </p>
+            </div>
+          </details>
+
+          <details class="cmd-group">
+            <summary>
+              <i class="fa-solid fa-chevron-right cmd-group-chevron"></i>
+              <span class="cmd-group-name">Admin</span>
+              <span class="cmd-group-count">2</span>
+            </summary>
+            <div class="cmd-group-body">
+              <table class="cmd-table">
+                <colgroup><col style="width:36%"><col style="width:64%"></colgroup>
+                <thead><tr><th><span data-lc="en">Command</span><span data-lc="es">Comando</span></th><th><span data-lc="en">Description</span><span data-lc="es">Descripción</span></th></tr></thead>
+                <tbody>
+                  <tr><td><code>admin.eject</code></td><td><span data-lc="en">Revoke an active admin's control</span><span data-lc="es">Revoca el control de un admin activo</span></td></tr>
+                  <tr><td><code>sc.reset &lt;script&gt;</code></td><td><span data-lc="en">Reset a single HUD script by name — recovery tool for when one part gets stuck</span><span data-lc="es">Reinicia un único script del HUD por nombre — herramienta de recuperación para cuando una parte se queda colgada</span></td></tr>
+                </tbody>
+              </table>
+              <p class="cmd-group-note">
+                <span data-lc="en">Resets a single script without detaching/reattaching the whole HUD. Valid names: <code>MAIN</code>, <code>Settings</code>, <code>HUD</code>, <code>Updater</code>, <code>Accessories</code>, <code>MenuProcessor</code>, <code>Menu</code>, <code>Outfits</code>, <code>Outfits_RLV</code>, <code>RLV</code>, <code>Memory</code>, <code>Perms</code>, <code>CmdConfig</code>, <code>Commands</code> (the last one resets the command script itself).</span>
+                <span data-lc="es">Reinicia un único script sin tener que desadjuntar/readjuntar el HUD entero. Nombres válidos: <code>MAIN</code>, <code>Settings</code>, <code>HUD</code>, <code>Updater</code>, <code>Accessories</code>, <code>MenuProcessor</code>, <code>Menu</code>, <code>Outfits</code>, <code>Outfits_RLV</code>, <code>RLV</code>, <code>Memory</code>, <code>Perms</code>, <code>CmdConfig</code>, <code>Commands</code> (este último reinicia el propio script de comandos).</span>
+              </p>
+            </div>
+          </details>
+
+        </div>
       </div>
 
       <div class="cmd-card">
         <h2><i class="fa-solid fa-circle-info"></i> <span data-lc="en">Notes on Specific Commands</span><span data-lc="es">Notas sobre Comandos Específicos</span></h2>
         <p>
-          <span data-lc="en"><strong>clothes.lock / .hardlock / .unlock</strong> — per-bodypart lock. <code>clothes.lock [part]</code>: anyone who isn't the owner/master sees the option greyed out as <code>[LOCKED]</code> and it does nothing if touched — the owner can still change that part normally. <code>clothes.hardlock [part]</code>: same, but also blocks the owner via a real RLV restriction until unlocked again — this is enforced technically, not just a greyed-out menu option. Locks are per-outfit: they reset automatically whenever you change avatar/outfit, so they're never accidentally "stuck" on a new look.</span>
-          <span data-lc="es"><strong>clothes.lock / .hardlock / .unlock</strong> — bloqueo por parte del cuerpo. <code>clothes.lock [parte]</code>: cualquiera que no sea el dueño/master ve la opción en gris como <code>[LOCKED]</code> y no hace nada si se toca — el dueño puede seguir cambiando esa parte con normalidad. <code>clothes.hardlock [parte]</code>: igual, pero también bloquea al propio dueño mediante una restricción RLV real hasta que se desbloquea de nuevo — se aplica técnicamente, no es solo una opción en gris del menú. Los bloqueos son por-outfit: se reinician automáticamente al cambiar de avatar/outfit, así que nunca se quedan "pegados" por accidente a un look nuevo.</span>
-        </p>
-        <p>
-          <span data-lc="en"><strong>avatar.lock / .hardlock / .unlock</strong> — a separate, whole-avatar lock (independent from the per-bodypart one above). While active: "Avatars" disappears from both your own menu and the external menu, and every avatar/outfit-change command (<code>@@</code>, <code>outfit.wear</code>/<code>.replace</code>/<code>.change</code>/<code>.back</code>/<code>.random</code>/<code>.menu</code>) is blocked with a warning. It persists through script resets, and — by design — has no menu button of its own; it's command-only, so it can't be toggled by mistake from a menu.</span>
-          <span data-lc="es"><strong>avatar.lock / .hardlock / .unlock</strong> — un bloqueo distinto, de avatar completo (independiente del bloqueo por parte del cuerpo de arriba). Mientras está activo: "Avatars" desaparece tanto de tu propio menú como del menú externo, y todos los comandos de cambio de avatar/outfit (<code>@@</code>, <code>outfit.wear</code>/<code>.replace</code>/<code>.change</code>/<code>.back</code>/<code>.random</code>/<code>.menu</code>) quedan bloqueados con un aviso. Persiste tras reinicios de script, y — a propósito — no tiene botón de menú propio; es solo por comando, para que no se pueda activar/desactivar sin querer desde un menú.</span>
-        </p>
-        <p>
-          <span data-lc="en"><strong>Dynamic titles</strong> — <code>title.set</code> accepts two special formats instead of plain text. <code>#SEQ[:tN]#phrase1|phrase2|...</code> rotates through phrases one at a time; <code>#SCROLL[:tN][:lN]#text</code> scrolls the text sideways like a ticker. Optional parameters go between the mode name and the closing <code>#</code>, separated by <code>:</code>, in any order: <code>t&lt;N&gt;</code> sets the speed (ticks between advances — roughly 10 ticks per second), <code>l&lt;N&gt;</code> sets the visible window width, <code>#SCROLL</code> only. Example: <code>title.set #SCROLL:t3:l25#Welcome to my HUD!</code>. Both formats still support the <code>{outfit}</code>, <code>{avatar}</code>, <code>{me}</code> and <code>{range}</code> placeholders, same as a static title.</span>
-          <span data-lc="es"><strong>Títulos dinámicos</strong> — <code>title.set</code> acepta dos formatos especiales en vez de texto plano. <code>#SEQ[:tN]#frase1|frase2|...</code> rota entre frases una a una; <code>#SCROLL[:tN][:lN]#texto</code> desplaza el texto en horizontal como una cinta. Los parámetros opcionales van entre el nombre del modo y el <code>#</code> de cierre, separados por <code>:</code>, en cualquier orden: <code>t&lt;N&gt;</code> fija la velocidad (ticks entre avances — aproximadamente 10 ticks por segundo), <code>l&lt;N&gt;</code> fija el ancho de la ventana visible, solo para <code>#SCROLL</code>. Ejemplo: <code>title.set #SCROLL:t3:l25#¡Bienvenido a mi HUD!</code>. Ambos formatos siguen admitiendo los placeholders <code>{outfit}</code>, <code>{avatar}</code>, <code>{me}</code> y <code>{range}</code>, igual que un título estático.</span>
-        </p>
-        <p>
-          <span data-lc="en"><strong>invite &lt;name&gt;</strong> — the name must match someone physically present in the same region (legacy or display name); the HUD sends them a clickable link on the <code>/45</code> external channel that opens your menu for them, same as if they'd touched your HUD/Clicker directly — still subject to your normal access permissions.</span>
-          <span data-lc="es"><strong>invite &lt;nombre&gt;</strong> — el nombre debe coincidir con alguien físicamente presente en la misma región (legacy o display name); el HUD le manda un link pulsable por el canal externo <code>/45</code> que les abre tu menú, igual que si hubieran tocado tu HUD/Clicker directamente — sigue sujeto a tus permisos de acceso normales.</span>
-        </p>
-        <p>
-          <span data-lc="en"><strong>sc.reset &lt;script&gt;</strong> — resets a single HUD script by name, without detaching/reattaching the whole HUD. Useful if one part gets stuck. Valid names: <code>MAIN</code>, <code>Settings</code>, <code>HUD</code>, <code>Updater</code>, <code>Accessories</code>, <code>MenuProcessor</code>, <code>Menu</code>, <code>Outfits</code>, <code>Outfits_RLV</code>, <code>RLV</code>, <code>Memory</code>, <code>Perms</code>, <code>CmdConfig</code>, <code>Commands</code> (the last one resets the command script itself).</span>
-          <span data-lc="es"><strong>sc.reset &lt;script&gt;</strong> — reinicia un único script del HUD por nombre, sin tener que desadjuntar/readjuntar el HUD entero. Útil si una parte se queda colgada. Nombres válidos: <code>MAIN</code>, <code>Settings</code>, <code>HUD</code>, <code>Updater</code>, <code>Accessories</code>, <code>MenuProcessor</code>, <code>Menu</code>, <code>Outfits</code>, <code>Outfits_RLV</code>, <code>RLV</code>, <code>Memory</code>, <code>Perms</code>, <code>CmdConfig</code>, <code>Commands</code> (este último reinicia el propio script de comandos).</span>
+          <span data-lc="en">Command-specific notes now live next to their command, inside each category above. What's left here applies across several categories at once, not just one.</span>
+          <span data-lc="es">Las notas específicas de cada comando ahora están junto a su comando, dentro de cada categoría de arriba. Lo que queda aquí aplica a varias categorías a la vez, no solo a una.</span>
         </p>
         <p>
           <span data-lc="en"><strong>No value = toggle</strong> — for <code>settings.&lt;opt&gt;</code>, <code>access.&lt;opt&gt;</code> and <code>perm.&lt;category&gt;.&lt;name&gt;</code>, leaving off <code>=&lt;value&gt;</code> flips the current state instead of doing nothing — e.g. <code>settings.otheranims</code> with no value toggles it on/off. Same idea as the Public permission category, extended to the rest of the config commands.</span>
@@ -235,16 +604,81 @@
           <span data-lc="en"><strong>&lt;bool&gt; values</strong> — anywhere a command takes a boolean (<code>title.show</code>, <code>title=</code>, <code>particles.</code>, <code>particles=</code>, permission toggles, etc.), any of these work: <code>on</code>/<code>off</code>, <code>true</code>/<code>false</code>, <code>1</code>/<code>0</code>, <code>yes</code>/<code>no</code> — case-insensitive.</span>
           <span data-lc="es"><strong>Valores &lt;bool&gt;</strong> — en cualquier comando que acepte un booleano (<code>title.show</code>, <code>title=</code>, <code>particles.</code>, <code>particles=</code>, toggles de permisos, etc.), sirve cualquiera de estos: <code>on</code>/<code>off</code>, <code>true</code>/<code>false</code>, <code>1</code>/<code>0</code>, <code>yes</code>/<code>no</code> — sin distinguir mayúsculas/minúsculas.</span>
         </p>
-        <p>
-          <span data-lc="en"><strong>scfind [-v]</strong> — WIP, in active development for the DEV-4.1 line. Broadcasts a message to the whole region/parcel; other Subbi Clothes HUDs with the option enabled respond with <code>&lt;username&gt; - {gender} - {bio} - {custom message}</code> (gender, bio, and message are optional; bio only shows if set). Intended for finding people to interact/roleplay with in the region.</span>
-          <span data-lc="es"><strong>scfind [-v]</strong> — WIP, en desarrollo activo para la línea DEV-4.1. Difunde un mensaje a toda la región/parcela; otros HUDs de Subbi Clothes con la opción activada responden con <code>&lt;username&gt; - {gender} - {bio} - {custom message}</code> (género, bio y mensaje son opcionales; la bio solo se muestra si está configurada). Pensado para encontrar gente con quien interactuar/rolear en la región.</span>
-        </p>
       </div>
 
     </div>
   </main>
 
   <script src="/js/shell.js"></script>
+  <script>
+    /* ── Command Reference: search filter + expand/collapse-all ──
+       Convenience-only: every row is already static HTML (see the
+       .cmd-groups CSS comment) — this only flips .open / a hidden class
+       on elements that exist in the DOM either way. ── */
+    (function () {
+      var groups = Array.prototype.slice.call(document.querySelectorAll('.cmd-group'));
+      var searchInput = document.getElementById('cmd-search-input');
+      var toggleAllBtn = document.getElementById('cmd-toggle-all');
+      if (!groups.length || !searchInput || !toggleAllBtn) return;
+
+      function visibleGroups() {
+        return groups.filter(function (g) { return !g.classList.contains('cmd-group--hidden'); });
+      }
+      function allOpen() {
+        var vg = visibleGroups();
+        return vg.length > 0 && vg.every(function (g) { return g.open; });
+      }
+      function syncToggleAllButton() {
+        toggleAllBtn.classList.toggle('is-all-open', allOpen());
+      }
+
+      function applyFilter(raw) {
+        var query = raw.trim().toLowerCase();
+        groups.forEach(function (group) {
+          var summary = group.querySelector('summary');
+          var categoryMatches = !!query && summary.textContent.toLowerCase().indexOf(query) !== -1;
+          var rows = group.querySelectorAll('tbody tr');
+          var anyVisible = false;
+          rows.forEach(function (row) {
+            var match = !query || categoryMatches || row.textContent.toLowerCase().indexOf(query) !== -1;
+            row.classList.toggle('cmd-row--hidden', !match);
+            if (match) anyVisible = true;
+          });
+          group.classList.toggle('cmd-group--hidden', !anyVisible);
+          if (query) {
+            if (anyVisible && !group.open) {
+              group.open = true;
+              group.dataset.autoOpened = '1';
+            }
+          } else if (group.dataset.autoOpened) {
+            group.open = false;
+            delete group.dataset.autoOpened;
+          }
+        });
+        syncToggleAllButton();
+      }
+
+      searchInput.addEventListener('input', function () { applyFilter(searchInput.value); });
+
+      toggleAllBtn.addEventListener('click', function () {
+        var open = !allOpen();
+        visibleGroups().forEach(function (g) {
+          g.open = open;
+          delete g.dataset.autoOpened;
+        });
+        syncToggleAllButton();
+      });
+
+      groups.forEach(function (g) { g.addEventListener('toggle', syncToggleAllButton); });
+
+      /* Bilingual placeholder: shell.js calls window.setLang(lang) after
+         it updates nav/footer text, if this is defined — same hook every
+         other page-specific i18n bit uses. */
+      window.setLang = function (lang) {
+        searchInput.placeholder = lang === 'es' ? 'Buscar comandos…' : 'Search commands…';
+      };
+    })();
+  </script>
 
 </body>
 </html>
