@@ -67,6 +67,26 @@ function parseConfig(text) {
     } catch(e) {}
   });
 
+  // Restore Favorites (independent flag, single self-contained JSON line).
+  // On overwrite, clear favorite on every outfit this import touched first,
+  // so re-importing after unfavoriting something in the file round-trips.
+  const favLine = lines.find(l => l.trim().startsWith('{"favorites"'));
+  if (overwrite) {
+    outfits.forEach(o => { if (parsedKeys.has(groupName(o) + '/' + o.name)) o.favorite = false; });
+  }
+  if (favLine) {
+    try {
+      const obj = JSON.parse(favLine.trim());
+      (obj.favorites || '').split(',').map(s => s.trim()).filter(Boolean).forEach(key => {
+        const idx = key.indexOf('/');
+        if (idx === -1) return;
+        const gname = key.slice(0, idx), oname = key.slice(idx + 1);
+        const o = outfits.find(x => groupName(x) === gname && x.name === oname);
+        if (o) o.favorite = true;
+      });
+    } catch(e) {}
+  }
+
   if (removeMismatch) {
     outfits = outfits.filter(o => parsedKeys.has(groupName(o) + '/' + o.name));
     if (activeId && !outfits.find(o => o.id === activeId) && !groups.find(g => g.id === activeId)) activeId = null;
@@ -193,7 +213,7 @@ function tryParseBlock(key, blockText, overwrite = true) {
 
     const existing = outfits.find(o => o.groupId === groupId && o.name === name);
     if (existing) { if (overwrite) existing.data = d; }
-    else outfits.push({ id: 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), groupId, name, data: d });
+    else outfits.push({ id: 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), groupId, name, favorite: false, data: d });
     return true;
   } catch(e) {
     console.warn('Could not parse block:', key, e);

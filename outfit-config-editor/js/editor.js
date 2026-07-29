@@ -525,9 +525,14 @@ function renderEditor(id) {
   ec.innerHTML = `
   <div class="outfit-editor" id="editor_${id}">
     <div class="editor-title-row">
-      <div>
-        <div class="editor-title">${esc(groupName(o))} / ${esc(o.name)}</div>
-        <div class="editor-subtitle" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);">"${esc(groupName(o))}/${esc(o.name)}"</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="favorite-star-toggle ${o.favorite ? 'active' : ''}" onclick="toggleFavorite('${id}')" title="${t(o.favorite ? 'unmark_favorite' : 'mark_favorite')}">
+          <i class="fa-${o.favorite ? 'solid' : 'regular'} fa-star"></i>
+        </button>
+        <div>
+          <div class="editor-title">${esc(groupName(o))} / ${esc(o.name)}</div>
+          <div class="editor-subtitle" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);">"${esc(groupName(o))}/${esc(o.name)}"</div>
+        </div>
       </div>
       <div style="display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;">
         <button class="btn btn-ghost btn-sm" onclick="openRenameModal('${id}')">
@@ -716,7 +721,7 @@ function initTagWidget(entityId, kind) {
   const addBtn = document.getElementById(`tagAddBtn_${entityId}`);
   if (!wrap || !hidden || !input || !acEl) return;
 
-  const TAG_PALETTE = ['#e8197a','#e86019','#e8c819','#6de819','#19d4e8','#1965e8','#8c19e8','#e819c8','#19e888','#e84040','#8899cc',''];
+  const TAG_PALETTE = ['#e8197a','#e86019','#e8c819','#6de819','#19d4e8','#1965e8','#8c19e8','#e819c8','#19e888','#e84040','#8899cc','#19e8b8','#e89c19','#8c8c19',''];
 
   let acHighlighted = -1;
   let chipDragSrc   = null;
@@ -802,18 +807,23 @@ function initTagWidget(entityId, kind) {
       picker = document.createElement('div');
       picker.id = '_tagColorPicker';
       picker.className = 'tag-color-picker';
-      document.body.appendChild(picker);
     }
     const curColor = tagColors[tag] || '';
     picker.innerHTML = `
-      <input type="text" class="tcp-rename-input" value="${esc(tag)}" maxlength="24" spellcheck="false" autocomplete="off">
+      <div class="tcp-rename-row">
+        <i class="fa-solid fa-pen tcp-rename-icon"></i>
+        <input type="text" class="tcp-rename-input" value="${esc(tag)}" maxlength="24" spellcheck="false" autocomplete="off">
+      </div>
       ${TAG_PALETTE.map(c =>
         `<button class="tcp-swatch${c === curColor ? ' tcp-active' : ''}${c ? '' : ' tcp-reset'}" data-color="${esc(c)}" style="${c ? 'background:' + c : ''}" title="${c || 'Remove color'}"></button>`
       ).join('')}
     `;
+    const scrollEl = document.getElementById('mainPanel');
+    if (picker.parentElement !== scrollEl) scrollEl.appendChild(picker);
+    const panelRect = scrollEl.getBoundingClientRect();
     const rect = chipEl.getBoundingClientRect();
-    picker.style.top  = (rect.bottom + 4) + 'px';
-    picker.style.left = Math.min(rect.left, window.innerWidth - 184) + 'px';
+    picker.style.top  = (rect.bottom - panelRect.top + scrollEl.scrollTop + 4) + 'px';
+    picker.style.left = Math.min(rect.left - panelRect.left, panelRect.width - 184) + 'px';
     picker.style.display = 'flex';
 
     const renameInput = picker.querySelector('.tcp-rename-input');

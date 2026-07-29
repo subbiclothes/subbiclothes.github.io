@@ -53,7 +53,7 @@ function outfitItemHTML(o) {
     ondragend="dragEnd(event)">
     <i class="fa-solid fa-grip-vertical outfit-drag-handle"></i>
     <div class="outfit-item-info">
-      <div class="outfit-item-name">${o.name}</div>
+      <div class="outfit-item-name">${o.favorite ? '<i class="fa-solid fa-star outfit-favorite-mark"></i> ' : ''}${o.name}</div>
       <div class="outfit-item-meta">${esc(groupName(o))} · <span class="gender-badge ${gc}">${g}</span>${searchByTag && tagsHTML ? `<span class="outfit-tags-row">${tagsHTML}</span>` : ''}</div>
     </div>
   </div>`;
