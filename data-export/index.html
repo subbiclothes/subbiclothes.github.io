@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Redirecting…</title>
+  <link rel="canonical" href="https://subbiclothes.com/settings-editor/">
+  <meta name="robots" content="noindex">
+  <script>
+    (function () {
+      // This tool moved to /settings-editor/. Preserve the ?query (and #hash) so
+      // backup links the HUD already generated as /data-export/?… keep working
+      // until build_export() is updated to point at /settings-editor/.
+      var target = '/settings-editor/' + window.location.search + window.location.hash;
+      try { window.location.replace(target); } catch (e) { window.location.href = target; }
+    })();
+  </script>
+</head>
+<body>
+  <p>This page has moved to <a href="/settings-editor/">/settings-editor/</a>…</p>
+</body>
+</html>
