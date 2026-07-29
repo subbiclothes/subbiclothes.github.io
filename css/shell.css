@@ -26,6 +26,11 @@
   --warning:    #f5a623;
   --radius:     8px;
   --radius-lg:  14px;
+  /* Shared content-column width for nav/footer/section-inner. Pages can
+     override this in their own <style> to widen just that page — see
+     commands-guide for the current experiment — without touching every
+     other page until the wider width is confirmed site-wide. */
+  --content-width: 1100px;
 
   /* ── Type scale ──
      Dark background + accent colours reduce contrast, so nothing that's
@@ -108,7 +113,7 @@ body::before {
   border-bottom: 1px solid var(--border);
 }
 .nav-inner {
-  max-width: 1100px; margin: 0 auto;
+  max-width: var(--content-width); margin: 0 auto;
   padding: 0 24px; height: 68px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -252,7 +257,7 @@ body::before {
   margin-top: auto;
 }
 .footer-inner {
-  max-width: 1100px; margin: 0 auto;
+  max-width: var(--content-width); margin: 0 auto;
   display: flex; align-items: flex-start; justify-content: space-between;
   flex-wrap: wrap; gap: 24px;
 }
@@ -301,7 +306,7 @@ body::before {
 .btn-ghost:hover { border-color: var(--border); color: var(--text); background: var(--bg-hover); }
 
 /* ─ Section layout primitives ─ */
-.section-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.section-inner { max-width: var(--content-width); margin: 0 auto; padding: 0 24px; }
 .section-eyebrow {
   font-size: 14px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
   color: var(--pink); margin-bottom: 10px;
