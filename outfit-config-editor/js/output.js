@@ -61,6 +61,12 @@ function generateAll() {
     .map(g => JSON.stringify({ ['group-tags-' + g.name]: g.groupTags.trim().split(/\s+/).join(',') }));
   const groupTagsSuffix = groupTagLines.length ? '\n\n' + groupTagLines.join('\n') : '';
 
+  // Favorites — a top-level flag on the outfit, not a field inside its
+  // settings block, so it's exported as its own independent line (same
+  // treatment as Group Tags above).
+  const favKeys = outfits.filter(o => o.favorite).map(o => `${groupName(o)}/${o.name}`).sort();
+  const favoritesSuffix = favKeys.length ? '\n\n' + JSON.stringify({ favorites: favKeys.join(',') }) : '';
+
   // Each group's settings block, immediately followed by its outfits.
   const sortedGroups = [...groups].sort((a, b) => a.name.localeCompare(b.name));
   const blocks = [];
@@ -71,7 +77,7 @@ function generateAll() {
   // Defensive: outfits whose group no longer exists shouldn't occur post-migration, but don't drop them silently.
   outfits.filter(o => !groups.some(g => g.id === o.groupId)).forEach(o => blocks.push(outfitToString(o)));
 
-  document.getElementById('outputCode').value = header + blocks.join('\n\n') + colorSuffix + tagsSuffix + allTagsSuffix + groupTagsSuffix;
+  document.getElementById('outputCode').value = header + blocks.join('\n\n') + colorSuffix + tagsSuffix + allTagsSuffix + groupTagsSuffix + favoritesSuffix;
   document.getElementById('instrList').innerHTML = (INSTR[lang] || INSTR.en).map(fn => `<li>${fn()}</li>`).join('');
   openModal('outputModal');
 }

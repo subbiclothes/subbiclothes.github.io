@@ -21,3 +21,24 @@ if (restored && outfits.length) {
 applyTranslations();
 
 document.addEventListener('click', () => closeApplyMenu());
+
+// Help tooltips (? icons) — hover for mouse, click/focus for touch & keyboard
+document.addEventListener('mouseover', e => {
+  const icon = e.target.closest('.help-icon');
+  if (icon) showHelpTip(icon);
+});
+document.addEventListener('mouseout', e => {
+  if (e.target.closest('.help-icon')) hideHelpTip();
+});
+document.addEventListener('focusin', e => {
+  const icon = e.target.closest('.help-icon');
+  if (icon) showHelpTip(icon);
+});
+document.addEventListener('focusout', e => {
+  if (e.target.closest('.help-icon')) hideHelpTip();
+});
+document.addEventListener('click', e => {
+  const icon = e.target.closest('.help-icon');
+  if (icon) { e.stopPropagation(); showHelpTip(icon); return; }
+  hideHelpTip();
+});

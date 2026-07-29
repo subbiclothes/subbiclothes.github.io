@@ -400,7 +400,6 @@
 @media (max-width: 540px) {
   .pillars-grid { grid-template-columns: 1fr; }
   .pillar { border-right: none !important; border-bottom: 1px solid var(--border-dim); }
-  .nav-links a:not(.nav-cta) { display: none; }
   .hero { padding: 70px 20px 60px; }
   .usecases-grid { grid-template-columns: 1fr; }
 }

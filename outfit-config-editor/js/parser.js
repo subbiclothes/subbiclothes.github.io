@@ -67,6 +67,26 @@ function parseConfig(text) {
     } catch(e) {}
   });
 
+  // Restore Favorites (independent flag, single self-contained JSON line).
+  // On overwrite, clear favorite on every outfit this import touched first,
+  // so re-importing after unfavoriting something in the file round-trips.
+  const favLine = lines.find(l => l.trim().startsWith('{"favorites"'));
+  if (overwrite) {
+    outfits.forEach(o => { if (parsedKeys.has(groupName(o) + '/' + o.name)) o.favorite = false; });
+  }
+  if (favLine) {
+    try {
+      const obj = JSON.parse(favLine.trim());
+      (obj.favorites || '').split(',').map(s => s.trim()).filter(Boolean).forEach(key => {
+        const idx = key.indexOf('/');
+        if (idx === -1) return;
+        const gname = key.slice(0, idx), oname = key.slice(idx + 1);
+        const o = outfits.find(x => groupName(x) === gname && x.name === oname);
+        if (o) o.favorite = true;
+      });
+    } catch(e) {}
+  }
+
   if (removeMismatch) {
     outfits = outfits.filter(o => parsedKeys.has(groupName(o) + '/' + o.name));
     if (activeId && !outfits.find(o => o.id === activeId) && !groups.find(g => g.id === activeId)) activeId = null;
@@ -152,6 +172,17 @@ function parseSettingsBlock(obj, d) {
   if (obj.particles_color_start) { d.particles_color_start = decodeColorFromInput(obj.particles_color_start); d.particles_color_start_enabled = true; }
   if (obj.particles_color_end)   { d.particles_color_end   = decodeColorFromInput(obj.particles_color_end);   d.particles_color_end_enabled   = true; }
 
+  // Advanced particle fields — mirror serializeSettingsBlock so an
+  // export → import round-trip doesn't silently drop them. Glow is written
+  // to the file scaled by 0.01 (see output.js), so undo that on the way in.
+  if (obj.particles_radius      !== undefined) d.particles_radius      = parseFloat(obj.particles_radius);
+  if (obj.particles_alpha_start !== undefined) d.particles_alpha_start = parseFloat(obj.particles_alpha_start);
+  if (obj.particles_alpha_end   !== undefined) d.particles_alpha_end   = parseFloat(obj.particles_alpha_end);
+  if (obj.particles_glow_start  !== undefined) d.particles_glow_start  = parseFloat((parseFloat(obj.particles_glow_start) * 100).toFixed(2));
+  if (obj.particles_glow_end    !== undefined) d.particles_glow_end    = parseFloat((parseFloat(obj.particles_glow_end) * 100).toFixed(2));
+  if (obj.particles_size_start  !== undefined) d.particles_size_start  = parseFloat(obj.particles_size_start);
+  if (obj.particles_size_end    !== undefined) d.particles_size_end    = parseFloat(obj.particles_size_end);
+
   if (obj.title_enabled !== undefined) d.title_enabled = obj.title_enabled;
   if (obj.title_text !== undefined) {
     const decoded = decodeTitleText(obj.title_text);
@@ -182,7 +213,7 @@ function tryParseBlock(key, blockText, overwrite = true) {
 
     const existing = outfits.find(o => o.groupId === groupId && o.name === name);
     if (existing) { if (overwrite) existing.data = d; }
-    else outfits.push({ id: 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), groupId, name, data: d });
+    else outfits.push({ id: 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), groupId, name, favorite: false, data: d });
     return true;
   } catch(e) {
     console.warn('Could not parse block:', key, e);

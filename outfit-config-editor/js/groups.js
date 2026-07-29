@@ -47,13 +47,34 @@ function confirmRenameGroup() {
   saveToStorage();
 }
 
+function resetGroupDeleteClickState() {
+  groupDeleteClickGroupId = null;
+  groupDeleteClickCount = 0;
+}
+
 function confirmDeleteGroup(id) {
   const g = groups.find(x => x.id === id);
   if (!g) return;
   if (outfits.some(o => o.groupId === id)) {
-    notify(t('group_delete_blocked'));
+    if (groupDeleteClickGroupId !== id) {
+      groupDeleteClickGroupId = id;
+      groupDeleteClickCount = 0;
+    }
+    groupDeleteClickCount++;
+    if (groupDeleteClickCount <= 3) {
+      notify(`${t('group_delete_blocked')} (${4 - groupDeleteClickCount})`, null, 3500);
+      return;
+    }
+    if (groupDeleteClickCount === 4) {
+      notify(t('group_delete_warning'), 'warning', 4500);
+      return;
+    }
+    resetGroupDeleteClickState();
+    outfits = outfits.filter(o => o.groupId !== id);
+    deleteGroup(id);
     return;
   }
+  resetGroupDeleteClickState();
   pendingDeleteGroupId = id;
   openModal('confirmDeleteGroupModal');
 }
@@ -78,6 +99,7 @@ function deleteGroup(id) {
 }
 
 function selectGroup(id) {
+  if (groupDeleteClickGroupId && groupDeleteClickGroupId !== id) resetGroupDeleteClickState();
   saveActiveEditor();
   activeMode = 'group';
   activeId = id;

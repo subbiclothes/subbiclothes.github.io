@@ -64,7 +64,7 @@ function confirmAdd() {
     let lastId;
     names.forEach(name => {
       lastId = 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-      outfits.push({ id: lastId, groupId, name, data: DEFAULT_OUTFIT() });
+      outfits.push({ id: lastId, groupId, name, favorite: false, data: DEFAULT_OUTFIT() });
     });
     closeModal('addModal');
     renderSidebar();
@@ -75,7 +75,7 @@ function confirmAdd() {
     const name = raw.trim();
     if (!name) return;
     const id = 'o_' + Date.now();
-    outfits.push({ id, groupId, name, data: DEFAULT_OUTFIT() });
+    outfits.push({ id, groupId, name, favorite: false, data: DEFAULT_OUTFIT() });
     closeModal('addModal');
     renderSidebar();
     selectOutfit(id);
@@ -137,6 +137,7 @@ function deleteOutfit(id) {
 }
 
 function selectOutfit(id) {
+  resetGroupDeleteClickState();
   saveActiveEditor();
   activeMode = 'outfit';
   activeId = id;
@@ -149,8 +150,22 @@ function duplicateOutfit(id) {
   const o = outfits.find(x => x.id === id);
   if (!o) return;
   const newId = 'o_' + Date.now();
-  outfits.push({ id: newId, groupId: o.groupId, name: o.name + ' (copy)', data: JSON.parse(JSON.stringify(o.data)) });
+  outfits.push({ id: newId, groupId: o.groupId, name: o.name + ' (copy)', favorite: false, data: JSON.parse(JSON.stringify(o.data)) });
   renderSidebar();
   selectOutfit(newId);
+  saveToStorage();
+}
+
+/* ── FAVORITES ──
+   Favorite is a top-level flag on the outfit (like groupId/name), not a
+   field inside `data` — it sits outside the Default/Group/Outfit settings
+   cascade, same as groupTags does for groups. */
+function toggleFavorite(id) {
+  saveActiveEditor();
+  const o = outfits.find(x => x.id === id);
+  if (!o) return;
+  o.favorite = !o.favorite;
+  if (activeMode === 'outfit' && activeId === id) renderEditor(id);
+  notify(o.favorite ? t('outfit_favorited') : t('outfit_unfavorited'));
   saveToStorage();
 }
