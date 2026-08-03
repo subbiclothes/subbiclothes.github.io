@@ -1,6 +1,17 @@
-const STORAGE_KEY  = 'subbi_outfits_v1';
-const GROUPS_KEY   = 'subbi_groups_v1';
-const COLORS_KEY   = 'subbi_tagcolors_v1';
+// Test/sandbox environment: activated with ?test (or ?env=test) in the URL.
+// It swaps the localStorage keys for a separate "_test" namespace, so the
+// sandbox starts as a clean template and never touches the normal config.
+const OCE_TEST_MODE = (() => {
+  try {
+    const p = new URLSearchParams(location.search);
+    return p.has('test') || p.get('env') === 'test';
+  } catch (e) { return false; }
+})();
+const KEY_SUFFIX = OCE_TEST_MODE ? '_test' : '';
+
+const STORAGE_KEY  = 'subbi_outfits_v1'   + KEY_SUFFIX;
+const GROUPS_KEY   = 'subbi_groups_v1'    + KEY_SUFFIX;
+const COLORS_KEY   = 'subbi_tagcolors_v1' + KEY_SUFFIX;
 
 function saveToStorage() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(outfits)); } catch(e) {}

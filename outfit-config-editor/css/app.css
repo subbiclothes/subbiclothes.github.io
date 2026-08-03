@@ -277,6 +277,22 @@ emoji-picker {
 .add-many-toggle:hover { color: var(--text-muted); border-color: var(--border-dim); }
 .add-many-toggle.active { color: var(--pink); border-color: var(--pink); }
 
+/* ── TEST / SANDBOX ENVIRONMENT BADGE ── */
+.test-env-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #1a1a1a;
+  background: var(--warning);
+  vertical-align: middle;
+  cursor: default;
+}
+
 /* ── GROUP HEADER ── */
 .group-header {
   font-family: 'Orbitron', monospace; font-size: 11px; letter-spacing: 2px;

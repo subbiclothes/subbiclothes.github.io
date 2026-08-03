@@ -157,6 +157,9 @@ const I18N = {
     tags_desc: "Filter and search outfits in the HUD by tag. Click a chip to pick a color, drag chips to reorder.",
     tag_renamed: "Tag renamed",
 
+    add_multiple: "add multiple",
+    add_multiple_outfit_hint: "Separate outfit names with commas",
+    add_multiple_group_hint: "Separate group names with commas",
     add_group: "Add group",
     new_group_option: "+ New group…",
     group_name_new_ph: "<New group name>",
@@ -343,6 +346,9 @@ const I18N = {
     tags_desc: "Filtra y busca outfits en el HUD por etiqueta. Haz clic en un chip para asignar color, arrastra para reordenar.",
     tag_renamed: "Tag renombrado",
 
+    add_multiple: "añadir varios",
+    add_multiple_outfit_hint: "Separa los nombres de outfit con comas",
+    add_multiple_group_hint: "Separa los nombres de grupo con comas",
     add_group: "Añadir grupo",
     new_group_option: "+ Nuevo grupo…",
     group_name_new_ph: "<Nombre del nuevo grupo>",

@@ -95,7 +95,7 @@
       </button>
       <div class="version-tag">
         <button class="duck-btn" onclick="duckClick()" tabindex="-1">🦆</button>
-        <span>v1.3.0.0</span>
+        <span>v1.3.1.0</span>
       </div>
     </div>
   </div>
@@ -124,11 +124,11 @@
       <label style="display:flex;align-items:center;justify-content:space-between;">
         <span data-t="outfit_name">Outfit Name</span>
         <button type="button" id="addManyToggle" class="add-many-toggle" onclick="toggleAddMany()">
-          <i class="fa-solid fa-list-ul"></i> add multiple
+          <i class="fa-solid fa-list-ul"></i> <span data-t="add_multiple">add multiple</span>
         </button>
       </label>
       <input type="text" id="m_outfit" placeholder="&lt;Outfit name&gt;" autocomplete="off"/>
-      <div id="m_many_hint" style="display:none;font-size:11px;color:var(--text-dim);margin-top:4px;">Separate outfit names with commas</div>
+      <div id="m_many_hint" style="display:none;font-size:11px;color:var(--text-dim);margin-top:4px;" data-t="add_multiple_outfit_hint">Separate outfit names with commas</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('addModal')" data-t="cancel">Cancel</button>
@@ -174,8 +174,14 @@
   <div class="modal">
     <h3 data-t="modal_title_group">NEW GROUP</h3>
     <div class="form-group">
-      <label data-t="group_name">Group Name</label>
+      <label style="display:flex;align-items:center;justify-content:space-between;">
+        <span data-t="group_name">Group Name</span>
+        <button type="button" id="addManyGroupToggle" class="add-many-toggle" onclick="toggleAddManyGroup()">
+          <i class="fa-solid fa-list-ul"></i> <span data-t="add_multiple">add multiple</span>
+        </button>
+      </label>
       <input type="text" id="g_add_name" placeholder="&lt;Body name&gt;" autocomplete="off"/>
+      <div id="g_many_hint" style="display:none;font-size:11px;color:var(--text-dim);margin-top:4px;" data-t="add_multiple_group_hint">Separate group names with commas</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('addGroupModal')" data-t="cancel">Cancel</button>

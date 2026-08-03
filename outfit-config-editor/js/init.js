@@ -9,6 +9,19 @@ document.getElementById('mainPanel').addEventListener('input', () => {
   saveTimer = setTimeout(() => { saveActiveEditor(); saveToStorage(); }, 400);
 });
 
+// Test/sandbox environment banner (activated via ?test in the URL)
+if (typeof OCE_TEST_MODE !== 'undefined' && OCE_TEST_MODE) {
+  document.title = '[TEST] ' + document.title;
+  const wordmark = document.querySelector('.logo-wordmark');
+  if (wordmark) {
+    const badge = document.createElement('span');
+    badge.className = 'test-env-badge';
+    badge.textContent = 'TEST';
+    badge.title = 'Sandbox environment — data saved separately from your normal config';
+    wordmark.appendChild(badge);
+  }
+}
+
 // Bootstrap: restore from localStorage, or start empty
 const restored = loadFromStorage();
 loadTagColors();

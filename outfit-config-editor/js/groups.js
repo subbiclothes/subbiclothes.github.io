@@ -1,23 +1,59 @@
+let addManyGroupMode = false;
+
+function toggleAddManyGroup() {
+  addManyGroupMode = !addManyGroupMode;
+  document.getElementById('addManyGroupToggle').classList.toggle('active', addManyGroupMode);
+  const input = document.getElementById('g_add_name');
+  input.placeholder = addManyGroupMode ? 'Group1, Group2, Group3' : '<Body name>';
+  document.getElementById('g_many_hint').style.display = addManyGroupMode ? '' : 'none';
+}
+
 function openAddGroupModal() {
+  addManyGroupMode = false;
   document.getElementById('g_add_name').value = '';
+  document.getElementById('g_add_name').placeholder = '<Body name>';
+  document.getElementById('g_many_hint').style.display = 'none';
+  document.getElementById('addManyGroupToggle').classList.remove('active');
   openModal('addGroupModal');
   setTimeout(() => document.getElementById('g_add_name').focus(), 100);
 }
 
 function confirmAddGroup() {
-  const name = document.getElementById('g_add_name').value.trim();
-  if (!name) return;
-  if (groups.some(g => g.name === name)) {
-    notify(t('group_name_taken'));
-    return;
+  const raw = document.getElementById('g_add_name').value;
+  if (!raw.trim()) return;
+
+  if (addManyGroupMode) {
+    const names = raw.split(',').map(s => s.trim()).filter(Boolean);
+    if (!names.length) return;
+    let created = 0, lastId = null;
+    names.forEach(name => {
+      if (groups.some(g => g.name === name)) return; // skip duplicates silently
+      const g = { id: 'g_' + Date.now() + '_' + Math.random().toString(36).slice(2,6), name, data: DEFAULT_OUTFIT(), groupTags: '' };
+      groups.push(g);
+      lastId = g.id;
+      created++;
+    });
+    if (!created) { notify(t('group_name_taken')); return; }
+    closeModal('addGroupModal');
+    renderSidebar();
+    if (lastId) selectGroup(lastId);
+    notify(created + ' ' + t('group_added'));
+    saveToStorage();
+  } else {
+    const name = raw.trim();
+    if (!name) return;
+    if (groups.some(g => g.name === name)) {
+      notify(t('group_name_taken'));
+      return;
+    }
+    const g = { id: 'g_' + Date.now(), name, data: DEFAULT_OUTFIT(), groupTags: '' };
+    groups.push(g);
+    closeModal('addGroupModal');
+    renderSidebar();
+    selectGroup(g.id);
+    notify(t('group_added'));
+    saveToStorage();
   }
-  const g = { id: 'g_' + Date.now(), name, data: DEFAULT_OUTFIT(), groupTags: '' };
-  groups.push(g);
-  closeModal('addGroupModal');
-  renderSidebar();
-  selectGroup(g.id);
-  notify(t('group_added'));
-  saveToStorage();
 }
 
 function openRenameGroupModal(id) {
