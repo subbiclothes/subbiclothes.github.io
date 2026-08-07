@@ -31,7 +31,7 @@
   "entries": [
 
     {
-      "version": "DEV-4.1",
+      "version": "DEV-5.0",
       "date": "Work in Progress",
       "type": "beta",
       "version_type": "middle",
@@ -40,22 +40,26 @@
       "summary": "Medium SC4 DEV update introducing group-level configuration through GCE, experimental Lock Clothes and Lock Avatar systems, new Titler modes, and expanded permission controls — including public access to MixOutfit — alongside a fully rebuilt command system, an overhauled update pipeline, and improvements to Particles, AlphaFix, and administrative access handling.",
 
       "new": [
-        "[WIP] Added support for **GCE**, the **Group**-level counterpart of OCE, extending per-outfit configuration to entire groups.",
+        "Added support for **GCE**, the **Group**-level counterpart of OCE, extending per-outfit configuration to entire groups.",
         "Added _experimental_ **Lock Clothes** functionality.",
         "Added _experimental_ **Lock Avatar** functionality.",
         "Added new **Titler** modes:",
         "- **Sequential Mode**",
         "- **Scroll Mode**",
+        "Added subparticles in initial phase (replace texture, color).",
+        "Added Favorite Outfits (Configurable via OCE and notecard).",
         "Added Say function.",
         "Added new **Invite** feature.",
         "Added a command to restore the previously worn avatar.",
         "Added a command to protect lists (Whitelist, Blacklist, Masters, Regions) from script resets.",
         "Added a new experimental function to transfer lists, permissions, and options to new HUDs.",
-        "Added multiple new utility commands. [note:See the Commands Guide at https://subbiclothes.com/commands-guide/]"
+        "Added new web interface for editing options and backups.",
+        "Added multiple new utility commands. [note:See the Commands Guide at https://subbiclothes.com/commands-guide/]",
+        "Added a direct access to OCE (your browser) via Settings in the HUD."
       ],
       "changed": [
         "Completely rebuilt the command system from the ground up, improving interoperability, consistency, and overall user experience.",
-        "Completely overhauled the update system (transparent to users).",
+        "Completely overhauled the update system.",
         "Improved Particles system with the following new options:",
         "- Radius",
         "- Alpha start - alpha end",
@@ -66,14 +70,19 @@
         "Authorized admins will retain access even if they appear on the blacklist.",
         "Bio now works behind a permission. Public allowed by default.",
         "[WIP] Added support for **MixOutfit** being accessible to the public through a permission (previously limited to the owner).",
-        "Now supports multiple commands in one line, separated by a semicolon. Example: ``/55 command1; command2; command3``"
+        "Now supports multiple commands in one line, separated by a semicolon. Example: ``/55 command1; command2; command3``",
+        "Changed the default Reload Avatar option from ON to OFF. (By default, avatars will no longer reload.)",
+        "New submenus in Settings: Permissions, Sounds, and Memory (re-added).",
+        "Now you can disable individual HUD sounds and adjust their volume individually (same volume for all)."
+
       ],
       "fixed": [
         "Fixed an issue where **STOP!** did not trigger visual effects when executed through a command.",
         "Fixed an issue where **Min.Range** and **Public.Distance** were not synchronized. _Yes, they're the same setting._",
         "Fixed a potential storage issue affecting the **Whitelist** and **Blacklist**.",
         "Fixed an issue with HUD texture switching. [note:Currently disabled]",
-        "Fixed an issue that could prevent accessories from being removed correctly."
+        "Fixed an issue that could prevent accessories from being removed correctly.",
+        "Fixed error where AnimsOnSit OFF was running."
       ],
       "bugs": [
         "None currently known."
