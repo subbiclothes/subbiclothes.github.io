@@ -54,7 +54,7 @@
         "Added a command to protect lists (Whitelist, Blacklist, Masters, Regions) from script resets.",
         "Added a new experimental function to transfer lists, permissions, and options to new HUDs.",
         "Added new web interface for editing options and backups.",
-        "Added multiple new utility commands. [note:See the Commands Guide at https://subbiclothes.com/commands-guide/]",
+        "Added multiple new utility commands. [URL https://subbiclothes.com/commands-guide/ See the Commands Guide for details.]",
         "Added a direct access to OCE (your browser) via Settings in the HUD."
       ],
       "changed": [
@@ -70,7 +70,7 @@
         "Authorized admins will retain access even if they appear on the blacklist.",
         "Bio now works behind a permission. Public allowed by default.",
         "[WIP] Added support for **MixOutfit** being accessible to the public through a permission (previously limited to the owner).",
-        "Now supports multiple commands in one line, separated by a semicolon. Example: ``/55 command1; command2; command3``",
+        "[WIP] Now supports multiple commands in one line, separated by a semicolon. Example: ``/55 command1; command2; command3``",
         "Changed the default Reload Avatar option from ON to OFF. (By default, avatars will no longer reload.)",
         "New submenus in Settings: Permissions, Sounds, and Memory (re-added).",
         "Now you can disable individual HUD sounds and adjust their volume individually (same volume for all)."

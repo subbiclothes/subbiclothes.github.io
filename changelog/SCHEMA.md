@@ -71,6 +71,9 @@ Applies to all list items (`new`/`changed`/`fixed`/`bugs`/`hud`) and `summary`.
 - `~~text~~` — Strikethrough
 - `||text||` — Spoiler (blurred, revealed on hover/click)
 - `` ``code`` `` — Inline monospace code
+- `[URL <url> <text>]` — Link, e.g. `[URL https://subbiclothes.com/ Home page]`. The URL must
+  start with `http://`, `https://`, or `/` (site-relative); external links open in a new tab.
+  The `<url>`/`<text>` are placeholders — write them without angle brackets.
 
 **Status tags** — can appear anywhere in the string:
 - `[fixed:X]` — "Fixed in vX" badge (green)

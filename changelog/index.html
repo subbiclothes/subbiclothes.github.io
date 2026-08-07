@@ -79,6 +79,42 @@
     .raw-data-link:hover { color: var(--text-muted); }
     .raw-data-link i { font-size: 11px; }
 
+    /* ── Stable vs DEV compare button ── */
+    .compare-btn {
+      display: inline-flex; align-items: center; gap: 14px;
+      padding: 12px 18px; margin-bottom: 28px;
+      border: 1px solid rgba(0,196,212,0.22); border-radius: var(--radius);
+      background: rgba(0,196,212,0.05); color: var(--text); text-decoration: none;
+      transition: border-color .15s, background .15s;
+    }
+    .compare-btn:hover { border-color: rgba(0,196,212,0.5); background: rgba(0,196,212,0.10); }
+    .compare-icon { color: #00c4d4; font-size: 20px; flex-shrink: 0; }
+    .compare-text { display: flex; flex-direction: column; gap: 2px; }
+    .compare-title {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 15px; letter-spacing: .5px; color: var(--text);
+    }
+    .compare-sub { font-size: 13px; color: var(--text-muted); }
+    .compare-arrow {
+      color: var(--text-dim); font-size: 13px; margin-left: 6px;
+      transition: transform .15s, color .15s;
+    }
+    .compare-btn:hover .compare-arrow { transform: translateX(3px); color: #00c4d4; }
+
+    /* ── Inline text link (JSON [URL …] tag) ── */
+    .cl-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      padding: 1px 7px; border-radius: 3px;
+      vertical-align: middle; margin: 0 2px; text-decoration: none;
+      background: rgba(255,45,120,0.12); color: var(--pink);
+      border: 1px solid rgba(255,45,120,0.3);
+      transition: background .15s, border-color .15s;
+    }
+    .cl-link:hover { background: rgba(255,45,120,0.22); border-color: var(--pink); }
+    .cl-link i { font-size: 9px; }
+
     /* ── Type legend ── */
     .type-legend {
       display: grid;
@@ -404,7 +440,14 @@
     <p class="page-eyebrow"><span data-lc="en">Release history</span><span data-lc="es">Historial de versiones</span></p>
     <h1 class="page-title"><i class="fa-solid fa-clock-rotate-left"></i> Subbi Clothes — <span>Changelog</span></h1>
     <p class="page-desc"><span data-lc="en">All changes across every release — stable builds and public DEV versions. Most recent first.</span><span data-lc="es">Todos los cambios de cada versión — builds estables y versiones DEV públicas. Más recientes primero.</span></p>
-    <p class="page-desc"><span data-lc="en">Want the short version? See our <a href="/stable-vs-dev/">Stable vs DEV comparison</a> for what's actually different between the two branches.</span><span data-lc="es">¿Quieres la versión corta? Consulta nuestra <a href="/stable-vs-dev/">comparativa Stable vs DEV</a> para ver qué cambia realmente entre ambas ramas.</span></p>
+    <a href="/stable-vs-dev/" class="compare-btn">
+      <i class="fa-solid fa-code-compare compare-icon"></i>
+      <span class="compare-text">
+        <span class="compare-title"><span data-lc="en">Stable vs DEV comparison</span><span data-lc="es">Comparativa Stable vs DEV</span></span>
+        <span class="compare-sub"><span data-lc="en">What's actually different between the two branches</span><span data-lc="es">Qué cambia realmente entre las dos ramas</span></span>
+      </span>
+      <i class="fa-solid fa-arrow-right compare-arrow"></i>
+    </a>
 
     <!-- ── Release type legend ── -->
     <div class="type-legend">
@@ -478,6 +521,7 @@
          [wip]            → tag WIP
          [breaking]       → tag BREAKING
          [note:text]      → small annotation tag
+         [URL u t]        → link: [URL https://site.com/ link text]  (http(s):// or /path)
     ════════════════════════════════════════════ */
 
     function renderMarkup(str) {
@@ -492,6 +536,22 @@
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+
+      // 1b. Extract [URL <url> <text>] links first, stashing the built <a> behind a
+      //     placeholder so the markup passes below can't mangle the href (e.g. an
+      //     underscore in the URL becoming italics). Restored at the very end.
+      const linkStore = [];
+      s = s.replace(/\[URL\s+(\S+)\s+([^\]]+)\]/gi, (m, url, text) => {
+        if (!/^(https?:\/\/|\/)/i.test(url)) return m; // only http(s) or site-relative
+        const href = url.replace(/"/g, '%22');
+        const external = /^https?:\/\//i.test(url);
+        const linkIcon = external ? 'fa-arrow-up-right-from-square' : 'fa-link';
+        linkStore.push(
+          `<a href="${href}" class="cl-link"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>` +
+          `<i class="fa-solid ${linkIcon}"></i> ${text}</a>`
+        );
+        return `@@LINK${linkStore.length - 1}@@`;
+      });
 
       // 2. Process ALL meta tags in string order (single pass)
       let firstTagDone = false;
@@ -531,6 +591,9 @@
 
       // 7. Strikethrough  ~~text~~
       s = s.replace(/~~(.+?)~~/g, '<del>$1</del>');
+
+      // 8. Restore the [URL …] links extracted in step 1b
+      s = s.replace(/@@LINK(\d+)@@/g, (m, i) => linkStore[+i] ?? m);
 
       return s;
     }
