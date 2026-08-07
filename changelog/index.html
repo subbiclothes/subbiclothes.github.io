@@ -598,7 +598,20 @@
     ════════════════════════════════════════════ */
 
     let allEntries  = [];
-    let currentFilter = 'all';
+    const VALID_FILTERS = ['all', 'stable', 'dev', 'beta'];
+
+    // Keep the chosen channel in the URL (?filter=…) so a shared link reopens on it.
+    function readFilterFromURL() {
+      const f = (new URLSearchParams(location.search).get('filter') || '').toLowerCase();
+      return VALID_FILTERS.includes(f) ? f : 'all';
+    }
+    function applyFilterButtons(f) {
+      document.querySelectorAll('.filter-btn').forEach(btn =>
+        btn.classList.toggle('active', btn.dataset.filter === f));
+    }
+
+    let currentFilter = readFilterFromURL();
+    applyFilterButtons(currentFilter);
 
     fetch('./data.json')
       .then(r => r.json())
@@ -824,8 +837,11 @@
     /* ── Filter ── */
     function setFilter(f) {
       currentFilter = f;
-      document.querySelectorAll('.filter-btn').forEach(btn =>
-        btn.classList.toggle('active', btn.dataset.filter === f));
+      applyFilterButtons(f);
+      const url = new URL(location);
+      if (f === 'all') url.searchParams.delete('filter'); // keep the default URL clean
+      else url.searchParams.set('filter', f);
+      history.replaceState(null, '', url);
       renderTimeline();
     }
   </script>
