@@ -28,14 +28,71 @@ function toggleSearchMode() {
   renderSidebar();
 }
 
-function toggleSidebarCollapse() {
-  document.querySelector('.sidebar').classList.toggle('sidebar-collapsed');
+/* ── RESIZABLE SIDEBAR ──
+   The sidebar is resized by hand via the right-edge handle, replacing the old
+   collapse "<" button. Drag it narrower than SIDEBAR_COLLAPSE_AT and it folds
+   into a vertical "OUTFITS" label (content hidden). Width is persisted. The
+   compact-names view stays a separate manual toggle (btnCompact). */
+const SIDEBAR_WIDTH_KEY = 'subbi_sidebar_width_v1';
+const SIDEBAR_MIN = 44;
+const SIDEBAR_MAX = 460;
+const SIDEBAR_COLLAPSE_AT = 130;
+const SIDEBAR_NARROW_AT = 215;
+const SIDEBAR_DEFAULT = 260;
+
+function applySidebarWidth(w) {
+  w = Math.max(SIDEBAR_MIN, Math.min(SIDEBAR_MAX, Math.round(w)));
+  const sb = document.querySelector('.sidebar');
+  sb.style.width = w + 'px';
+  sb.style.minWidth = w + 'px';
+  const collapsed = w <= SIDEBAR_COLLAPSE_AT;
+  sb.classList.toggle('sidebar-collapsed', collapsed);
+  sb.classList.toggle('sidebar-narrow', !collapsed && w <= SIDEBAR_NARROW_AT);
+  return w;
+}
+
+// Quick expand from the collapsed rail — restores the default width.
+function expandSidebar() {
+  const w = applySidebarWidth(SIDEBAR_DEFAULT);
+  try { localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (e) {}
+}
+
+function initSidebarResize() {
+  const sb = document.querySelector('.sidebar');
+  const handle = document.getElementById('sidebarResizer');
+  if (!sb || !handle) return;
+
+  const saved = parseInt(localStorage.getItem(SIDEBAR_WIDTH_KEY), 10);
+  if (!isNaN(saved)) applySidebarWidth(saved);
+
+  let dragging = false, curW = null;
+  const onMove = e => {
+    if (!dragging) return;
+    curW = applySidebarWidth(e.clientX - sb.getBoundingClientRect().left);
+  };
+  const onUp = () => {
+    if (!dragging) return;
+    dragging = false;
+    sb.classList.remove('resizing');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    if (curW != null) { try { localStorage.setItem(SIDEBAR_WIDTH_KEY, String(curW)); } catch (e) {} }
+  };
+  handle.addEventListener('mousedown', e => {
+    e.preventDefault();
+    dragging = true;
+    sb.classList.add('resizing');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
 }
 
 function outfitItemHTML(o) {
   const g = o.data.gender || 'Neutral';
   const gc = g === 'Female' ? 'gb-female' : g === 'Male' ? 'gb-male' : 'gb-neutral';
-  const tags = (o.data.tags || '').trim().split(/\s+/).filter(Boolean).slice(0, 3);
+  const tags = (o.data.tags || '').trim().split(/\s+/).filter(Boolean).slice(0, 10);
   const tagsHTML = tags.map(tag => {
     const col = tagColors[tag] || '';
     const s = col ? ` style="border-color:${col};color:${col}"` : '';
@@ -104,12 +161,6 @@ function renderSidebar() {
 function toggleCompact() {
   compactSidebar = !compactSidebar;
   document.getElementById('btnCompact').classList.toggle('btn-group-active', compactSidebar);
-  renderSidebar();
-}
-
-function toggleGroupBy() {
-  groupByGroup = !groupByGroup;
-  document.getElementById('btnGroupBy').classList.toggle('btn-group-active', groupByGroup);
   renderSidebar();
 }
 

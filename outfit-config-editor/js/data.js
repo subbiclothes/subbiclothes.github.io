@@ -220,6 +220,7 @@ const DEFAULT_OUTFIT = () => ({
   title_text: '',
   title_mode: null,
   title_scroll_size: 5,
+  title_auto_split: false,
   title_color_enabled: false,
   title_color: '<1.0, 1.0, 1.0>',
   biography: '',

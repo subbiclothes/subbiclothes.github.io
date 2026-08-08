@@ -165,6 +165,7 @@ function toggleFavorite(id) {
   const o = outfits.find(x => x.id === id);
   if (!o) return;
   o.favorite = !o.favorite;
+  renderSidebar();
   if (activeMode === 'outfit' && activeId === id) renderEditor(id);
   notify(o.favorite ? t('outfit_favorited') : t('outfit_unfavorited'));
   saveToStorage();

@@ -169,6 +169,115 @@ function copyGroupConfig(id) {
     .then(() => notify(t('outfit_copied')));
 }
 
+/* ── PASTE CONFIG ──
+   Inverse of copyOutfitConfig/copyGroupConfig: read a copied settings block and
+   merge a chosen subset of its categories into the current outfit or group. */
+
+// Which data fields belong to each pasteable category. `bodyparts` is deep-copied
+// separately since it's a nested object.
+const PASTE_CATEGORY_FIELDS = {
+  settings:  ['gender','animations_enabled','skelfix_change','skelfix_reload',
+              'nudity_permission','hairstyle_permission','clothes_permission',
+              'lock_ankles','pg_safe_mode'],
+  tags:      ['tags'],
+  particles: ['particles_enabled','particles_texture','particles_duration',
+              'particles_color_start_enabled','particles_color_end_enabled',
+              'particles_color_start','particles_color_end','particles_radius',
+              'particles_alpha_start','particles_alpha_end','particles_glow_start',
+              'particles_glow_end','particles_size_start','particles_size_end'],
+  title:     ['title_enabled','title_text','title_mode','title_scroll_size',
+              'title_color_enabled','title_color'],
+  biography: ['biography'],
+};
+
+// Parse the first settings block found in `text` into a DEFAULT_OUTFIT()-shaped
+// object (reusing the importer's helpers). Returns null if nothing parseable.
+function parseSingleBlockToData(text) {
+  const lines = String(text || '').split('\n');
+  const blockRegex = /^\s*"([^"]+\/[^"]+)"\s*:\s*\{/;
+  let blockLines = null, inBlock = false;
+  for (const line of lines) {
+    if (!inBlock) {
+      if (blockRegex.test(line)) { blockLines = ['{']; inBlock = true; }
+    } else {
+      if (line.includes('// === END OUTFIT ===')) break;
+      const stripped = line.replace(/\/\/.*$/, '').trimEnd();
+      if (stripped.trim()) blockLines.push(stripped);
+    }
+  }
+  if (!blockLines) return null;
+  blockLines.push('}');
+  try {
+    const obj = JSON.parse(fixBlockJson(blockLines.join('\n')));
+    const d = DEFAULT_OUTFIT();
+    parseSettingsBlock(obj, d);
+    if (obj.tags !== undefined) d.tags = obj.tags;
+    return d;
+  } catch (e) { return null; }
+}
+
+function applyCategories(dst, src, cats) {
+  cats.forEach(cat => {
+    if (cat === 'bodyparts') { dst.bodyparts = JSON.parse(JSON.stringify(src.bodyparts)); return; }
+    (PASTE_CATEGORY_FIELDS[cat] || []).forEach(f => { dst[f] = src[f]; });
+  });
+}
+
+function openPasteConfigModal(id, mode) {
+  pasteTargetId = id;
+  pasteTargetMode = mode;
+  document.getElementById('pasteConfigArea').value = '';
+  const cats = [
+    { key: 'settings',  label: t('sec_settings')  },
+    { key: 'tags',      label: t('sec_tags')      },
+    { key: 'bodyparts', label: t('sec_bodyparts') },
+    { key: 'particles', label: t('sec_particles') },
+    { key: 'title',     label: t('sec_title')     },
+    { key: 'biography', label: t('sec_biography') },
+  ].filter(c => !(c.key === 'tags' && mode === 'group')); // groups carry no outfit tags
+
+  const rows = cats.map(c =>
+    `<label class="paste-cat"><input type="checkbox" class="paste-cat-chk" value="${c.key}" checked onchange="syncPasteAll()"><span>${esc(c.label)}</span></label>`
+  ).join('');
+  document.getElementById('pasteCatList').innerHTML =
+    `<label class="paste-cat paste-cat-all"><input type="checkbox" id="pasteCatAll" checked onchange="togglePasteAll(this)"><span>${t('paste_all')}</span></label>` +
+    `<div class="paste-cat-grid">${rows}</div>`;
+  openModal('pasteConfigModal');
+  setTimeout(() => document.getElementById('pasteConfigArea').focus(), 100);
+}
+
+function togglePasteAll(master) {
+  document.querySelectorAll('.paste-cat-chk').forEach(chk => { chk.checked = master.checked; });
+}
+
+function syncPasteAll() {
+  const all = [...document.querySelectorAll('.paste-cat-chk')];
+  document.getElementById('pasteCatAll').checked = all.every(c => c.checked);
+}
+
+function confirmPasteConfig() {
+  const text = document.getElementById('pasteConfigArea').value;
+  if (!text.trim()) return;
+  const parsed = parseSingleBlockToData(text);
+  if (!parsed) { notify(t('paste_invalid'), 'warning'); return; }
+  const selected = [...document.querySelectorAll('.paste-cat-chk:checked')].map(c => c.value);
+  if (!selected.length) { notify(t('paste_none'), 'warning'); return; }
+
+  const target = pasteTargetMode === 'group'
+    ? groups.find(g => g.id === pasteTargetId)
+    : outfits.find(o => o.id === pasteTargetId);
+  if (!target) return;
+
+  saveActiveEditor();
+  applyCategories(target.data, parsed, selected);
+  closeModal('pasteConfigModal');
+  if (pasteTargetMode === 'group') renderGroupEditor(target.id);
+  else renderEditor(target.id);
+  renderSidebar();
+  notify(t('paste_applied'));
+  saveToStorage();
+}
+
 function copyOutput() {
   navigator.clipboard.writeText(document.getElementById('outputCode').value)
     .then(() => notify(t('copied')));

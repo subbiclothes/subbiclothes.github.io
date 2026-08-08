@@ -231,7 +231,34 @@ function renderTogglesSectionHTML(d, showApplyButtons) {
     </div>`;
 }
 
+// Browser-only "memory" for clothing layer names, kept per body part: for each
+// part, the distinct Dressed / Underwear names already typed into that same part
+// across all outfits and groups, so a field only suggests names that belong to
+// its own slot. Purely a UI convenience — it doesn't touch the exported config.
+function collectLayerNames() {
+  const map = {};
+  BODY_PARTS.forEach(p => { map[p] = { normal: new Set(), underwear: new Set() }; });
+  const scan = data => {
+    if (!data || !data.bodyparts) return;
+    BODY_PARTS.forEach(p => {
+      const bp = data.bodyparts[p];
+      if (!bp) return;
+      if (bp.normal    && bp.normal.trim())    map[p].normal.add(bp.normal.trim());
+      if (bp.underwear && bp.underwear.trim()) map[p].underwear.add(bp.underwear.trim());
+    });
+  };
+  outfits.forEach(o => scan(o.data));
+  groups.forEach(g => scan(g.data));
+  return map;
+}
+
 function renderBodypartsSectionHTML(d) {
+  const layerNames = collectLayerNames();
+  const layerDatalists = BODY_PARTS.map(p => {
+    const nOpts = [...layerNames[p].normal].sort().map(n => `<option value="${esc(n)}"></option>`).join('');
+    const uOpts = [...layerNames[p].underwear].sort().map(n => `<option value="${esc(n)}"></option>`).join('');
+    return `<datalist id="bpNormalNames_${p}">${nOpts}</datalist><datalist id="bpUnderwearNames_${p}">${uOpts}</datalist>`;
+  }).join('');
   const bpRows = BODY_PARTS.map(p => {
     const bp = d.bodyparts[p] || {};
     const def = BP_DEFAULTS[p] || {};
@@ -241,8 +268,8 @@ function renderBodypartsSectionHTML(d) {
         <input type="checkbox" class="row-enable" ${en} data-part="${p}" style="pointer-events:none;"/>
         <span class="part-label">${p}</span>
       </div></td>
-      <td><input type="text" class="bp-normal"    data-part="${p}" value="${esc(bp.normal||'')}"      placeholder="${esc(def.normal||'')}"            oninput="updatePartEnabled('${p}')"/></td>
-      <td><input type="text" class="bp-underwear" data-part="${p}" value="${esc(bp.underwear||'')}"   placeholder="${esc(def.underwear||'')}"         oninput="updatePartEnabled('${p}')"/></td>
+      <td><input type="text" class="bp-normal"    data-part="${p}" value="${esc(bp.normal||'')}"      placeholder="${esc(def.normal||'')}"            list="bpNormalNames_${p}"    oninput="updatePartEnabled('${p}')"/></td>
+      <td><input type="text" class="bp-underwear" data-part="${p}" value="${esc(bp.underwear||'')}"   placeholder="${esc(def.underwear||'')}"         list="bpUnderwearNames_${p}" oninput="updatePartEnabled('${p}')"/></td>
       <td class="bp-col-anim"><input type="text" class="bp-wear-anim" data-part="${p}" value="${esc(bp.wear_anim||'')}"   placeholder="${esc(def.wear_anim||'—')}"        oninput="updatePartEnabled('${p}')"/></td>
       <td class="bp-col-anim bp-col-time"><input type="number" class="bp-wear-time" data-part="${p}" value="${bp.wear_time??''}"     placeholder="${def.wear_time??1.0}" step="0.1" min="0" oninput="updatePartEnabled('${p}')"/></td>
       <td class="bp-col-anim"><input type="text" class="bp-rem-anim"  data-part="${p}" value="${esc(bp.remove_anim||'')}" placeholder="${esc(def.remove_anim||'—')}"      oninput="updatePartEnabled('${p}')"/></td>
@@ -284,6 +311,7 @@ function renderBodypartsSectionHTML(d) {
             <tbody>${bpRows}</tbody>
           </table>
         </div>
+        ${layerDatalists}
         <details class="tip-box" style="margin-top:12px;">
           <summary><i class="fa-solid fa-circle-info tip-icon"></i>${t('footer_hint_summary')}</summary>
           <div class="tip-content">${t('footer_hint')}</div>
@@ -303,7 +331,6 @@ function toggleBpAnimCols() {
 }
 
 function renderParticlesSectionHTML(d) {
-  const wip = `<span class="wip-badge">${t('wip')}</span>`;
   return `
     <div class="section" id="sec_particles">
       <div class="section-header" onclick="toggleSection('sec_particles')">
@@ -323,7 +350,7 @@ function renderParticlesSectionHTML(d) {
           </div>
           <div class="form-group">
             <label>${t('particles_duration')}</label>
-            <input type="number" class="f-part-dur" value="${d.particles_duration??''}" placeholder="2" step="1" min="0"/>
+            <input type="number" class="f-part-dur" value="${d.particles_duration??''}" placeholder="4" step="1" min="0"/>
           </div>
         </div>
         <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;">
@@ -349,7 +376,7 @@ function renderParticlesSectionHTML(d) {
         <div class="section collapsed" id="sec_part_adv" style="margin-top:16px;">
           <div class="section-header" onclick="toggleSection('sec_part_adv')">
             <i class="fa-solid fa-flask section-icon"></i>
-            <span class="section-label">${t('sec_particles_adv')} ${wip}</span>
+            <span class="section-label">${t('sec_particles_adv')}</span>
             <i class="fa-solid fa-chevron-down section-chevron"></i>
           </div>
           <div class="section-body">
@@ -398,20 +425,17 @@ function renderParticlesSectionHTML(d) {
             </div>
           </div>
         </div>
-        <details class="tip-box" style="margin-top:12px;">
-          <summary><i class="fa-solid fa-circle-info tip-icon"></i>${t('title_special_intro')}</summary>
-          <ul>
-            <li>${t('title_tip_rgb')}</li>
-            <li>${t('title_tip_rainbow')}</li>
-            <li>${t('title_tip_random')}</li>
-          </ul>
-        </details>
       </div>
     </div>`;
 }
 
 function renderTitleSectionHTML(d) {
   const wip = `<span class="wip-badge">${t('wip')}</span>`;
+  const autoSplit = d.title_mode === 'sequential' && !!d.title_auto_split;
+  const segs = (d.title_text || '').split('|');
+  // Special color modes tip is only relevant on the Preset tab of the title color
+  const _tc = d.title_color || '<1.0, 1.0, 1.0>';
+  const titleColorIsPreset = /^RGB(?::\d+)?$/i.test(_tc) || COLOR_PRESETS.some(p => p.value === _tc);
   return `
     <div class="section" id="sec_title">
       <div class="section-header" onclick="toggleSection('sec_title')">
@@ -426,8 +450,15 @@ function renderTitleSectionHTML(d) {
         </div>
         <div class="form-grid">
           <div class="form-group full">
-            <label>${t('title_text')}</label>
-            <textarea class="f-title-txt" placeholder="♥ My title! ♥ (empty = auto)">${esc((d.title_text||'').replace(/\\n/g, '\n'))}</textarea>
+            <div class="title-text-labelrow">
+              <label>${t('title_text')}</label>
+              <div class="title-seg-controls" id="titleSegControls" style="display:${autoSplit ? '' : 'none'}">
+                <button type="button" class="seg-btn" onclick="addTitleSegment()" title="${t('title_seg_add')}"><i class="fa-solid fa-plus"></i></button>
+                <button type="button" class="seg-btn" onclick="removeTitleSegment()" title="${t('title_seg_remove')}"><i class="fa-solid fa-minus"></i></button>
+              </div>
+            </div>
+            <textarea class="f-title-txt" id="titleTextArea" placeholder="♥ My title! ♥ (empty = auto)" style="display:${autoSplit ? 'none' : ''}">${esc((d.title_text||'').replace(/\\n/g, '\n'))}</textarea>
+            <div class="title-segments" id="titleSegments" style="display:${autoSplit ? '' : 'none'}">${autoSplit ? segs.map(titleSegmentHTML).join('') : ''}</div>
           </div>
         </div>
         <div style="margin-top:14px;">
@@ -447,6 +478,14 @@ function renderTitleSectionHTML(d) {
             </div>
           </div>
         </div>
+        <details class="tip-box" id="titleSpecialModes" style="margin-top:12px;display:${titleColorIsPreset ? '' : 'none'};">
+          <summary><i class="fa-solid fa-circle-info tip-icon"></i>${t('title_special_intro')}</summary>
+          <ul>
+            <li>${t('title_tip_rgb')}</li>
+            <li>${t('title_tip_rainbow')}</li>
+            <li>${t('title_tip_random')}</li>
+          </ul>
+        </details>
         <label class="title-modes-heading">${t('title_modes_heading')}</label>
         <div class="title-mode-options">
           <label class="title-mode-option">
@@ -456,6 +495,15 @@ function renderTitleSectionHTML(d) {
               <span class="title-mode-option-desc">${t('title_mode_sequential_desc')}</span>
             </span>
           </label>
+          <div class="title-autosplit-row" id="titleAutoSplitRow" style="display:${d.title_mode === 'sequential' ? '' : 'none'}">
+            <label class="title-autosplit-label">
+              <input type="checkbox" class="f-title-autosplit" ${autoSplit ? 'checked' : ''} onchange="toggleTitleAutoSplit(this)"/>
+              <span>
+                <span class="title-autosplit-title">${t('title_auto_split')}</span>
+                <span class="title-autosplit-desc">${t('title_auto_split_desc')}</span>
+              </span>
+            </label>
+          </div>
           <label class="title-mode-option">
             <input type="checkbox" class="f-title-mode-scroll" ${d.title_mode === 'scroll' ? 'checked' : ''} onchange="setTitleMode(this,'scroll')"/>
             <span>
@@ -481,6 +529,49 @@ function renderTitleSectionHTML(d) {
         </details>
       </div>
     </div>`;
+}
+
+/* ── TITLE AUTO-SPLIT (sequential mode) ──
+   When on, the sequential title is edited as one field per message (each joined
+   by "|" on save) instead of typing the "|" separators by hand. */
+function titleSegmentHTML(text) {
+  return `<input type="text" class="f-title-seg title-seg-input" value="${esc(text || '')}" placeholder="${t('title_seg_ph')}"/>`;
+}
+
+function addTitleSegment() {
+  const cont = document.getElementById('titleSegments');
+  if (!cont) return;
+  cont.insertAdjacentHTML('beforeend', titleSegmentHTML(''));
+  const inputs = cont.querySelectorAll('.f-title-seg');
+  inputs[inputs.length - 1].focus();
+  saveActiveEditor(); saveToStorage();
+}
+
+function removeTitleSegment() {
+  const cont = document.getElementById('titleSegments');
+  if (!cont) return;
+  const inputs = cont.querySelectorAll('.f-title-seg');
+  if (inputs.length > 1) { inputs[inputs.length - 1].remove(); saveActiveEditor(); saveToStorage(); }
+}
+
+function toggleTitleAutoSplit(cb) {
+  const ta       = document.getElementById('titleTextArea');
+  const cont     = document.getElementById('titleSegments');
+  const controls = document.getElementById('titleSegControls');
+  if (!ta || !cont) return;
+  if (cb.checked) {
+    // one field per "|"-separated message
+    cont.innerHTML = (ta.value || '').split('|').map(titleSegmentHTML).join('');
+    cont.style.display = '';
+    ta.style.display = 'none';
+    if (controls) controls.style.display = '';
+  } else {
+    ta.value = [...cont.querySelectorAll('.f-title-seg')].map(i => i.value).join('|');
+    cont.style.display = 'none';
+    ta.style.display = '';
+    if (controls) controls.style.display = 'none';
+  }
+  saveActiveEditor(); saveToStorage();
 }
 
 function renderBiographySectionHTML(d) {
@@ -543,6 +634,9 @@ function renderEditor(id) {
         </button>
         <button class="btn btn-ghost btn-sm" onclick="copyOutfitConfig('${id}')">
           <i class="fa-solid fa-code"></i> ${t('copy_outfit')}
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="openPasteConfigModal('${id}','outfit')">
+          <i class="fa-solid fa-paste"></i> ${t('paste_outfit')}
         </button>
         <button class="btn btn-danger btn-sm" onclick="confirmDeleteOutfit('${id}')">
           <i class="fa-solid fa-trash"></i> ${t('btn_delete')}
@@ -616,6 +710,9 @@ function renderGroupEditor(id) {
         </button>
         <button class="btn btn-ghost btn-sm" onclick="copyGroupConfig('${id}')">
           <i class="fa-solid fa-code"></i> ${t('copy_outfit')}
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="openPasteConfigModal('${id}','group')">
+          <i class="fa-solid fa-paste"></i> ${t('paste_outfit')}
         </button>
         <button class="btn btn-danger btn-sm" onclick="confirmDeleteGroup('${id}')">
           <i class="fa-solid fa-trash"></i> ${t('btn_delete_group')}
@@ -704,6 +801,14 @@ function toggleColorEnable(cb, wrapperId) {
   if (!w) return;
   w.style.opacity = cb.checked ? '1' : '0.35';
   w.style.pointerEvents = cb.checked ? '' : 'none';
+  // When turning the color off, collapse any open preset dropdown so it doesn't
+  // stay hanging open under the now-dimmed control.
+  if (!cb.checked) {
+    w.querySelectorAll('.color-field').forEach(field => {
+      const list = field.querySelector('.color-preset-list');
+      if (list && list.style.display !== 'none') closeColorPresetMenu(field);
+    });
+  }
 }
 
 /* ── TAG WIDGET ──
@@ -1093,7 +1198,13 @@ function saveActiveEditor() {
   d.particles_size_start   = _nf('.f-part-size-start');
   d.particles_size_end     = _nf('.f-part-size-end');
   d.title_enabled           = getTs('f-title-en');
-  d.title_text              = get('.f-title-txt').value.replace(/\n/g, '\\n');
+  d.title_auto_split        = get('.f-title-autosplit') ? get('.f-title-autosplit').checked : false;
+  const _segCont            = document.getElementById('titleSegments');
+  if (_segCont && _segCont.style.display !== 'none') {
+    d.title_text = [...document.querySelectorAll('.f-title-seg')].map(i => i.value).join('|').replace(/\n/g, '\\n');
+  } else {
+    d.title_text = get('.f-title-txt').value.replace(/\n/g, '\\n');
+  }
   d.title_mode              = get('.f-title-mode-seq') && get('.f-title-mode-seq').checked ? 'sequential'
                              : get('.f-title-mode-scroll') && get('.f-title-mode-scroll').checked ? 'scroll' : null;
   d.title_scroll_size       = get('.f-title-scroll-size') ? (parseInt(get('.f-title-scroll-size').value) || 5) : 5;

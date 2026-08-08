@@ -32,6 +32,7 @@ if (restored && outfits.length) {
   renderSidebar();
 }
 applyTranslations();
+initSidebarResize();
 
 document.addEventListener('click', () => closeApplyMenu());
 

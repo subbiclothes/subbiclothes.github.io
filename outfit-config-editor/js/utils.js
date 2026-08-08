@@ -110,6 +110,16 @@ function setTitleMode(cb, mode) {
   }
   const row = document.getElementById('titleScrollSizeRow');
   if (row) row.style.display = scrollCb && scrollCb.checked ? '' : 'none';
+
+  // "Auto separation" only applies to sequential mode.
+  const seqOn  = seqCb && seqCb.checked;
+  const asRow  = document.getElementById('titleAutoSplitRow');
+  if (asRow) asRow.style.display = seqOn ? '' : 'none';
+  const asCb = document.querySelector('.f-title-autosplit');
+  if (!seqOn && asCb && asCb.checked) {
+    asCb.checked = false;
+    toggleTitleAutoSplit(asCb); // collapse fields back into the single textarea
+  }
 }
 
 function presetSwatchBg(value) {
@@ -171,6 +181,12 @@ function switchColorTab(btn, mode) {
       updateRgbSpeedUI(field, false);
     }
     syncSwatchFromText(inp);
+  }
+  // The "Special color modes" tip belongs to the Title color — show it only
+  // while its Preset tab is active.
+  if (field.querySelector('.f-title-col')) {
+    const box = document.getElementById('titleSpecialModes');
+    if (box) box.style.display = (mode === 'preset') ? '' : 'none';
   }
 }
 

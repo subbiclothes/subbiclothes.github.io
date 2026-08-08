@@ -53,29 +53,24 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebarPanel">
+    <div class="sidebar-resizer" id="sidebarResizer" title="Drag to resize"></div>
     <div class="sidebar-header">
       <div class="sidebar-title-row">
         <div class="sidebar-title" data-t="outfits_list">Outfits</div>
         <div style="display:flex;gap:2px;" id="sidebarToolbar">
-          <button class="btn btn-ghost btn-sm btn-group-active" id="btnGroupBy" onclick="toggleGroupBy()" title="Group by group" style="border:none;padding:3px 7px;">
-            <i class="fa-solid fa-layer-group"></i>
-          </button>
           <button class="btn btn-ghost btn-sm" id="btnCompact" onclick="toggleCompact()" title="Compact view" style="border:none;padding:3px 7px;">
             <i class="fa-solid fa-bars"></i>
           </button>
           <button class="btn btn-ghost btn-sm" onclick="sortOutfits()" title="Sort A–Z" style="border:none;padding:3px 7px;">
             <i class="fa-solid fa-arrow-down-a-z"></i>
           </button>
-          <button class="btn btn-ghost btn-sm" id="btnCollapse" onclick="toggleSidebarCollapse()" title="Collapse sidebar" style="border:none;padding:3px 7px;">
-            <i class="fa-solid fa-chevron-left" id="sidebarCollapseIcon"></i>
-          </button>
         </div>
       </div>
-      <div style="display:flex;gap:6px;">
-        <button class="btn btn-ghost" style="flex:1; justify-content:center;" onclick="openAddModal()">
+      <div class="sidebar-add-row" style="display:flex;gap:6px;">
+        <button class="btn btn-ghost" style="flex:1; justify-content:center;" onclick="openAddModal()" title="Add outfit">
           <i class="fa-solid fa-plus"></i> <span data-t="add_outfit">Add outfit</span>
         </button>
-        <button class="btn btn-ghost" style="flex:1; justify-content:center;" onclick="openAddGroupModal()">
+        <button class="btn btn-ghost" style="flex:1; justify-content:center;" onclick="openAddGroupModal()" title="Add group">
           <i class="fa-solid fa-users"></i> <span data-t="add_group">Add group</span>
         </button>
       </div>
@@ -86,6 +81,17 @@
           <i class="fa-solid fa-tag"></i>
         </button>
       </div>
+    </div>
+    <div class="sidebar-collapsed-rail">
+      <button class="btn btn-ghost btn-sm rail-btn" onclick="expandSidebar()" title="Expand">
+        <i class="fa-solid fa-angles-right"></i>
+      </button>
+      <button class="btn btn-ghost btn-sm rail-btn" onclick="openAddModal()" title="Add outfit">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <button class="btn btn-ghost btn-sm rail-btn" onclick="openAddGroupModal()" title="Add group">
+        <i class="fa-solid fa-users"></i>
+      </button>
     </div>
     <div class="sidebar-collapsed-label">OUTFITS</div>
     <div class="outfit-list" id="outfitList"></div>
@@ -259,6 +265,20 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('uploadModal')" data-t="cancel">Cancel</button>
       <button class="btn btn-primary" onclick="parsePasteArea()" data-t="parse_btn">Parse text</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASTE CONFIG MODAL -->
+<div class="modal-overlay" id="pasteConfigModal">
+  <div class="modal" style="width:560px;max-width:95vw;">
+    <h3 data-t="paste_title">PASTE CONFIG</h3>
+    <textarea id="pasteConfigArea" class="config-paste-area" data-t-ph="paste_config_ph" placeholder="Paste a copied config here…" spellcheck="false"></textarea>
+    <div class="paste-choose-label" data-t="paste_choose">Apply which parts:</div>
+    <div id="pasteCatList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('pasteConfigModal')" data-t="cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmPasteConfig()" data-t="paste_apply">Apply</button>
     </div>
   </div>
 </div>

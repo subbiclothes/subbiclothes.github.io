@@ -102,20 +102,44 @@ header {
   border-right: 1px solid var(--border-dim);
   display: flex; flex-direction: column;
   overflow: hidden;
+  position: relative;
   transition: width .22s ease, min-width .22s ease;
 }
-.sidebar.sidebar-collapsed { width: 40px; min-width: 40px; }
-.sidebar.sidebar-collapsed .sidebar-title,
-.sidebar.sidebar-collapsed #sidebarToolbar > *:not(#btnCollapse),
-.sidebar.sidebar-collapsed .sidebar-header > *:not(.sidebar-title-row),
+/* While dragging the handle, kill the width transition so it tracks the cursor */
+.sidebar.resizing { transition: none; }
+
+/* Drag-to-resize handle pinned to the right edge */
+.sidebar-resizer {
+  position: absolute; top: 0; right: 0; width: 6px; height: 100%;
+  cursor: col-resize; z-index: 6;
+  background: transparent; transition: background .15s;
+}
+.sidebar-resizer:hover,
+.sidebar.resizing .sidebar-resizer { background: var(--pink-dim); }
+
+/* Dragged narrow enough → collapse: hide everything, leave only the vertical
+   label. We hide the whole header (not its children) because the toolbar / Add
+   rows carry inline `display:flex`, which would otherwise beat a `display:none`
+   on the children and keep them visible. */
+.sidebar.sidebar-collapsed .sidebar-header,
 .sidebar.sidebar-collapsed .outfit-list,
 .sidebar.sidebar-collapsed .sidebar-footer { display: none; }
-.sidebar.sidebar-collapsed .sidebar-title-row { justify-content: center; padding: 0; }
-.sidebar.sidebar-collapsed .sidebar-header { padding: 10px 4px; border-bottom: none; }
-#sidebarCollapseIcon { transition: transform .22s ease; }
-.sidebar.sidebar-collapsed #sidebarCollapseIcon { transform: rotate(180deg); }
 
-/* Vertical label shown only when sidebar is collapsed */
+/* Quick-action rail shown only when collapsed: expand · add outfit · add group */
+.sidebar-collapsed-rail { display: none; }
+.sidebar.sidebar-collapsed .sidebar-collapsed-rail {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 12px 0 6px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.sidebar-collapsed-rail .rail-btn {
+  width: 34px; height: 34px; padding: 0; justify-content: center;
+  color: var(--text-bright); background: var(--bg-hover); border-color: var(--border-dim);
+}
+.sidebar-collapsed-rail .rail-btn i { font-size: 15px; }
+.sidebar-collapsed-rail .rail-btn:hover { color: var(--pink); border-color: var(--border); }
+
+/* Vertical "OUTFITS" label shown only when collapsed */
 .sidebar-collapsed-label {
   display: none;
   writing-mode: vertical-rl;
@@ -128,11 +152,10 @@ header {
   user-select: none;
 }
 .sidebar.sidebar-collapsed .sidebar-collapsed-label {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
+  display: flex; flex: 1;
+  align-items: center; justify-content: center;
 }
+
 .sidebar-header {
   padding: 16px; border-bottom: 1px solid var(--border-dim);
   display: flex; flex-direction: column; gap: 10px;
@@ -309,6 +332,52 @@ emoji-picker {
 .group-chevron { font-size: 10px; opacity: .7; flex-shrink: 0; }
 .group-count { margin-left: auto; font-size: 11px; letter-spacing: 0; color: var(--pink-dim); }
 .btn-group-active { background: var(--pink-soft) !important; color: var(--pink) !important; border-color: var(--border) !important; }
+
+/* ── PASTE CONFIG MODAL ── */
+.config-paste-area {
+  width: 100%; min-height: 120px; resize: vertical;
+  background: var(--bg-input); border: 1px solid var(--border-dim);
+  border-radius: var(--radius); color: var(--text-bright);
+  font-family: 'Share Tech Mono', monospace; font-size: 12px; padding: 10px;
+  transition: border-color .15s;
+}
+.config-paste-area:focus { outline: none; border-color: var(--pink); }
+.paste-choose-label {
+  font-size: 12px; color: var(--text-dim);
+  letter-spacing: .5px; margin: 14px 0 6px;
+}
+.paste-cat {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 15px; color: var(--text-bright); cursor: pointer; padding: 4px 0;
+}
+.paste-cat input { accent-color: var(--pink); width: 15px; height: 15px; cursor: pointer; }
+.paste-cat-all { font-weight: 700; }
+.paste-cat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;
+  margin: 4px 0 0 6px; padding-left: 12px;
+  border-left: 2px solid var(--border-dim);
+}
+
+/* Sidebar toolbar icons — give them a visible chip so they stay legible even
+   when the column is dragged narrow. */
+#sidebarToolbar .btn {
+  color: var(--text-bright);
+  background: var(--bg-hover);
+  border-radius: 5px;
+}
+#sidebarToolbar .btn i { font-size: 15px; }
+#sidebarToolbar .btn:hover { color: var(--pink); background: var(--bg-input); }
+
+/* Narrow (dragged small but not yet collapsed): trim the header so its buttons
+   stop getting clipped against the edges. Drop the "Outfits" title to free room
+   for the toolbar, and collapse the Add buttons to icon-only so both still fit. */
+.sidebar.sidebar-narrow .sidebar-header { padding: 12px 8px; gap: 8px; }
+.sidebar.sidebar-narrow .sidebar-title { display: none; }
+.sidebar.sidebar-narrow .sidebar-title-row { justify-content: center; }
+.sidebar.sidebar-narrow #sidebarToolbar { gap: 4px; }
+.sidebar.sidebar-narrow .sidebar-add-row .btn { padding: 6px 8px; }
+.sidebar.sidebar-narrow .sidebar-add-row .btn span { display: none; }
+.sidebar.sidebar-narrow .sidebar-add-row .btn i { font-size: 15px; }
 
 /* ── MAIN PANEL ── */
 .main {
@@ -707,6 +776,34 @@ textarea { resize: vertical; min-height: 60px; }
   text-transform: uppercase; color: var(--text-dim);
 }
 .title-scroll-size-row input[type=number] { width: 70px; }
+
+/* Title text + / − field controls (auto separation) */
+.title-text-labelrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.title-seg-controls { display: flex; gap: 6px; }
+.seg-btn {
+  width: 28px; height: 24px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--bg-hover); color: var(--text-bright);
+  border: 1px solid var(--border-dim); border-radius: 5px;
+  cursor: pointer; transition: all .15s; font-size: 13px;
+}
+.seg-btn:hover { color: var(--pink); border-color: var(--border); }
+.title-segments { display: flex; flex-direction: column; gap: 6px; }
+
+/* "Auto separation" sub-option under Sequential mode */
+.title-autosplit-row { margin: -2px 0 2px 18px; }
+.title-autosplit-label {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 6px 10px; border-radius: var(--radius);
+  border: 1px dashed var(--border-dim); cursor: pointer; transition: border-color .15s;
+}
+.title-autosplit-label:hover { border-color: var(--border); }
+.title-autosplit-label input[type=checkbox] { margin-top: 2px; accent-color: var(--pink); flex-shrink: 0; }
+.title-autosplit-title {
+  display: block; font-size: 13px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text-bright);
+}
+.title-autosplit-desc { display: block; font-size: 13px; color: var(--text-dim); margin-top: 2px; }
 
 /* ── COLOR FIELD (manual / preset tabs) ── */
 .color-field { display: flex; flex-direction: column; gap: 5px; }
