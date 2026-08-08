@@ -158,6 +158,9 @@
     .dx-perm-table tbody tr:hover td, .dx-perm-table tbody tr:hover th { background: var(--bg-hover); }
     .dx-perm-table .yes { color: #1de68a; }
     .dx-perm-table .no  { color: var(--text-dim); }
+    /* Inaccessible permissions: shown as a dark "blocked" cell, not editable. */
+    .dx-perm-table td.dx-perm-cell.blocked { color: #55555f; background: rgba(0,0,0,0.28); cursor: not-allowed; }
+    .dx-perm-table tbody tr:hover td.blocked { background: rgba(0,0,0,0.28); }
     .dx-perm-table .reserved { font-size: 11px; color: var(--text-dim); font-weight: 400; margin-left: 5px; letter-spacing: 0; text-transform: none; }
 
     /* Editable affordances (click any option / value / permission to change it) */
@@ -265,7 +268,7 @@
                placeholder="https://subbiclothes.com/settings-editor/?v=1&o=…   ·   or   ·   SC1|0,1,…|…|…">
         <button class="btn-primary" id="dx-decode-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-lc="en">Load</span><span data-lc="es">Cargar</span></button>
       </div>
-      <p class="dx-example-link"><a id="dx-example"><span data-lc="en">Load a sample</span><span data-lc="es">Cargar un ejemplo</span></a></p>
+      <p class="dx-example-link"><button type="button" class="btn-ghost btn-sm dx-sample-btn" id="dx-example"><i class="fa-solid fa-flask"></i> <span data-lc="en">Load a sample</span><span data-lc="es">Cargar un ejemplo</span></button></p>
     </div>
 
     <!-- BACKUPS -->
@@ -419,7 +422,7 @@
           <div class="dx-import-methods">
             <div class="dx-method">
               <b>${lc('Via chat', 'Por chat')}</b>
-              ${lc('Say in chat: ', 'Escribe en el chat: ')}<code>import SC1|&hellip;</code>
+              ${lc('Say in chat: ', 'Escribe en el chat: ')}<code>/55 import SC1|&hellip;</code>
             </div>
             <div class="dx-method">
               <b>${lc('Via notecard', 'Por notecard')}</b>
@@ -511,11 +514,32 @@
       });
     }
 
+    // Permissions that aren't accessible in the HUD yet: rendered as locked,
+    // non-editable cells. k = PERM_NAMES index, c = PERM_CATS index
+    // (0 Public · 1 Whitelist · 2 Friends · 3 Group).
+    function isBlockedPerm(k, c) {
+      if (k === 13) return true;               // MixOutfit — blocked for everyone (for now)
+      if (k === 9 || k === 10) return c !== 1;  // Adv.Commands / Hid.Folders — all except Whitelist
+      return false;
+    }
+
+    // Display-only reordering. The bit math (pi = c*14 + k), PUBLIC_PERM_SYNC and
+    // isBlockedPerm all key off the *real* PERM_CATS / PERM_NAMES indices, so we
+    // reorder only how columns and rows are shown, never the arrays themselves.
+    const PERM_CAT_ORDER = [0, 3, 2, 1];                          // Public · Group · Friends · Whitelist
+    const PERM_ROW_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 9, 10, 13]; // Adv.Commands / Hid.Folders / MixOutfit last
+
     function renderPermissions() {
-      const head = `<tr><th style="text-align:left;">${lc('Permission', 'Permiso')}</th>${PERM_CATS.map(c => `<th>${c}</th>`).join('')}</tr>`;
-      const rows = PERM_NAMES.map((name, k) => {
+      const head = `<tr><th style="text-align:left;">${lc('Permission', 'Permiso')}</th>${PERM_CAT_ORDER.map(c => `<th>${PERM_CATS[c]}</th>`).join('')}</tr>`;
+      const rows = PERM_ROW_ORDER.map(k => {
+        const name = PERM_NAMES[k];
         const reserved = (k === 11) ? `<span class="reserved">${lc('reserved', 'reservado')}</span>` : '';
-        const cells = PERM_CATS.map((_, c) => {
+        const cells = PERM_CAT_ORDER.map(c => {
+          if (isBlockedPerm(k, c)) {
+            // No data-pi / tabindex → the delegated click & keyboard handlers skip it.
+            const blockedTitle = isES() ? 'No disponible' : 'Not available';
+            return `<td class="dx-perm-cell blocked" aria-disabled="true" title="${blockedTitle}"><i class="fa-solid fa-lock"></i></td>`;
+          }
           const pi = c * 14 + k;
           const on = pBits[pi] === '1';
           return `<td class="dx-perm-cell ${on ? 'yes' : 'no'}" data-pi="${pi}" role="button" tabindex="0">${icon(on)}</td>`;
@@ -770,7 +794,7 @@
         + renderRaw(v === null ? '—' : v, oBits, current.n, pBits, currentCsv);
 
       wireCopy('dx-copy-csv', () => currentCsv);
-      wireCopy('dx-copy-cmd', () => 'import ' + currentCsv);
+      wireCopy('dx-copy-cmd', () => '/55 import ' + currentCsv);
       balanceColumns();
       touchAuto();
       renderArchiveCard();
