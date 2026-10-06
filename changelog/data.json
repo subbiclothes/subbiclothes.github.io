@@ -31,10 +31,10 @@
   "entries": [
 
     {
-      "version": "DEV-5.0",
-      "date": "Work in Progress",
-      "type": "beta",
-      "version_type": "middle",
+      "version": "DEV-5.1",
+      "date": "2026-08-27",
+      "type": "dev",
+      "version_type": "major",
       "badge": "DEV · SC4",
 
       "summary": "Medium SC4 DEV update introducing group-level configuration through GCE, experimental Lock Clothes and Lock Avatar systems, new Titler modes, and expanded permission controls — including public access to MixOutfit — alongside a fully rebuilt command system, an overhauled update pipeline, and improvements to Particles, AlphaFix, and administrative access handling.",
@@ -86,6 +86,23 @@
       ],
       "bugs": [
         "None currently known."
+      ],
+      "sub_versions": [
+        {
+          "version": "DEV-5.1",
+          "date": "2026-10-05",
+          "version_type": "middle",
+          "summary": "Minor fixes and QoL features",
+          "new":[
+            "Added the option to automatically hide the title when seated, whether alone or with others.",
+            "Added the ability to block access to accessories based on specific body part states."
+          ],
+          "fixed": [
+            "Missing descriptions have been corrected.",
+            "Memory issues have been fixed.",
+            "An error that increased the likelihood of a stack-heap collision in Clicker has been fixed."
+          ]
+        }
       ]
     },
     {
