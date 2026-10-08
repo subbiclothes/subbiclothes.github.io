@@ -97,6 +97,9 @@
             "Added the option to automatically hide the title when seated, whether alone or with others.",
             "Added the ability to block access to accessories based on specific body part states."
           ],
+          "changed":[
+            "Reset Skeleton (C) and Reset Skeleton (R) are now disabled by default. They can be re-enabled through the Settings menu."
+          ],
           "fixed": [
             "Missing descriptions have been corrected.",
             "Memory issues have been fixed.",
